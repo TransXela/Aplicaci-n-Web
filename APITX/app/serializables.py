@@ -100,8 +100,7 @@ class TxdDenunciaTipoS(serializers.ModelSerializer):
     class Meta:
         model = models.TxdTipodenuncia
         fields = ('idtipodenuncia','denunciaRecurso')
-
-
+        
 class TxcoConsejoS(serializers.ModelSerializer):
     class Meta:
         model = models.TxcoConsejo
