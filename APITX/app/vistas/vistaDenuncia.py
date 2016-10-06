@@ -4,17 +4,20 @@ from rest_framework.response import Response
 from datetime import datetime, date
 from django.core.exceptions import ObjectDoesNotExist
 from app.models import TxdDenuncia,TxdBus,TxdHorariodetalle
-from app.serializables import TxdDenunciaS
+from app.serializables import TxdDenunciaS, TxdDenunciaRecursosS
 
 
 @api_view(['GET', 'POST'])
-def lista_objetos(request):
+def lista_objetos(request, var):
     """
     Lista de todos los Denuncias, o crea uno nuevo.
     """
     if request.method == 'GET':
         objeto = TxdDenuncia.objects.all()
         serializador = TxdDenunciaS(objeto, many=True)
+        if var==1:
+            serializador = TxdDenunciaRecursosS(objeto, many=True)
+                    
         return Response(serializador.data)
 
     elif request.method == 'POST':
@@ -47,7 +50,7 @@ def lista_objetos(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def detalle_objetos(request, pk):
+def detalle_objetos(request, pk,var):
     """
     Actuliza, elimina un objeto segun su id
     """
@@ -59,8 +62,10 @@ def detalle_objetos(request, pk):
 
     if request.method == 'GET':
         serializador = TxdDenunciaS(objeto)
-        return Response(serializador.data)
+        if var==1:
+            serializador = TxdDenunciaRecursosS(objeto)
 
+        return Response(serializador.data)
     elif request.method == 'PUT':
         serializador = TxdDenunciaS(objeto, data=request.data)
         if serializador.is_valid():
