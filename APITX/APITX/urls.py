@@ -18,7 +18,7 @@ from django.contrib import admin
 from rest_framework import routers
 from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.authtoken.views import obtain_auth_token
-from app.vistas import vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo, vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle
+from app.vistas import vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo, vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia
 
 urlpatterns = [
     url(r'^api-token-auth/', obtain_auth_token),
@@ -44,9 +44,15 @@ urlpatterns = [
     url(r'^recurso/(?P<pk>[0-9]+)$', vistaRecurso.detalle_objetos),
     url(r'^horariodetalle/$', vistaHorariodetalle.lista_objetos),
     url(r'^horariodetalle/(?P<pk>[0-9]+)$', vistaHorariodetalle.detalle_objetos),
-    url(r'^denuncia/$', vistaDenuncia.lista_objetos),
-    url(r'^denuncia/(?P<pk>[0-9]+)$', vistaDenuncia.detalle_objetos),
-    url(r'^denuncia/(?P<pk>[0-9]+)/recursos$', vistaDenuncia.detalle_objetos),
+
+    url(r'^denuncia/$', vistaDenuncia.lista_objetos,{'var': 0}),
+    url(r'^denuncia/recursos$', vistaDenuncia.lista_objetos,{'var': 1}),
+    url(r'^denuncia/(?P<pk>[0-9]+)$', vistaDenuncia.detalle_objetos,{'var': 0}),
+    url(r'^denuncia/(?P<pk>[0-9]+)/recursos/$', vistaDenuncia.detalle_objetos,{'var': 1}),
+    url(r'^denuncia/tipo/$', vistaTipodenuncia.lista_objetos),
+    url(r'^denuncia/tipo/(?P<pk>[0-9]+)$', vistaTipodenuncia.detalle_objetos),
+
+
     url(r'^operador/denuncias/ruta/(?P<pk>[0-9]+)$', vistaDenuncia.detalle_objetos),
     url(r'^tipodenuncia/$', vistaTipodenuncia.lista_objetos),
 

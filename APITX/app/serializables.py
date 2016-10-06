@@ -48,7 +48,7 @@ class  TxdChoferS(serializers.ModelSerializer):
 class TxdDenunciaS(serializers.ModelSerializer):
     class Meta:
         model = models.TxdDenuncia
-        
+
 class TxdHorariodetalleS(serializers.ModelSerializer):
     class Meta:
         model = models.TxdHorariodetalle
@@ -89,6 +89,18 @@ class TxdRutaS(serializers.ModelSerializer):
 class TxdTipodenunciaS(serializers.ModelSerializer):
     class Meta:
         model = models.TxdTipodenuncia
+class TxdDenunciaRecursosS(serializers.ModelSerializer):
+    recursos = TxdRecursoS(many=True, read_only=True, source='txdrecurso_set')
+    class Meta:
+        model = models.TxdDenuncia
+        fields = ('iddenuncia','recursos')
+
+class TxdDenunciaTipoS(serializers.ModelSerializer):
+    denunciaRecurso = TxdDenunciaRecursosS(many=True, read_only=True, source='txddenuncia_set')
+    class Meta:
+        model = models.TxdTipodenuncia
+        fields = ('idtipodenuncia','denunciaRecurso')
+        
 class TxcoConsejoS(serializers.ModelSerializer):
     class Meta:
         model = models.TxcoConsejo

@@ -11,7 +11,14 @@ def lista_objetos(request):
     Lista de todas las Buses, o crear una nueva
     """
     if request.method == 'GET':
-        objeto = TxdBus.objects.all()
+        todos = request.META.get('todos')
+        n=1
+        if todos:
+            objeto = TxdBus.objects.all()
+        else:
+            objeto = TxdBus.objects.get(estado=True)
+
+
         serializador = TxdBusS(objeto, many=True)
         return Response(serializador.data)
 
