@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.core.exceptions import ObjectDoesNotExist
 from app.models import TxdRecurso
 from app.serializables import TxdRecursoS
 
@@ -28,7 +29,7 @@ def detalle_objetos(request, pk):
     """
     try:
         objeto = TxdRecurso.objects.get(pk=pk)
-    except objeto.DoesNotExist:
+    except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':

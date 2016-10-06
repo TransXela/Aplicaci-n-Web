@@ -1,8 +1,9 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from datetime import datetime, date
 from django.core.exceptions import ObjectDoesNotExist
-from app.models import TxdDenuncia,TxdBus
+from app.models import TxdDenuncia,TxdBus,TxdHorariodetalle
 from app.serializables import TxdDenunciaS
 
 
@@ -17,19 +18,31 @@ def lista_objetos(request):
         return Response(serializador.data)
 
     elif request.method == 'POST':
-        serializador = TxdDenunciaS(data=request.data)
-        placa = request.data['placa']
-        respuesta ={"denuncia": {"estado": "rechazada"}}
+
         try:
+            placa = request.data['placa']
             bus = TxdBus.objects.get(placa=placa)
         except ObjectDoesNotExist:
+            respuesta ={'denuncia': {'estado': 'rechazada'}}
             return Response(respuesta, status=status.HTTP_406_NOT_ACCEPTABLE)
 
+        try:
+
+            horario = TxdHorariodetalle.objects.get(bus=bus.idbus, fecha=date.today())
+            data= {"placa": request.data['placa'] ,"idhash": request.data['idhash'],
+            "descripcion": request.data['descripcion'] ,"tipodenuncia": request.data['tipodenuncia'],
+            "estado": request.data['estado'] ,"chofer": horario.chofer.idchofer, "fechahora": request.data['fechahora']}
+            serializador = TxdDenunciaS(data=data)
+        except ObjectDoesNotExist:
+            serializador = TxdDenunciaS(data=request.data)
+
+
         if serializador.is_valid():
+
             serializador.save()
-            i = serializador.pk
-            respuesta ={"denuncia":{"estado": "realizada", "id": i }}
-            return Response(serializador.data, status=status.HTTP_201_CREATED)
+            ultimoId = TxdDenuncia.objects.latest('iddenuncia')
+            respuesta ={'denuncia': {'estado': 'aceptada', "id": ultimoId.iddenuncia}}
+            return Response(respuesta, status=status.HTTP_201_CREATED)
         return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -40,8 +53,9 @@ def detalle_objetos(request, pk):
     """
     try:
         objeto = TxdDenuncia.objects.get(pk=pk)
-    except objeto.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+    except ObjectDoesNotExist:
+        respuesta ={'denuncia': {'estado': 'no existe denuncia'}}
+        return Response(respuesta,status=status.HTTP_204_NO_CONTENT)
 
     if request.method == 'GET':
         serializador = TxdDenunciaS(objeto)
@@ -51,7 +65,8 @@ def detalle_objetos(request, pk):
         serializador = TxdDenunciaS(objeto, data=request.data)
         if serializador.is_valid():
             serializador.save()
-            return Response(serializador.data)
+            respuesta ={'denuncia': {'estado': 'se actualizo la denuncia'}}
+            return Response(respuesta, status=status.HTTP_202_ACCEPTED)
         return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':

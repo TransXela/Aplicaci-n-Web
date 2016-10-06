@@ -9,7 +9,6 @@ from __future__ import unicode_literals
 
 from django.db import models
 
-
 class TxcActividad(models.Model):
     idactividad = models.AutoField(db_column='idActividad', primary_key=True)  # Field name made lowercase.
     nombre = models.CharField(max_length=100, blank=True, null=True)
