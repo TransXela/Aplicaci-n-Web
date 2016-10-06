@@ -25,7 +25,7 @@ def lista_objetos(request):
 @api_view(['GET'])
 def principal_consejo(request,pk):
     """
-    Lista de consejos por id
+    Lista de las fechas y consejos
     """
     try:
         objeto = TxcoConsejo.objects.get(pk=pk)
