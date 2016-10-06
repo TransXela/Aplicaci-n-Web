@@ -12,10 +12,12 @@ def lista_objetos(request):
     """
     if request.method == 'GET':
         todos = request.META.get('todos')
+        n=1
         if todos:
             objeto = TxdBus.objects.all()
         else:
-            objeto = TxdBus.objects.all(estado=1)
+            objeto = TxdBus.objects.get(estado=True)
+
 
         serializador = TxdBusS(objeto, many=True)
         return Response(serializador.data)

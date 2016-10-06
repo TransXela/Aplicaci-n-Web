@@ -17,7 +17,7 @@ def lista_objetos(request, var):
         serializador = TxdDenunciaS(objeto, many=True)
         if var==1:
             serializador = TxdDenunciaRecursosS(objeto, many=True)
-                    
+
         return Response(serializador.data)
 
     elif request.method == 'POST':
@@ -25,26 +25,34 @@ def lista_objetos(request, var):
         try:
             placa = request.data['placa']
             bus = TxdBus.objects.get(placa=placa)
+            data= {"placa": request.data['placa'] ,"idhash": request.data['idhash'],
+            "descripcion": request.data['descripcion'] ,"tipodenuncia": request.data['tipodenuncia'],
+            "estado": 1  ,"chofer": "" , "fechahora": datetime.now()}
         except ObjectDoesNotExist:
-            respuesta ={'denuncia': {'estado': 'rechazada'}}
-            return Response(respuesta, status=status.HTTP_406_NOT_ACCEPTABLE)
+            data= {"placa": request.data['placa'] ,"idhash": request.data['idhash'],
+            "descripcion": request.data['descripcion'] ,"tipodenuncia": request.data['tipodenuncia'],
+            "estado": 2  ,"chofer": "" , "fechahora": datetime.now()}
+
 
         try:
-
             horario = TxdHorariodetalle.objects.get(bus=bus.idbus, fecha=date.today())
             data= {"placa": request.data['placa'] ,"idhash": request.data['idhash'],
             "descripcion": request.data['descripcion'] ,"tipodenuncia": request.data['tipodenuncia'],
-            "estado": request.data['estado'] ,"chofer": horario.chofer.idchofer, "fechahora": request.data['fechahora']}
+            "estado": 1  ,"chofer": horario.chofer.idchofer, "fechahora": datetime.now()}
             serializador = TxdDenunciaS(data=data)
         except ObjectDoesNotExist:
-            serializador = TxdDenunciaS(data=request.data)
+            serializador = TxdDenunciaS(data=data)
 
 
         if serializador.is_valid():
 
             serializador.save()
-            ultimoId = TxdDenuncia.objects.latest('iddenuncia')
-            respuesta ={'denuncia': {'estado': 'aceptada', "id": ultimoId.iddenuncia}}
+            if data['estado']==1 :
+                ultimoId = TxdDenuncia.objects.latest('iddenuncia')
+                respuesta ={'denuncia': {'estado': 'aceptada y en proceso', "id": ultimoId.iddenuncia}}
+            else:
+                respuesta ={'denuncia': {'estado': 'rechazada'}}
+
             return Response(respuesta, status=status.HTTP_201_CREATED)
         return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
 
