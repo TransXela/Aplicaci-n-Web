@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import TxcoConsejo
-from app.serializables import TxcoConsejoS, TxcoFechaS
+from app.serializables import TxcoConsejoS, TxcoFechaS, ConsejosFecha
 
 
 @api_view(['GET', 'POST'])

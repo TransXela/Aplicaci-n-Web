@@ -100,10 +100,15 @@ class TxdDenunciaTipoS(serializers.ModelSerializer):
     class Meta:
         model = models.TxdTipodenuncia
         fields = ('idtipodenuncia','denunciaRecurso')
-        
+
 class TxcoConsejoS(serializers.ModelSerializer):
     class Meta:
         model = models.TxcoConsejo
 class TxcoFechaS(serializers.ModelSerializer):
     class Meta:
         model = models.TxcoFecha
+class ConsejosFecha(serializers.ModelSerializer):
+    fechas=TxcoFechaS(many=True, read_only=True,source='TxcoFecha_set')
+    class Meta:
+        model = models.TxcoConsejo
+        fields = ('idconsejo','fecha')
