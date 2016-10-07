@@ -111,4 +111,4 @@ class ConsejosFecha(serializers.ModelSerializer):
     fechas=TxcoFechaS(many=True, read_only=True,source='TxcoFecha_set')
     class Meta:
         model = models.TxcoConsejo
-        fields = ('idconsejo','fecha')
+        fields = ('idconsejo','fechas')
