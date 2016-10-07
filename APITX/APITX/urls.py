@@ -38,6 +38,13 @@ urlpatterns = [
     url(r'^duenio/bus/(?P<pk>[0-9]+)$', vistaBus.detalle_objetos,{'var': 1}),
     url(r'^duenio/horario/$', vistaHorario.lista_objetos),
     url(r'^duenio/horario/(?P<pk>[0-9]+)$', vistaHorario.detalle_objetos),
+
+    url(r'^duenio/(?P<pk>[0-9]+)/buses/$', vistaBus.buses_duenio),
+    url(r'^duenio/false/buses/$', vistaBus.buses_activos),
+
+    url(r'^duenio/(?P<pk>[0-9]+)/horarios/$', vistaHorario.horarios_duenio),
+    url(r'^duenio/crear/horario/$', vistaHorario.crear_horario),
+
     url(r'^ruta/$', vistaRuta.lista_objetos),
     url(r'^ruta/(?P<pk>[0-9]+)$', vistaRuta.detalle_objetos),
     url(r'^duenio/bus/(?P<pk>[0-9]+)/editar/$', vistaBus.detalle_objetos),

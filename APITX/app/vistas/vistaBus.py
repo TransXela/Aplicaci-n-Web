@@ -34,7 +34,7 @@ def detalle_objetos(request, pk,var):
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
     else:
-        
+
             objeto = TxdBus.objects.get(pk=pk)
 
 
@@ -52,3 +52,31 @@ def detalle_objetos(request, pk,var):
     elif request.method == 'DELETE':
         objeto.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+def buses_duenio(request, pk):
+    """
+    retorna los buses de un duenio
+    """
+    try:
+        objetos = TxdBus.objects.filter(duenio=pk)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializador = TxdBusS(objetos, many=True)
+        return Response(serializador.data)
+
+@api_view(['GET'])
+def buses_activos(request):
+    """
+    retorna los busese que estan activos
+    """
+    try:
+        objetos = TxdBus.objects.filter(estado = 1)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializador = TxdBusS(objetos, many=True)
+        return Response(serializador.data)
