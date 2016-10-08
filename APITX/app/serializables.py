@@ -37,6 +37,10 @@ class TxcPreguntaS(serializers.ModelSerializer):
     class Meta:
         model = models.TxcPregunta
 
+class TxdTokenS(serializers.ModelSerializer):
+    class Meta:
+        model = models.TxdToken
+
 class TxdBusS(serializers.ModelSerializer):
     class Meta:
         model = models.TxdBus
@@ -111,4 +115,4 @@ class ConsejosFecha(serializers.ModelSerializer):
     fechas=TxcoFechaS(many=True, read_only=True,source='TxcoFecha_set')
     class Meta:
         model = models.TxcoConsejo
-        fields = ('idconsejo','fecha')
+        fields = ('idconsejo','fechas')
