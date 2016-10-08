@@ -7,7 +7,7 @@ from app.serializables import TxdBusS
 
 
 @api_view(['GET', 'POST'])
-def lista_objetos(request,var):
+def lista_objetos(request):
     """
     Lista de todas las Buses, o crear una nueva
     """
@@ -24,18 +24,16 @@ def lista_objetos(request,var):
         return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT','DELETE'])
-def detalle_objetos(request, pk,var):
+def detalle_objetos(request, pk):
     """
     Actualiza, elimina un objeto segun su id
     """
-    if var==0:
-        try:
-            objetos = TxdBus.objects.get(pk=1)
-        except ObjectDoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-    else:
-        
-            objeto = TxdBus.objects.get(pk=pk)
+
+    try:
+        objeto = TxdBus.objects.get(pk=1)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 
     if request.method == 'GET':
@@ -52,3 +50,20 @@ def detalle_objetos(request, pk,var):
     elif request.method == 'DELETE':
         objeto.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+def detalle_Activos(request):
+    """
+    Actualiza, elimina un objeto segun su id
+    """
+
+    try:
+        objetos = TxdBus.objects.get(estado=1)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializador = TxdBusS(objetos)
+        return Response(serializador.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
