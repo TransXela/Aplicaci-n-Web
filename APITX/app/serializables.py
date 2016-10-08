@@ -37,6 +37,10 @@ class TxcPreguntaS(serializers.ModelSerializer):
     class Meta:
         model = models.TxcPregunta
 
+class TxdTokenS(serializers.ModelSerializer):
+    class Meta:
+        model = models.TxdToken
+
 class TxdBusS(serializers.ModelSerializer):
     class Meta:
         model = models.TxdBus

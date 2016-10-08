@@ -110,6 +110,12 @@ class TxdRuta(models.Model):
     class Meta:
         db_table = 'txd_ruta'
 
+class TxdToken(models.Model):
+    idtoken = models.AutoField(db_column='idToken', primary_key=True)  # Field name made lowercase.
+    token = models.CharField(max_length=40, blank=True, null=True)
+
+    class Meta:
+        db_table = 'txd_Token'
 
 class TxdBus(models.Model):
     idbus = models.AutoField(db_column='idBus', primary_key=True)  # Field name made lowercase.
