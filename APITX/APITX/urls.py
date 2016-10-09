@@ -41,13 +41,16 @@ urlpatterns = [
     url(r'^duenio/(?P<pk>[0-9]+)/horarios/$', vistaHorario.horarios_duenio),
     url(r'^duenio/crear/horario/$', vistaHorario.crear_horario),
 
+    url(r'^duenio/horariodetalle/$', vistaHorariodetalle.lista_objetos),
+    url(r'^duenio/horariodetalle/(?P<fInicio>20[0-9][0-9]-[0-1][0-9]-[0-3][0-9])/(?P<fFin>20[0-9][0-9]-[0-1][0-9]-[0-3][0-9])$', vistaHorariodetalle.rango),
+    url(r'^duenio/horariodetalle/(?P<pk>[0-9]+)$', vistaHorariodetalle.detalle_objetos),
+
     url(r'^ruta/$', vistaRuta.lista_objetos),
     url(r'^ruta/(?P<pk>[0-9]+)$', vistaRuta.detalle_objetos),
     url(r'^duenio/bus/(?P<pk>[0-9]+)/editar/$', vistaBus.detalle_objetos),
     url(r'^recurso/$', vistaRecurso.lista_objetos),
     url(r'^recurso/(?P<pk>[0-9]+)$', vistaRecurso.detalle_objetos),
-    url(r'^horariodetalle/$', vistaHorariodetalle.lista_objetos),
-    url(r'^horariodetalle/(?P<pk>[0-9]+)$', vistaHorariodetalle.detalle_objetos),
+
 
     url(r'^denuncia/$', vistaDenuncia.lista_objetos,{'var': 0}),
     url(r'^denuncia/recursos$', vistaDenuncia.lista_objetos,{'var': 1}),

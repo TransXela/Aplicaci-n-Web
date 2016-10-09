@@ -40,8 +40,16 @@ def detalle_objetos(request, pk):
     elif request.method == 'PUT':
         serializador = TxdHorarioS(objeto, data=request.data)
         if serializador.is_valid():
-            serializador.save()
-            return Response(serializador.data)
+            inicio = datetime.strptime(str(request.data.get('horainicio')),'%H:%M:%S')
+            final = datetime.strptime(str(request.data.get('horafin')),'%H:%M:%S')
+            if final>inicio:
+                serializador.save()
+                respuesta ={"modificar": {"estado": "Horario creado exitosamente"}}
+                return Response(respuesta, status=status.HTTP_201_CREATED)
+            else:
+                respuesta ={"crear": {"modificar": "El horario inicio debe ser menor/diferente a horario fin"}}
+                return Response(respuesta, status=status.HTTP_400_BAD_REQUEST)
+
         return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':

@@ -57,7 +57,7 @@ def buses_Activos(request):
     retorna los busese que estan activos
     """
     try:
-        objetos = TxdBus.objects.filter(estado = 1)
+        objetos = TxdBus.objects.filter(estado=1)
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
