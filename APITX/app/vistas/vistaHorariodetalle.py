@@ -112,7 +112,7 @@ def rango(request,fInicio,fFin):
 
     try:
         hoy = date.today()
-        objeto = TxdHorariodetalle.objects.filter(chofer=1)
+        objeto = TxdHorariodetalle.objects.filter(bus=1)
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
