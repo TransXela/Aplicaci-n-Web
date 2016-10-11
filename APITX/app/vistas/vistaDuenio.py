@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import TxdDuenio
-from app.serializables import TxdDuenioS, DueniosChoferBuses
+from app.serializables import TxdDuenioS, DueniosChoferBuses,DueniosChoferes,DueniosHorarios,DueniosBuses
 
 
 @api_view(['GET', 'POST'])
@@ -23,7 +23,7 @@ def lista_objetos(request):
         return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-def principal_duenio(request,pk):
+def principal_duenio_choferes(request,pk, var):
     """
     Lista los buses y choferes
     """
@@ -33,65 +33,21 @@ def principal_duenio(request,pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializador = DueniosChoferBuses(objeto)
-        return Response(serializador.data)
-
-    elif request.method == 'PUT':
-        serializador = TxdDuenioS(objeto, data=request.data)
-        if serializador.is_valid():
-            serializador.save()
+        if var==0:
+            serializador = DueniosChoferBuses(objeto)
             return Response(serializador.data)
-        return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == 'DELETE':
-        objeto.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-@api_view(['GET'])
-def choferes_duenio(request,pk):
-
-    try:
-        objeto = TxdDuenio.objects.get(pk=pk)
-    except objeto.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        serializador = DueniosChoferes(objeto)
-        return Response(serializador.data)
-
-    elif request.method == 'PUT':
-        serializador = TxdDuenioS(objeto, data=request.data)
-        if serializador.is_valid():
-            serializador.save()
+        elif var==1:
+            serializador = DueniosChoferes(objeto)
             return Response(serializador.data)
-        return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == 'DELETE':
-        objeto.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-@api_view(['GET'])
-def horarios_duenio(request,pk):
-    
-    try:
-        objeto = TxdDuenio.objects.get(pk=pk)
-    except objeto.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        serializador = DueniosHorarios(objeto)
-        return Response(serializador.data)
-
-    elif request.method == 'PUT':
-        serializador = TxdDuenioS(objeto, data=request.data)
-        if serializador.is_valid():
-            serializador.save()
+        elif var==2:
+            serializador = DueniosHorarios(objeto)
             return Response(serializador.data)
-        return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
+        elif var==3:
+            serializador = DueniosBuses(objeto)
+            return Response(serializador.data)
+        else:
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
-    elif request.method == 'DELETE':
-        objeto.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def detalle_objetos(request, pk):

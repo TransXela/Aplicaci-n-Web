@@ -26,16 +26,21 @@ urlpatterns = [
     url(r'^duenio/$', vistaDuenio.lista_objetos),
     url(r'^operador/duenios/$', vistaDuenio.lista_objetos),
     url(r'^admin/duenio/lista/$', vistaDuenio.lista_objetos),
+
     url(r'^duenio/(?P<pk>[0-9]+)$', vistaDuenio.detalle_objetos),
-    url(r'^duenio/(?P<pk>[0-9]+)/principal/$', vistaDuenio.principal_duenio),
-    url(r'^duenio/(?P<pk>[0-9]+)/pilotos/$', vistaDuenio.choferes_duenio),
-    url(r'^duenio/(?P<pk>[0-9]+)/verhorarios/$', vistaDuenio.horarios_duenio),
-    url(r'^duenio/piloto/$', vistaChofer.lista_objetos),
+    url(r'^duenio/(?P<pk>[0-9]+)/principal/$', vistaDuenio.principal_duenio_choferes,{'var': 0}),
+    url(r'^duenio/(?P<pk>[0-9]+)/pilotos/$', vistaDuenio.principal_duenio_choferes,{'var': 1}),
+    url(r'^duenio/(?P<pk>[0-9]+)/verhorarios/$', vistaDuenio.principal_duenio_choferes,{'var': 2}),
+    url(r'^duenio/(?P<pk>[0-9]+)/buses/$', vistaDuenio.principal_duenio_choferes,{'var': 3}),
+
+    url(r'^duenio/pilotos/$', vistaChofer.lista_objetos),
     url(r'^duenio/piloto/(?P<pk>[0-9]+)$', vistaChofer.detalle_objetos),
     url(r'^duenio/piloto/(?P<pk>[0-9]+)/editar/$', vistaChofer.detalle_objetos),
+
     url(r'^duenio/bus/$', vistaBus.lista_objetos),
     url(r'^duenio/bus/activos/$', vistaBus.buses_Activos),
     url(r'^duenio/bus/(?P<pk>[0-9]+)$', vistaBus.detalle_objetos),
+
     url(r'^duenio/horario/$', vistaHorario.lista_objetos),
     url(r'^duenio/horario/(?P<pk>[0-9]+)$', vistaHorario.detalle_objetos),
     url(r'^duenio/(?P<pk>[0-9]+)/horarios/$', vistaHorario.horarios_duenio),

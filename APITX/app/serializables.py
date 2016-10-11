@@ -68,6 +68,12 @@ class DueniosChoferBuses(serializers.ModelSerializer):
         model = models.TxdDuenio
         fields = ('idduenio','choferes','buses')
 
+class DueniosBuses(serializers.ModelSerializer):
+    buses = TxdBusS(many=True, read_only=True, source='txdbus_set')
+    class Meta:
+        model = models.TxdDuenio
+        fields = ('idduenio','buses')        
+
 class DueniosChoferes(serializers.ModelSerializer):
     choferes = TxdChoferS(many=True, read_only=True, source='txdchofer_set')
     class Meta:

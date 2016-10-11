@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
+import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
@@ -22,4 +23,5 @@ class Migration(migrations.Migration):
                 'db_table': 'txd_Token',
             },
         ),
+        migrations.AddField("TxdDenuncia", "Token",  models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='app.TxdToken')),
     ]

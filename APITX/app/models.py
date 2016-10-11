@@ -170,6 +170,7 @@ class TxdDenuncia(models.Model):
     tipodenuncia = models.ForeignKey(TxdTipodenuncia, models.DO_NOTHING, db_column='Tipodenuncia_id')  # Field name made lowercase.
     placa = models.CharField(max_length=7, blank=True, null=True)
     chofer = models.ForeignKey(TxdChofer, models.DO_NOTHING, db_column='Chofer_id', blank=True, null=True)  # Field name made lowercase.
+    token = models.ForeignKey(TxdToken, models.DO_NOTHING, db_column='Token_id')  # Field name made lowercase.
 
     class Meta:
         db_table = 'txd_denuncia'
