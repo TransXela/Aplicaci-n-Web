@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from rest_framework import routers
 from rest_framework.urlpatterns import format_suffix_patterns
-from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework.authtoken import views
 from app.vistas import vistaGrupoUsuario
 from app.vistas import vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo, vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia
 
@@ -26,7 +26,7 @@ router.register(r'users', vistaGrupoUsuario.UserViewSet)
 router.register(r'groups', vistaGrupoUsuario.GroupViewSet)
 
 urlpatterns = [
-    url(r'^api-token-auth/', obtain_auth_token),
+    url(r'^token-auth/', views.obtain_auth_token),
     url(r'^admin/', admin.site.urls),
     url(r'^duenio/$', vistaDuenio.lista_objetos),
     url(r'^operador/duenios/$', vistaDuenio.lista_objetos),
