@@ -82,7 +82,7 @@ def lista_objetos(request, var):
                 return Response(respuesta, status=status.HTTP_400_BAD_REQUEST)
 
             try:
-                bus = TxdBus.objects.get(placa=placa)
+                bus = TxdBus.objects.get(placa=data['placa'])
                 busid=bus.idbus
                 idchofer= (TxdHorariodetalle.objects.get(bus=busid,fecha=date.today())).chofer.idchofer
                 data['estado']= 1
