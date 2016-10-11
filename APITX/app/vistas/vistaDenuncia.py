@@ -88,7 +88,7 @@ def lista_objetos(request, var):
                 data['estado']= 1
                 data['chofer']= idchofer
             except ObjectDoesNotExist:
-                data['estado']= 1
+                data['estado']= 2
                 data['chofer']= ""
 
 
@@ -119,8 +119,7 @@ def detalle_objetos(request, pk,var):
     try:
         objeto = TxdDenuncia.objects.get(pk=pk)
     except ObjectDoesNotExist:
-        respuesta ={'denuncia': {'estado': 'no existe denuncia'}}
-        return Response(respuesta,status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     if request.method == 'GET':
         serializador = TxdDenunciaS(objeto)
