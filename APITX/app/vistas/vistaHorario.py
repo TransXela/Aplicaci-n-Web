@@ -81,7 +81,6 @@ def horarios_duenio(request, pk):
     obtiene los horarios de un duenio
     """
     try:
-        print request.user
         objeto = TxdHorario.objects.filter(duenio=pk)
     except objeto.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)

@@ -18,12 +18,7 @@ from django.contrib import admin
 from rest_framework import routers
 from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.authtoken.views import obtain_auth_token
-from app.vistas import vistaGrupoUsuario
 from app.vistas import vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo, vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia
-
-router = routers.DefaultRouter()
-router.register(r'users', vistaGrupoUsuario.UserViewSet)
-router.register(r'groups', vistaGrupoUsuario.GroupViewSet)
 
 urlpatterns = [
     url(r'^api-token-auth/', obtain_auth_token),
@@ -86,7 +81,4 @@ urlpatterns = [
     #url(r'^cultura/consejo(?P<pk>[0-9]+)$', vistaConsejo.detalle_objetos),
     #url(r'^cultura/fechaCon$', vistaFechaConsejo.lista_objetos),
     #url(r'^cultura/fechaCon(?P<pk>[0-9]+)$', vistaFechaConsejo.detalle_objetos),
-
-    url(r'^', include(router.urls)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
