@@ -30,7 +30,7 @@ def detalle_objetos(request, pk):
     """
 
     try:
-        objetos = TxdBus.objects.get(pk=pk)
+        objeto = TxdBus.objects.get(pk=pk)
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 

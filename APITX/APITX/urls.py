@@ -76,6 +76,10 @@ urlpatterns = [
     url(r'^tipodenuncia/$', vistaTipodenuncia.lista_objetos),
 
 
+    #url modulo PMT
+    url(r'^pmt/duenio/(?P<pk>[0-9]+)$', vistaDuenio.duenio_rutas), #devuelve
+
+
     #url(r'^tipodenuncia/(?P<pk>[0-9]+)$', vistaTipodenuncia.detalle_objetos),
     #url(r'^tipodiahorariodetalle/$', vistadiahorariodetalle.lista_objetos),
     #url(r'^tipodiahorariodetalle/(?P<pk>[0-9]+)$', vistadiahorariodetalle.detalle_objetos),

@@ -66,19 +66,36 @@ class DueniosChoferBuses(serializers.ModelSerializer):
     buses = TxdBusS(many=True, read_only=True, source='txdbus_set')
     class Meta:
         model = models.TxdDuenio
-        fields = ('idduenio','choferes','buses')
+        fields = ('idduenio','nombre','apellidos','direccion','dpi','telefono','correo','foto','estado','choferes','buses')
+
+class TxdRutaS(serializers.ModelSerializer):
+    class Meta:
+        model = models.TxdRuta
+
+class BusesRutas(serializers.ModelSerializer):
+    rutas = TxdRutaS(many=True, read_only=True, source='txdruta_set')
+    class Meta:
+        model = models.TxdBus
+        field = ('rutas')
+
+class DueniosRutas(serializers.ModelSerializer):
+    rutas = BusesRutas(many=True, read_only=True, source='txdbus_set')
+    class Meta:
+        model = models.TxdDuenio
+        fields = ('idduenio','nombre','apellidos','direccion','dpi','telefono','correo','foto','estado','rutas')
+
 
 class DueniosBuses(serializers.ModelSerializer):
     buses = TxdBusS(many=True, read_only=True, source='txdbus_set')
     class Meta:
         model = models.TxdDuenio
-        fields = ('idduenio','buses')        
+        fields = ('idduenio','nombre','apellidos','direccion','dpi','telefono','correo','foto','estado','buses')
 
 class DueniosChoferes(serializers.ModelSerializer):
     choferes = TxdChoferS(many=True, read_only=True, source='txdchofer_set')
     class Meta:
         model = models.TxdDuenio
-        fields = ('idduenio','choferes')
+        fields = ('idduenio','nombre','apellidos','direccion','dpi','telefono','correo','foto','estado','choferes')
 
 class TxdHorarioS(serializers.ModelSerializer):
     class Meta:
@@ -87,15 +104,11 @@ class DueniosHorarios(serializers.ModelSerializer):
     horarios = TxdHorarioS(many=True, read_only=True, source='txdhorario_set')
     class Meta:
         model = models.TxdDuenio
-        fields = ('idduenio','horarios')
+        fields = ('idduenio','idduenio','nombre','apellidos','direccion','dpi','telefono','correo','foto','estado','horarios')
 
 class TxdRecursoS(serializers.ModelSerializer):
     class Meta:
         model = models.TxdRecurso
-
-class TxdRutaS(serializers.ModelSerializer):
-    class Meta:
-        model = models.TxdRuta
 
 class TxdTipodenunciaS(serializers.ModelSerializer):
     class Meta:

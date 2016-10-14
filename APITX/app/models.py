@@ -143,9 +143,9 @@ class TxdChofer(models.Model):
     telefono = models.IntegerField(blank=True, null=True)
     correo = models.CharField(max_length=45, blank=True, null=True)
     foto = models.CharField(max_length=100, blank=True, null=True)
-    licencia = models.CharField(max_length=1)
+    licencia = models.CharField(max_length=11)
     tipolicencia = models.CharField(db_column='tipoLicencia', max_length=2, blank=True, null=True)  # Field name made lowercase.
-    nolicencia = models.IntegerField(db_column='noLicencia', blank=True, null=True)  # Field name made lowercase.
+    #nolicencia = models.IntegerField(db_column='noLicencia', blank=True, null=True)  # Field name made lowercase.
     estado = models.IntegerField(blank=True, null=True)
     duenio = models.ForeignKey(TxdDuenio, models.DO_NOTHING, db_column='Duenio_id')  # Field name made lowercase.
 
