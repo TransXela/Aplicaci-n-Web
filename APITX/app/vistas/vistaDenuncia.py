@@ -7,31 +7,29 @@ from django.core.exceptions import ObjectDoesNotExist
 from app.models import TxdDenuncia,TxdBus,TxdHorariodetalle,TxdToken
 from app.serializables import TxdDenunciaS, TxdDenunciaRecursosS,TxdTokenS
 
-@api_view(['POST'])
-def obtenerToken(request):
+
+def obtenerToken(imei):
     """
         Crea Tokens, para los dispositivos que deseen hacer denuncias
     """
-    if request.method == 'POST':
-        dato=request.data['imei']
-        h = hashlib.new("sha1", dato)
-        token ={"token":h.hexdigest()}
-        serializador = TxdTokenS(data=token)
-        if serializador.is_valid():
-            serializador.save()
-            return Response(token, status=status.HTTP_201_CREATED)
-        else:
-            respuesta ={'token': {'estado': 'rechazada'}}
-            return Response(respuesta, status=status.HTTP_400_BAD_REQUEST)
+    dato = imei
+    h = hashlib.new("sha1", dato)
+    token ={"token":h.hexdigest()}
+    serializador = TxdTokenS(data=token)
+    if serializador.is_valid():
+        serializador.save()
+        return token
+    else:
+        return
 
 def validar(token):
     """
         Valida si el token tiene permisos y evaluar si puede realizar una consulta
     """
     try:
+        token =TxdToken.objects.get(token=token)
         fecha = datetime.now()
         fecha2 = fecha-timedelta(hours=1)
-        token =TxdToken.objects.get(token=token)
         denuncias = TxdDenuncia.objects.filter(fechahora__range=(fecha2,fecha), token=token.idtoken)
         cantidad=len(denuncias)
         if cantidad <=2:
@@ -54,32 +52,56 @@ def lista_objetos(request, var):
     """
 
     if request.method == 'GET':
+        if 'HTTP_AUTHORIZATION' in request.META:
+            token = request.META['HTTP_AUTHORIZATION']
+            var2 = validar(token)
+            var2['token']=False
+            if var2['bolean']:
+                token =TxdToken.objects.get(token=token)
+                objeto = TxdDenuncia.objects.filter(token=token.idtoken)
 
-        objeto = TxdDenuncia.objects.all()
-        serializador = TxdDenunciaS(objeto, many=True)
-        if var==1:
-            serializador = TxdDenunciaRecursosS(objeto, many=True)
+                if var==0:
+                    serializador = TxdDenunciaS(objeto, many=True)
+                else:
+                    serializador = TxdDenunciaRecursosS(objeto, many=True)
 
-        return Response(serializador.data)
+                return Response(serializador.data)
+            else:
+                return Response(var2['respuesta'], status=status.HTTP_400_BAD_REQUEST)
+        else:
+            respuesta ={'denuncia': {'estado': 'no envio el token'}}
+            return Response(respuesta, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'POST':
 
-        var =  validar(request.GET['token'])
+        if 'HTTP_AUTHORIZATION' in request.META:
+            token = request.META['HTTP_AUTHORIZATION']
+            var = validar(token)
+            var['token']=False
+        else:
+            if 'imei' in request.data:
+                token = obtenerToken(request.data['imei'])['token']
+                var ={'bolean':True, 'respuesta': {'estado': 'Si se hizo el token'},'token':True}
+            else:
+                var ={'bolean':False, 'respuesta': {'estado': 'No se efectuo la Denuncia'},'token':False}
 
         if var['bolean']:
 
             try:
-                token =TxdToken.objects.get(token=request.GET['token'])
+                print token
+                token =TxdToken.objects.get(token=token)
             except ObjectDoesNotExist:
                 return Response( status=status.HTTP_400_BAD_REQUEST)
             busid=-1
-            if 'placa' in request.data and 'descripcion' in request.data and 'tipodenuncia' in request.data:
-                data= {"placa": request.data['placa'] ,"idhash": '',
-                "descripcion": request.data['descripcion'] ,"tipodenuncia": request.data['tipodenuncia'],
+            if 'placa' in request.data["denuncia"] and 'descripcion' in request.data["denuncia"] and 'tipodenuncia' in request.data["denuncia"]:
+                data= {"placa": request.data['denuncia']['placa'] ,"idhash": '',
+                "descripcion": request.data['denuncia']['descripcion'] ,"tipodenuncia": request.data['denuncia']['tipodenuncia'],
                 "estado": ""  ,"chofer": "" , "fechahora": datetime.now(),"token": token.idtoken}
             else:
                 respuesta ={'denuncia': {'estado': 'solicitud rechaza, no envio uno o mas parametros requeridos'}}
-                return Response(respuesta, status=status.HTTP_400_BAD_REQUEST)
+                serializador = TxdDenunciaS(data=request.data)
+                serializador.is_valid()
+                return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
 
             try:
                 bus = TxdBus.objects.get(placa=data['placa'])
@@ -96,13 +118,13 @@ def lista_objetos(request, var):
             if serializador.is_valid():
 
                 serializador.save()
-                if data['estado']==1 :
-                    ultimoId = TxdDenuncia.objects.latest('iddenuncia')
-                    respuesta ={'denuncia': {'estado': 'aceptada y en proceso', "id": ultimoId.iddenuncia}}
+                ultimoId = TxdDenuncia.objects.latest('iddenuncia')
+                if var['token']==False :
+                    respuesta ={'denuncia': {'estado': 'en proceso', "id": ultimoId.iddenuncia}}
                     return Response(respuesta, status=status.HTTP_201_CREATED)
                 else:
-                    respuesta ={'denuncia': {'estado': 'rechazada'}}
-                    return Response(respuesta, status=status.HTTP_400_BAD_REQUEST)
+                    respuesta ={'denuncia': {'estado': 'en proceso', "id": ultimoId.iddenuncia,"token":token.token}}
+                    return Response(respuesta, status=status.HTTP_201_CREATED)
 
 
             return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -116,17 +138,35 @@ def detalle_objetos(request, pk,var):
     """
     Actuliza, elimina un objeto segun su id
     """
-    try:
-        objeto = TxdDenuncia.objects.get(pk=pk)
-    except ObjectDoesNotExist:
-        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
     if request.method == 'GET':
-        serializador = TxdDenunciaS(objeto)
-        if var==1:
-            serializador = TxdDenunciaRecursosS(objeto)
+        if 'HTTP_AUTHORIZATION' in request.META:
+            token = request.META['HTTP_AUTHORIZATION']
+            var2 = validar(token)
+            var2['token']=False
+            if var2['bolean']:
+                try:
+                    token =TxdToken.objects.get(token=token)
+                    objeto = TxdDenuncia.objects.get(pk=pk,token=token.idtoken)
+                    if var==0:
+                        serializador = TxdDenunciaS(objeto)
+                    else:
+                        serializador = TxdDenunciaRecursosS(objeto)
 
-        return Response(serializador.data)
+                    return Response(serializador.data)
+                except ObjectDoesNotExist:
+                    respuesta ={'denuncia': {'estado': 'no tiene permiso para ver esta denuncia'}}
+                    return Response(respuesta, status=status.HTTP_400_BAD_REQUEST)
+
+            else:
+                return Response(var2['respuesta'], status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            respuesta ={'denuncia': {'estado': 'no envio el token'}}
+            return Response(respuesta, status=status.HTTP_400_BAD_REQUEST)
+
+
     elif request.method == 'PUT':
         serializador = TxdDenunciaS(objeto, data=request.data)
         if serializador.is_valid():
