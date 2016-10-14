@@ -23,5 +23,12 @@ class Migration(migrations.Migration):
                 'db_table': 'txd_Token',
             },
         ),
-        migrations.AddField("TxdDenuncia", "Token",  models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='app.TxdToken')),
+        migrations.AddField("TxdDenuncia", "Token",  models.FloatField(blank=True, null=True)),
+        migrations.AddField("TxdDenuncia", "latitud", models.FloatField(blank=True, null=True)),
+        migrations.AddField("TxdDenuncia", "latitud", models.FloatField(blank=True, null=True)),
+
+        migrations.RemoveField(
+            model_name='txdchofer',
+            name='nolicencia',
+        ),
     ]
