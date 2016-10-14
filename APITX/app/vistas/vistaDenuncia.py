@@ -93,10 +93,11 @@ def lista_objetos(request, var):
             except ObjectDoesNotExist:
                 return Response( status=status.HTTP_400_BAD_REQUEST)
             busid=-1
-            if 'placa' in request.data["denuncia"] and 'descripcion' in request.data["denuncia"] and 'tipodenuncia' in request.data["denuncia"]:
+            if 'placa' in request.data["denuncia"] and 'descripcion' in request.data["denuncia"] and 'tipodenuncia' in request.data["denuncia"] and 'latitud' in request.data["latitud"] and 'longitud' in request.data["longitud"]:
+            :
                 data= {"placa": request.data['denuncia']['placa'] ,"idhash": '',
                 "descripcion": request.data['denuncia']['descripcion'] ,"tipodenuncia": request.data['denuncia']['tipodenuncia'],
-                "estado": ""  ,"chofer": "" , "fechahora": datetime.now(),"token": token.idtoken}
+                "estado": ""  ,"chofer": "" , "fechahora": datetime.now(),"token": token.idtoken, "latitud":request.data['latitud'], "longitud":request.data['longitud']}
             else:
                 respuesta ={'denuncia': {'estado': 'solicitud rechaza, no envio uno o mas parametros requeridos'}}
                 serializador = TxdDenunciaS(data=request.data)

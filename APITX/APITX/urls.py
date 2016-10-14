@@ -61,7 +61,7 @@ urlpatterns = [
     url(r'^recurso/$', vistaRecurso.lista_objetos),
     url(r'^recurso/(?P<pk>[0-9]+)$', vistaRecurso.detalle_objetos),
 
-
+    #url denuncia para movil
     url(r'^denuncia/$', vistaDenuncia.lista_objetos,{'var': 0}),
     url(r'^denuncia/recursos$', vistaDenuncia.lista_objetos,{'var': 1}),
     url(r'^denuncia/(?P<pk>[0-9]+)$', vistaDenuncia.detalle_objetos,{'var': 0}),
@@ -77,7 +77,7 @@ urlpatterns = [
 
 
     #url modulo PMT
-    url(r'^pmt/duenio/(?P<pk>[0-9]+)$', vistaDuenio.duenio_rutas), #devuelve
+    #url(r'^pmt/duenio/(?P<pk>[0-9]+)$', vistaDuenio.duenio_rutas), #devuelve
 
 
     #url(r'^tipodenuncia/(?P<pk>[0-9]+)$', vistaTipodenuncia.detalle_objetos),
