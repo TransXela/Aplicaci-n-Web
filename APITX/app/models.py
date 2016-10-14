@@ -179,8 +179,7 @@ class TxdHorario(models.Model):
     idhorario = models.AutoField(db_column='idHorario', primary_key=True)  # Field name made lowercase.
     horainicio = models.TimeField()
     horafin = models.TimeField()
-    duenio = models.ForeignKey(TxdDuenio, models.DO_NOTHING, db_column='Duenio_id')  # Field name made lowercase.
-
+    duenio = models.ForeignKey(TxdDuenio, models.DO_NOTHING, db_column='Duenio_id')  # Field name made lowercase
     class Meta:
         db_table = 'txd_horario'
 
@@ -191,7 +190,7 @@ class TxdHorariodetalle(models.Model):
     chofer = models.ForeignKey(TxdChofer, models.DO_NOTHING, db_column='Chofer_id')  # Field name made lowercase.
     horario = models.ForeignKey(TxdHorario, models.DO_NOTHING, db_column='Horario_id')  # Field name made lowercase.
     fecha = models.DateField()
-
+    estado = models.IntegerField(blank=True, null=True)
     class Meta:
         db_table = 'txd_horariodetalle'
 

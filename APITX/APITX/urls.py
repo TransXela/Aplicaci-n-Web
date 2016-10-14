@@ -77,7 +77,7 @@ urlpatterns = [
 
 
     #url modulo PMT
-    url(r'^pmt/duenio/(?P<pk>[0-9]+)$', vistaDuenio.duenio_rutas), #devuelve
+#    url(r'^pmt/duenio/(?P<pk>[0-9]+)$', vistaDuenio.duenio_rutas), #devuelve
 
 
     #url(r'^tipodenuncia/(?P<pk>[0-9]+)$', vistaTipodenuncia.detalle_objetos),

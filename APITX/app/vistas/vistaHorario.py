@@ -1,10 +1,11 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import IntegrityError
 from datetime import datetime
 from app.models import TxdHorario
 from app.serializables import TxdHorarioS
-
 
 @api_view(['GET', 'POST'])
 def lista_objetos(request):
@@ -30,7 +31,7 @@ def detalle_objetos(request, pk):
     """
     try:
         objeto = TxdHorario.objects.get(pk=pk)
-    except objeto.DoesNotExist:
+    except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
@@ -53,8 +54,13 @@ def detalle_objetos(request, pk):
         return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        objeto.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        try:
+            objeto.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except IntegrityError:
+            content = {'estado': 'No se puede eliminar tiene dependencias'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['POST'])
 def crear_horario(request):

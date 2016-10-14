@@ -56,8 +56,8 @@ def detalle_objetos(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializador = TxdHorariodetalleS(objeto)
         return Response(serializador.data)
+        serializador = TxdHorariodetalleS(objeto)
 
     elif request.method == 'PUT':
         serializador = TxdHorariodetalleS(objeto, data=request.data)
@@ -88,8 +88,6 @@ def detalle_objetos(request, pk):
 
     elif request.method == 'DELETE':
         formato_fecha = "%Y-%m-%d"
-
-
         fecha2 = datetime.combine(objeto.fecha,  datetime.min.time())
         stringF=str(datetime.now().year)+"-"+str(datetime.now().month)+"-"+str(datetime.now().day)
         fecha1 = datetime.strptime(stringF, formato_fecha)
@@ -97,9 +95,15 @@ def detalle_objetos(request, pk):
         if fecha2 >= fecha1:
             objeto.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
-
-        respuesta ={'eliminar': {'estado": "no puede eliminar un registro con una fecha anterior a la actual.'}}
-        return Response(respuesta, status=status.HTTP_406_NOT_ACCEPTABLE)
+        else:
+            data = request.data
+            data['estado']= 0
+            serializador = TxdHorariodetalleS(data=data)
+            serializador.save
+            content = {'estado': 'se deshabilito'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            #respuesta ={'eliminar': {'estado": "no puede eliminar un registro con una fecha anterior a la actual.'}}
+            #return Response(respuesta, status=status.HTTP_406_NOT_ACCEPTABLE)
 
 @api_view(['GET'])
 def rango(request,fInicio,fFin):
