@@ -97,6 +97,8 @@ class TxdDuenio(models.Model):
     correo = models.CharField(max_length=45, blank=True, null=True)
     foto = models.CharField(max_length=100)
     estado = models.IntegerField(blank=True, null=True)
+    latitud= models.FloatField(blank=True, null=True)
+    longitud= models.FloatField(blank=True, null=True)
 
     class Meta:
         db_table = 'txd_duenio'
@@ -171,7 +173,8 @@ class TxdDenuncia(models.Model):
     placa = models.CharField(max_length=7, blank=True, null=True)
     chofer = models.ForeignKey(TxdChofer, models.DO_NOTHING, db_column='Chofer_id', blank=True, null=True)  # Field name made lowercase.
     token = models.ForeignKey(TxdToken, models.DO_NOTHING, db_column='Token_id')  # Field name made lowercase.
-
+    latitud= models.FloatField(blank=True, null=True)
+    longitud= models.FloatField(blank=True, null=True)
     class Meta:
         db_table = 'txd_denuncia'
 
