@@ -134,7 +134,7 @@ class Migration(migrations.Migration):
                 ('telefono', models.IntegerField(blank=True, null=True)),
                 ('correo', models.CharField(blank=True, max_length=45, null=True)),
                 ('foto', models.CharField(blank=True, max_length=100, null=True)),
-                ('licencia', models.CharField(max_length=1)),
+                ('licencia', models.CharField(max_length=11)),
                 ('tipolicencia', models.CharField(blank=True, db_column='tipoLicencia', max_length=2, null=True)),
                 ('nolicencia', models.IntegerField(blank=True, db_column='noLicencia', null=True)),
                 ('estado', models.IntegerField(blank=True, null=True)),

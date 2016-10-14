@@ -96,14 +96,16 @@ def detalle_objetos(request, pk):
             objeto.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
-            data = request.data
+            data = {"fecha": objeto.fecha ,"bus": objeto.bus.idbus,"chofer":objeto.chofer.idchofer,"horario":objeto.horario.idhorario}
             data['estado']= 0
-            serializador = TxdHorariodetalleS(data=data)
-            serializador.save
-            content = {'estado': 'se deshabilito'}
-            return Response(content, status=status.HTTP_400_BAD_REQUEST)
-            #respuesta ={'eliminar': {'estado": "no puede eliminar un registro con una fecha anterior a la actual.'}}
-            #return Response(respuesta, status=status.HTTP_406_NOT_ACCEPTABLE)
+            print data
+            serializador = TxdHorariodetalleS(objeto,data=data)
+            if serializador.is_valid():
+                serializador.save()
+                content = {'estado': 'se deshabilito'}
+                return Response(content, status=status.HTTP_202_ACCEPTED)
+            else:
+                return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def rango(request,fInicio,fFin):
