@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
         migrations.AddField("TxdDenuncia", "Token",  models.FloatField(blank=True, null=True)),
         migrations.AddField("TxdDenuncia", "latitud", models.FloatField(blank=True, null=True)),
         migrations.AddField("TxdDenuncia", "longitud", models.FloatField(blank=True, null=True)),
-
+        migrations.AddField("TxdHorariodetalle", "estado", models.FloatField(blank=True, null=True)),
         migrations.RemoveField(
             model_name='txdchofer',
             name='nolicencia',
