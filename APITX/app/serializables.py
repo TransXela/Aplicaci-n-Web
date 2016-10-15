@@ -53,6 +53,12 @@ class TxdDenunciaS(serializers.ModelSerializer):
     class Meta:
         model = models.TxdDenuncia
 
+class ChoferesDenuncias(serializers.ModelSerializer):
+    denuncias = TxdDenunciaS(many=True, read_only=True, source='txddenuncia_set')
+    class Meta:
+        model = models.TxdChofer
+        fields = ('','denuncias')
+
 class TxdHorariodetalleS(serializers.ModelSerializer):
     class Meta:
         model = models.TxdHorariodetalle

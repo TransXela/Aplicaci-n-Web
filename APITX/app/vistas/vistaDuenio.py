@@ -71,5 +71,14 @@ def detalle_objetos(request, pk):
         return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        objeto.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        data = {"nombre": objeto.nombre ,"apellidos": objeto.apellidos,"direccion":objeto.direccion,
+        "dpi":objeto.dpi, "telefono":objeto.telefono, "correo":objeto.correo,"foto":objeto.foto}
+        data['estado']= 0
+        print data
+        serializador = TxdDuenioS(objeto,data=data)
+        if serializador.is_valid():
+            serializador.save()
+            content = {'estado': 'se deshabilito'}
+            return Response(content, status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)

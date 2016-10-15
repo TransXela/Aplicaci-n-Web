@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.db import IntegrityError
 from app.models import TxdRuta
 from app.serializables import TxdRutaS
 
@@ -44,5 +45,9 @@ def detalle_objetos(request, pk):
         return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        objeto.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        try:
+            objeto.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except IntegrityError:
+            content = {'estado': 'No se puede eliminar tiene dependencias'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)

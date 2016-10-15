@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import TxdChofer
-from app.serializables import TxdChoferS
+from app.serializables import TxdChoferS, ChoferesDenuncias
 
 @api_view(['GET', 'POST'])
 def lista_objetos(request):
@@ -45,3 +45,14 @@ def detalle_objetos(request, pk):
     elif request.method == 'DELETE':
         objeto.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+def lista_choferes_denuncias(request):
+    """
+    Lista de todos los choferes con sus denuncias
+    """
+    if request.method == 'GET':
+        objeto = TxdChofer.objects.all()
+        print objeto
+        serializador = ChoferesDenuncias(objeto, many = true)
+        return Response(serializador.data)

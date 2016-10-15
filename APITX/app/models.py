@@ -96,9 +96,7 @@ class TxdDuenio(models.Model):
     telefono = models.IntegerField(blank=True, null=True)
     correo = models.CharField(max_length=45, blank=True, null=True)
     foto = models.CharField(max_length=100)
-    estado = models.IntegerField(blank=True, null=True)
-    latitud= models.FloatField(blank=True, null=True)
-    longitud= models.FloatField(blank=True, null=True)
+    estado = models.IntegerField(blank=True, null=True
 
     class Meta:
         db_table = 'txd_duenio'

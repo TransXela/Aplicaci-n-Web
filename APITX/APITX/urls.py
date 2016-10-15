@@ -38,7 +38,7 @@ urlpatterns = [
     url(r'^duenio/(?P<pk>[0-9]+)/verhorarios/$', vistaDuenio.principal_duenio_choferes,{'var': 2}),
     url(r'^duenio/(?P<pk>[0-9]+)/buses/$', vistaDuenio.principal_duenio_choferes,{'var': 3}),
 
-    url(r'^duenio/pilotos/$', vistaChofer.lista_objetos),
+    #url(r'^duenio/pilotos/$', vistaChofer.lista_objetos),
     url(r'^duenio/piloto/(?P<pk>[0-9]+)$', vistaChofer.detalle_objetos),
     url(r'^duenio/piloto/(?P<pk>[0-9]+)/editar/$', vistaChofer.detalle_objetos),
 
@@ -54,6 +54,7 @@ urlpatterns = [
     url(r'^duenio/horariodetalle/$', vistaHorariodetalle.lista_objetos),
     url(r'^duenio/horariodetalle/(?P<fInicio>20[0-9][0-9]-[0-1][0-9]-[0-3][0-9])/(?P<fFin>20[0-9][0-9]-[0-1][0-9]-[0-3][0-9])$', vistaHorariodetalle.rango),
     url(r'^duenio/horariodetalle/(?P<pk>[0-9]+)$', vistaHorariodetalle.detalle_objetos),
+    url(r'^duenio/(?P<pk>[0-9]+)/horariodetalle/$', vistaHorariodetalle.lista_objetos),
 
     url(r'^ruta/$', vistaRuta.lista_objetos),
     url(r'^ruta/(?P<pk>[0-9]+)$', vistaRuta.detalle_objetos),
@@ -77,8 +78,13 @@ urlpatterns = [
 
 
     #url modulo PMT
-#    url(r'^pmt/duenio/(?P<pk>[0-9]+)$', vistaDuenio.duenio_rutas), #devuelve
-
+    url(r'^pmt/duenio/$', vistaDuenio.lista_objetos),
+    url(r'^pmt/duenio/(?P<pk>[0-9]+)$', vistaDuenio.detalle_objetos),
+    url(r'^pmt/ruta/$', vistaRuta.lista_objetos),
+    url(r'^pmt/rutas/$', vistaRuta.lista_objetos),
+    url(r'^pmt/ruta/(?P<pk>[0-9]+)$', vistaRuta.detalle_objetos),
+    url(r'^pmt/horario/$', vistaHorario.lista_objetos),
+    url(r'^pmt/denuncias/pilotos/$', vistaChofer.lista_choferes_denuncias),
 
 
     #url(r'^tipodenuncia/(?P<pk>[0-9]+)$', vistaTipodenuncia.detalle_objetos),
