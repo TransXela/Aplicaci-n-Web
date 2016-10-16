@@ -15,7 +15,8 @@ class TxcActividad(models.Model):
     descripcion = models.TextField()
     fecha = models.DateTimeField()
     lugar = models.CharField(max_length=100)
-    ubicacion = models.CharField(max_length=250, blank=True, null=True)
+    latitud = models.FloatField(null=True)
+    longitud = models.FloatField(null=True)
     direccion = models.TextField(blank=True, null=True)
 
     class Meta:
