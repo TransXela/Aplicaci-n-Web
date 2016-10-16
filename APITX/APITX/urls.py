@@ -53,7 +53,9 @@ urlpatterns = [
 
     url(r'^duenio/horariodetalle/$', vistaHorariodetalle.lista_objetos),
     url(r'^duenio/horariodetalle/(?P<fInicio>20[0-9][0-9]-[0-1][0-9]-[0-3][0-9])/(?P<fFin>20[0-9][0-9]-[0-1][0-9]-[0-3][0-9])$', vistaHorariodetalle.rango),
+    #actualizar un horariodetalle PUT/DELETE
     url(r'^duenio/horariodetalle/(?P<pk>[0-9]+)$', vistaHorariodetalle.detalle_objetos),
+    #LISTA de todos los horario detalle de un dueño
     url(r'^duenio/(?P<pk>[0-9]+)/horariodetalle/$', vistaHorariodetalle.lista_objetos),
 
     url(r'^ruta/$', vistaRuta.lista_objetos),
