@@ -3,8 +3,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime, date
-from app.models import TxdHorariodetalle,TxdBus,TxdChofer
-from app.serializables import TxdHorariodetalleS
+from app.models import TxdHorariodetalle,TxdBus,TxdChofer,TxdDuenio
+from app.serializables import TxdHorariodetalleS,Duenios_horariodetalle,TxdDuenioS
 
 
 @api_view(['GET', 'POST'])
@@ -56,8 +56,9 @@ def detalle_objetos(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        return Response(serializador.data)
         serializador = TxdHorariodetalleS(objeto)
+        return Response(serializador.data)
+
 
     elif request.method == 'PUT':
         serializador = TxdHorariodetalleS(objeto, data=request.data)
@@ -125,5 +126,27 @@ def rango(request,fInicio,fFin):
     if request.method == 'GET':
         serializador = TxdHorariodetalleS(objeto)
         return Response(serializador.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def lista_por_duenio(request,pk):
+    """
+    obtiene la lista de duenio
+    """
+    try:
+        s =list()
+        for i in TxdChofer.objects.filter(duenio=pk):
+            s+=[i.idchofer]
+        objeto =TxdHorariodetalle.objects.filter(pk__in=s)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializador = Duenios_horariodetalle(objeto, many=True)
+        duenio=TxdDuenio.objects.get(pk=pk)
+        duenios = TxdDuenioS(duenio)
+        data={"duenio":duenios.data,"diasHorarioDetalle": serializador.data}
+        return Response(data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)

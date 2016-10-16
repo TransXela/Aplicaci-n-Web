@@ -106,6 +106,19 @@ class DueniosChoferes(serializers.ModelSerializer):
 class TxdHorarioS(serializers.ModelSerializer):
     class Meta:
         model = models.TxdHorario
+
+class Duenios_horariodetalle(serializers.ModelSerializer):
+    chofer = TxdChoferS(read_only=True)
+    choferes = serializers.PrimaryKeyRelatedField(write_only=True, queryset=models.TxdChofer.objects.filter(duenio=1), source='chofer')
+    horario = TxdHorarioS(read_only=True)
+    horarios = serializers.PrimaryKeyRelatedField(write_only=True, queryset=models.TxdHorario.objects.filter(duenio=1), source='horario')
+    bus = TxdBusS(read_only=True)
+    buses = serializers.PrimaryKeyRelatedField(write_only=True, queryset=models.TxdBus.objects.filter(duenio=1), source='bus')
+
+    class Meta:
+        model = models.TxdHorariodetalle
+        fields = ('idhorariodetalle','fecha','horario','horarios','chofer', 'choferes','bus','buses')
+
 class DueniosHorarios(serializers.ModelSerializer):
     horarios = TxdHorarioS(many=True, read_only=True, source='txdhorario_set')
     class Meta:
