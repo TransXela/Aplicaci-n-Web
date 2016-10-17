@@ -22,8 +22,11 @@ class Migration(migrations.Migration):
                 ('descripcion', models.TextField()),
                 ('fecha', models.DateTimeField()),
                 ('lugar', models.CharField(max_length=100)),
-                ('ubicacion', models.CharField(blank=True, max_length=250, null=True)),
+                ('latitud', models.FloatField(null=True)),
+                ('longitud', models.FloatField(null=True)),
                 ('direccion', models.TextField(blank=True, null=True)),
+                ('estado', models.BooleanField()),
+
             ],
             options={
                 'db_table': 'txc_actividad',

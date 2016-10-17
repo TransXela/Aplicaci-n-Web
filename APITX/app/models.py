@@ -18,7 +18,7 @@ class TxcActividad(models.Model):
     latitud = models.FloatField(null=True)
     longitud = models.FloatField(null=True)
     direccion = models.TextField(blank=True, null=True)
-
+    estado = models.BooleanField()
     class Meta:
         db_table = 'txc_actividad'
 
