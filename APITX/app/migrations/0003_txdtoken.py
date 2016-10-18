@@ -13,17 +13,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='TxdToken',
-            fields=[
-                ('idtoken', models.AutoField(db_column='idToken', primary_key=True, serialize=False)),
-                ('token', models.CharField(blank=True, max_length=40, null=True)),
-            ],
-            options={
-                'db_table': 'txd_Token',
-            },
-        ),
-        migrations.AddField("TxdDenuncia", "Token",  models.FloatField(blank=True, null=True)),
+        
         migrations.AddField("TxdDenuncia", "latitud", models.FloatField(blank=True, null=True)),
         migrations.AddField("TxdDenuncia", "longitud", models.FloatField(blank=True, null=True)),
         migrations.AddField("TxdHorariodetalle", "estado", models.FloatField(blank=True, null=True)),

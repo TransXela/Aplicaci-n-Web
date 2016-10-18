@@ -17,10 +17,13 @@ def lista_objetos(request):
         return Response(serializador.data)
 
     elif request.method == 'POST':
+        print request.data
         serializador = TxdRecursoS(data=request.data)
+        print request.data['direccion']
         if serializador.is_valid():
             serializador.save()
             return Response(serializador.data,status=status.HTTP_201_CREATED)
+        else:
             return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
 @api_view(['GET', 'PUT','DELETE'])
 def detalle_objetos(request, pk):

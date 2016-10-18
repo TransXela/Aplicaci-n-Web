@@ -199,7 +199,7 @@ class TxdHorariodetalle(models.Model):
 
 class TxdRecurso(models.Model):
     idrecurso = models.AutoField(db_column='idRecurso', primary_key=True)  # Field name made lowercase.
-    direccion = models.CharField(max_length=100, blank=True, null=True)
+    direccion = models.ImageField(upload_to='photos/')
     denuncia = models.ForeignKey(TxdDenuncia, models.DO_NOTHING, db_column='Denuncia_id')  # Field name made lowercase.
 
     class Meta:

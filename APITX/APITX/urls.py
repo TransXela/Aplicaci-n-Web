@@ -20,12 +20,14 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.authtoken import views
 from app.vistas import vistaGrupoUsuario
 from app.vistas import vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo, vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia
-
+from APITX import settings
+from django.conf.urls.static import static
 router = routers.DefaultRouter()
 router.register(r'users', vistaGrupoUsuario.UserViewSet)
 router.register(r'groups', vistaGrupoUsuario.GroupViewSet)
 
 urlpatterns = [
+
     url(r'^token-auth/', views.obtain_auth_token),
     url(r'^admin/', admin.site.urls),
     url(r'^duenio/$', vistaDuenio.lista_objetos),
@@ -52,13 +54,13 @@ urlpatterns = [
     url(r'^duenio/(?P<pk>[0-9]+)/horarios/$', vistaHorario.horarios_duenio),
     #url(r'^duenio/crear/horario/$', vistaHorario.crear_horario),
 
-    url(r'^duenio/horariodetalles/$', vistaHorariodetalle.lista_objetos),
+    url(r'^duenio/horariodetalle/$', vistaHorariodetalle.lista_objetos),
     url(r'^duenio/horariosdetalle/$', vistaHorariodetalle.lista_objetos), # obtiene todos los horarios y detalles
     url(r'^duenio/horariodetalle/(?P<fInicio>20[0-9][0-9]-[0-1][0-9]-[0-3][0-9])/(?P<fFin>20[0-9][0-9]-[0-1][0-9]-[0-3][0-9])$', vistaHorariodetalle.rango),
 
     #actualizar un horariodetalle PUT/DELETE
     url(r'^duenio/horariodetalle/(?P<pk>[0-9]+)$', vistaHorariodetalle.detalle_objetos),# Obtiene uno en especifico
-    url(r'^duenio/(?P<pk>[0-9]+)/horariodetalle/$', vistaHorariodetalle.lista_por_duenio),# Otiene el listado de horarios de un duenio
+    url(r'^duenio/(?P<pk>[0-9]+)/horariosdetalle/$', vistaHorariodetalle.lista_por_duenio),# Otiene el listado de horarios de un duenio
 
     url(r'^ruta/$', vistaRuta.lista_objetos),
     url(r'^ruta/(?P<pk>[0-9]+)$', vistaRuta.detalle_objetos),
@@ -69,6 +71,7 @@ urlpatterns = [
     #url denuncia para movil
     url(r'^denuncia/$', vistaDenuncia.lista_objetos,{'var': 0}),
     url(r'^denuncia/recursos$', vistaDenuncia.lista_objetos,{'var': 1}),
+    url(r'^denuncia/recurso$', vistaRecurso.lista_objetos),
     url(r'^denuncia/(?P<pk>[0-9]+)$', vistaDenuncia.detalle_objetos,{'var': 0}),
     url(r'^denuncia/(?P<pk>[0-9]+)/recursos/$', vistaDenuncia.detalle_objetos,{'var': 1}),
     url(r'^denuncia/obtenertoken/$', vistaDenuncia.obtenerToken),
@@ -105,4 +108,4 @@ urlpatterns = [
 
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
-]
+]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
