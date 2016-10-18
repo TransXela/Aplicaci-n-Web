@@ -35,7 +35,7 @@ def principal_duenio_choferes(request,pk, var):
     if request.method == 'GET':
         if var==0:
 
-            serializador = DueniosChoferBuses(objeto)
+            serializador = TxdDuenioS(objeto)
             data = serializador.data
             data['no_Choferes']=len(TxdChofer.objects.filter(duenio=pk))
             data['no_Buses']=len(TxdBus.objects.filter(duenio=pk))
