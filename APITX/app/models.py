@@ -140,7 +140,7 @@ class TxdChofer(models.Model):
     nombre = models.CharField(max_length=45)
     apellidos = models.CharField(max_length=45)
     direccion = models.CharField(max_length=45, blank=True, null=True)
-    dpi = models.IntegerField()
+    dpi = models.CharField(max_length=13, blank=True, null=True)
     telefono = models.IntegerField(blank=True, null=True)
     correo = models.CharField(max_length=45, blank=True, null=True)
     foto = models.CharField(max_length=100, blank=True, null=True)
