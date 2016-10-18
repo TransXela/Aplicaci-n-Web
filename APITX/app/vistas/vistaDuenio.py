@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from app.models import TxdDuenio
+from app.models import TxdDuenio, TxdChofer, TxdHorario, TxdBus
 from app.serializables import TxdDuenioS, DueniosChoferBuses,DueniosChoferes,DueniosHorarios,DueniosBuses
 
 
@@ -34,8 +34,13 @@ def principal_duenio_choferes(request,pk, var):
 
     if request.method == 'GET':
         if var==0:
+
             serializador = DueniosChoferBuses(objeto)
-            return Response(serializador.data)
+            data = serializador.data
+            data['no_Choferes']=len(TxdChofer.objects.filter(duenio=pk))
+            data['no_Buses']=len(TxdBus.objects.filter(duenio=pk))
+            data['no_Horarios']=len(TxdHorario.objects.filter(duenio=pk))
+            return Response(data)
         elif var==1:
             serializador = DueniosChoferes(objeto)
             return Response(serializador.data)
