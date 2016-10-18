@@ -100,9 +100,9 @@ urlpatterns = [
     ##url(r'^snippets/(?P<pk>[0-9]+)$', views.snippet_detail),
     url(r'^cultura/$', vistaActividad.lista_objetos),
     url(r'^cultura/(?P<pk>[0-9]+)$', vistaActividad.detalle_objetos),
-    url(r'^cultura/consejo/$', vistaFechaConsejo.lista_objetos),
+    url(r'^cultura/consejos/$', vistaFechaConsejo.lista_objetos),
     url(r'^cultura/consejos/(?P<pk>[0-9]+)$', vistaFechaConsejo.detalle_objetos),
-    #url(r'^cultura/consejo(?P<pk>[0-9]+)$', vistaConsejo.detalle_objetos),
+    url(r'^cultura/consejodeldia/$', vistaConsejo.lista_objetos),
     #url(r'^cultura/fechaCon$', vistaFechaConsejo.lista_objetos),
     #url(r'^cultura/fechaCon(?P<pk>[0-9]+)$', vistaFechaConsejo.detalle_objetos),
 
