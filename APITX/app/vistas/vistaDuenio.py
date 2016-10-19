@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import TxdDuenio, TxdChofer, TxdHorario, TxdBus
-from app.serializables import TxdDuenioS, DueniosChoferBuses,DueniosChoferes,DueniosHorarios,DueniosBuses
+from app.serializables import TxdDuenioS, DueniosChoferBuses, DueniosChoferes, DueniosHorarios, DueniosBuses
 
 
 @api_view(['GET', 'POST'])
@@ -52,7 +52,6 @@ def principal_duenio_choferes(request,pk, var):
             return Response(serializador.data)
         else:
             return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def detalle_objetos(request, pk):
