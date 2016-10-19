@@ -19,7 +19,7 @@ from rest_framework import routers
 from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.authtoken import views
 from app.vistas import vistaGrupoUsuario
-from app.vistas import vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo, vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia
+from app.vistas import vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo, vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia, vistaCapitulo, vistaPregunta, vistaTitulo
 from APITX import settings
 from django.conf.urls.static import static
 router = routers.DefaultRouter()
@@ -101,10 +101,17 @@ urlpatterns = [
     url(r'^cultura/$', vistaActividad.lista_objetos),
     url(r'^cultura/(?P<pk>[0-9]+)$', vistaActividad.detalle_objetos),
     url(r'^cultura/consejos/$', vistaFechaConsejo.lista_objetos),
+    url(r'^cultura/(?P<busq>([2][0][1-9]{2}-([1-9]|[1][0-2])-([0][1-9]|[1-2][0-9]|[3][0-1]))|[1-9a-z\s]+[0-9a-z\s]*)$', vistaActividad.busqueda),
+    url(r'^cultura/consejo/$', vistaFechaConsejo.lista_objetos),
     url(r'^cultura/consejos/(?P<pk>[0-9]+)$', vistaFechaConsejo.detalle_objetos),
     url(r'^cultura/consejodeldia/$', vistaConsejo.lista_objetos),
-    #url(r'^cultura/fechaCon$', vistaFechaConsejo.lista_objetos),
-    #url(r'^cultura/fechaCon(?P<pk>[0-9]+)$', vistaFechaConsejo.detalle_objetos),
+    url(r'^cultura/capitulo/$', vistaCapitulo.lista_objetos),
+    url(r'^cultura/nuevapregunta/$',vistaPregunta.lista_objetos),
+    url(r'^cultura/verpregunta/(?P<pk>[0-9]+)$',vistaPregunta.detalle_objetos),
+    url(r'^cultura/modificarpregunta/(?P<pk>[0-9]+)$',vistaPregunta.detalle_objetos),
+    url(r'^cultura/eliminarpregunta/(?P<pk>[0-9]+)$',vistaPregunta.detalle_objetos),
+    url(r'^cultura/titulo/$',vistaTitulo.lista_objetos),
+
 
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
