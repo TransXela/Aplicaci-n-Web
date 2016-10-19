@@ -16,7 +16,7 @@ def lista_objetos(request):
         return Response(serializador.data)
 
     elif request.method == 'POST':
-        serializador = TxcoCapituloTituloS(data=request.data)
+        serializador = TxcCapituloS(data=request.data)
         if serializador.is_valid():
             serializador.save()
             return Response(serializador.data,status=status.HTTP_201_CREATED)
