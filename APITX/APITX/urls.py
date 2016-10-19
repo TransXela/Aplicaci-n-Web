@@ -101,7 +101,7 @@ urlpatterns = [
     url(r'^cultura/$', vistaActividad.lista_objetos),
     url(r'^cultura/(?P<pk>[0-9]+)$', vistaActividad.detalle_objetos),
     url(r'^cultura/consejos/$', vistaFechaConsejo.lista_objetos),
-    url(r'^cultura/(?P<busq>([2][0][1-9]{2}-([1-9]|[1][0-2])-([0][1-9]|[1-2][0-9]|[3][0-1]))|[1-9a-z\s]+[0-9a-z\s]*)$', vistaActividad.busqueda),
+    # Este metodo en esta vista no exite url(r'^cultura/(?P<busq>([2][0][1-9]{2}-([1-9]|[1][0-2])-([0][1-9]|[1-2][0-9]|[3][0-1]))|[1-9a-z\s]+[0-9a-z\s]*)$', vistaActividad.busqueda),
     url(r'^cultura/consejo/$', vistaFechaConsejo.lista_objetos),
     url(r'^cultura/consejos/(?P<pk>[0-9]+)$', vistaFechaConsejo.detalle_objetos),
     url(r'^cultura/consejodeldia/$', vistaConsejo.lista_objetos),
