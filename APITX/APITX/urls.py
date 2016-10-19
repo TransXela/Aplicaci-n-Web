@@ -19,13 +19,15 @@ from rest_framework import routers
 from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.authtoken import views
 from app.vistas import vistaGrupoUsuario
-from app.vistas import vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo, vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia
-
+from app.vistas import vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo, vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia, vistaCapitulo, vistaPregunta, vistaTitulo
+from APITX import settings
+from django.conf.urls.static import static
 router = routers.DefaultRouter()
 router.register(r'users', vistaGrupoUsuario.UserViewSet)
 router.register(r'groups', vistaGrupoUsuario.GroupViewSet)
 
 urlpatterns = [
+
     url(r'^token-auth/', views.obtain_auth_token),
     url(r'^admin/', admin.site.urls),
     url(r'^duenio/$', vistaDuenio.lista_objetos),
@@ -35,29 +37,30 @@ urlpatterns = [
     url(r'^duenio/(?P<pk>[0-9]+)$', vistaDuenio.detalle_objetos),
     url(r'^duenio/(?P<pk>[0-9]+)/principal/$', vistaDuenio.principal_duenio_choferes,{'var': 0}),
     url(r'^duenio/(?P<pk>[0-9]+)/pilotos/$', vistaDuenio.principal_duenio_choferes,{'var': 1}),
-    url(r'^duenio/(?P<pk>[0-9]+)/verhorarios/$', vistaDuenio.principal_duenio_choferes,{'var': 2}),
+
+    #url(r'^duenio/(?P<pk>[0-9]+)/verhorarios/$', vistaDuenio.principal_duenio_choferes,{'var': 2}),
     url(r'^duenio/(?P<pk>[0-9]+)/buses/$', vistaDuenio.principal_duenio_choferes,{'var': 3}),
 
-    #url(r'^duenio/pilotos/$', vistaChofer.lista_objetos),
+    url(r'^duenio/piloto/$', vistaChofer.lista_objetos),
     url(r'^duenio/piloto/(?P<pk>[0-9]+)$', vistaChofer.detalle_objetos),
     url(r'^duenio/piloto/(?P<pk>[0-9]+)/editar/$', vistaChofer.detalle_objetos),
 
     url(r'^duenio/bus/$', vistaBus.lista_objetos),
-    url(r'^duenio/bus/activos/$', vistaBus.buses_Activos),
+    #url(r'^duenio/bus/activos/$', vistaBus.buses_Activos),
     url(r'^duenio/bus/(?P<pk>[0-9]+)$', vistaBus.detalle_objetos),
 
     url(r'^duenio/horario/$', vistaHorario.lista_objetos),
     url(r'^duenio/horario/(?P<pk>[0-9]+)$', vistaHorario.detalle_objetos),
     url(r'^duenio/(?P<pk>[0-9]+)/horarios/$', vistaHorario.horarios_duenio),
-    url(r'^duenio/crear/horario/$', vistaHorario.crear_horario),
+    #url(r'^duenio/crear/horario/$', vistaHorario.crear_horario),
 
-    url(r'^duenio/horariodetalles/$', vistaHorariodetalle.lista_objetos),
+    url(r'^duenio/horariodetalle/$', vistaHorariodetalle.lista_objetos),
     url(r'^duenio/horariosdetalle/$', vistaHorariodetalle.lista_objetos), # obtiene todos los horarios y detalles
     url(r'^duenio/horariodetalle/(?P<fInicio>20[0-9][0-9]-[0-1][0-9]-[0-3][0-9])/(?P<fFin>20[0-9][0-9]-[0-1][0-9]-[0-3][0-9])$', vistaHorariodetalle.rango),
 
     #actualizar un horariodetalle PUT/DELETE
     url(r'^duenio/horariodetalle/(?P<pk>[0-9]+)$', vistaHorariodetalle.detalle_objetos),# Obtiene uno en especifico
-    url(r'^duenio/(?P<pk>[0-9]+)/horariodetalle/$', vistaHorariodetalle.lista_por_duenio),# Otiene el listado de horarios de un duenio
+    url(r'^duenio/(?P<pk>[0-9]+)/horariosdetalle/$', vistaHorariodetalle.lista_por_duenio),# Otiene el listado de horarios de un duenio
 
     url(r'^ruta/$', vistaRuta.lista_objetos),
     url(r'^ruta/(?P<pk>[0-9]+)$', vistaRuta.detalle_objetos),
@@ -68,6 +71,7 @@ urlpatterns = [
     #url denuncia para movil
     url(r'^denuncia/$', vistaDenuncia.lista_objetos,{'var': 0}),
     url(r'^denuncia/recursos$', vistaDenuncia.lista_objetos,{'var': 1}),
+    url(r'^denuncia/recurso$', vistaRecurso.lista_objetos),
     url(r'^denuncia/(?P<pk>[0-9]+)$', vistaDenuncia.detalle_objetos,{'var': 0}),
     url(r'^denuncia/(?P<pk>[0-9]+)/recursos/$', vistaDenuncia.detalle_objetos,{'var': 1}),
     url(r'^denuncia/obtenertoken/$', vistaDenuncia.obtenerToken),
@@ -96,12 +100,19 @@ urlpatterns = [
     ##url(r'^snippets/(?P<pk>[0-9]+)$', views.snippet_detail),
     url(r'^cultura/$', vistaActividad.lista_objetos),
     url(r'^cultura/(?P<pk>[0-9]+)$', vistaActividad.detalle_objetos),
+    url(r'^cultura/consejos/$', vistaFechaConsejo.lista_objetos),
+    url(r'^cultura/(?P<busq>([2][0][1-9]{2}-([1-9]|[1][0-2])-([0][1-9]|[1-2][0-9]|[3][0-1]))|[1-9a-z\s]+[0-9a-z\s]*)$', vistaActividad.busqueda),
     url(r'^cultura/consejo/$', vistaFechaConsejo.lista_objetos),
     url(r'^cultura/consejos/(?P<pk>[0-9]+)$', vistaFechaConsejo.detalle_objetos),
-    #url(r'^cultura/consejo(?P<pk>[0-9]+)$', vistaConsejo.detalle_objetos),
-    #url(r'^cultura/fechaCon$', vistaFechaConsejo.lista_objetos),
-    #url(r'^cultura/fechaCon(?P<pk>[0-9]+)$', vistaFechaConsejo.detalle_objetos),
+    url(r'^cultura/consejodeldia/$', vistaConsejo.lista_objetos),
+    url(r'^cultura/capitulo/$', vistaCapitulo.lista_objetos),
+    url(r'^cultura/nuevapregunta/$',vistaPregunta.lista_objetos),
+    url(r'^cultura/verpregunta/(?P<pk>[0-9]+)$',vistaPregunta.detalle_objetos),
+    url(r'^cultura/modificarpregunta/(?P<pk>[0-9]+)$',vistaPregunta.detalle_objetos),
+    url(r'^cultura/eliminarpregunta/(?P<pk>[0-9]+)$',vistaPregunta.detalle_objetos),
+    url(r'^cultura/titulo/$',vistaTitulo.lista_objetos),
+
 
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
-]
+]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

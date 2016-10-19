@@ -20,14 +20,20 @@ def lista_objetos(request):
     elif request.method == 'POST':
         serializador = TxdHorarioS(data=request.data)
         if serializador.is_valid():
-            serializador.save()
-            return Response(serializador.data, status=status.HTTP_201_CREATED)
+            inicio = datetime.strptime(str(request.data.get('horainicio')),'%H:%M')
+            final = datetime.strptime(str(request.data.get('horafin')),'%H:%M')
+            if (final > inicio):
+                serializador.save()
+                return Response(serializador.data, status=status.HTTP_201_CREATED)
+            else:
+                respuesta ={"crear": {"estado": "Hora inicio debe ser menor/diferente a hora fin"}}
+                return Response(respuesta, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def detalle_objetos(request, pk):
     """
-    Actuliza, elimina un objeto segun su id
+    Actualiza, elimina un objeto segun su id
     """
     try:
         objeto = TxdHorario.objects.get(pk=pk)
@@ -41,14 +47,14 @@ def detalle_objetos(request, pk):
     elif request.method == 'PUT':
         serializador = TxdHorarioS(objeto, data=request.data)
         if serializador.is_valid():
-            inicio = datetime.strptime(str(request.data.get('horainicio')),'%H:%M:%S')
-            final = datetime.strptime(str(request.data.get('horafin')),'%H:%M:%S')
+            inicio = datetime.strptime(str(request.data.get('horainicio')),'%H:%M')
+            final = datetime.strptime(str(request.data.get('horafin')),'%H:%M')
             if final>inicio:
                 serializador.save()
-                respuesta ={"modificar": {"estado": "Horario creado exitosamente"}}
+                respuesta ={"modificar": {"estado": "Horario modificado exitosamente"}}
                 return Response(respuesta, status=status.HTTP_201_CREATED)
             else:
-                respuesta ={"crear": {"modificar": "El horario inicio debe ser menor/diferente a horario fin"}}
+                respuesta ={"modificar": {"estado": "Hora inicio debe ser menor/diferente a hora fin"}}
                 return Response(respuesta, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -60,26 +66,6 @@ def detalle_objetos(request, pk):
         except IntegrityError:
             content = {'estado': 'No se puede eliminar tiene dependencias'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['POST'])
-def crear_horario(request):
-    """
-    Crea un nuevo horario
-    """
-    if request.method == 'POST':
-        serializador = TxdHorarioS(data=request.data)
-        if serializador.is_valid():
-            inicio = datetime.strptime(str(request.data.get('horainicio')),'%H:%M:%S')
-            final = datetime.strptime(str(request.data.get('horafin')),'%H:%M:%S')
-            if (final > inicio):
-                serializador.save()
-                respuesta ={"crear": {"estado": "Horario creado exitosamente"}}
-                return Response(respuesta, status=status.HTTP_201_CREATED)
-            else:
-                respuesta ={"crear": {"estado": "El horario inicio debe ser menor/diferente a horario fin"}}
-                return Response(respuesta, status=status.HTTP_400_BAD_REQUEST)
-        return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def horarios_duenio(request, pk):

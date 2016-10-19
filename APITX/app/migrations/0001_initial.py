@@ -22,8 +22,11 @@ class Migration(migrations.Migration):
                 ('descripcion', models.TextField()),
                 ('fecha', models.DateTimeField()),
                 ('lugar', models.CharField(max_length=100)),
-                ('ubicacion', models.CharField(blank=True, max_length=250, null=True)),
+                ('latitud', models.FloatField(null=True)),
+                ('longitud', models.FloatField(null=True)),
                 ('direccion', models.TextField(blank=True, null=True)),
+                ('estado', models.BooleanField()),
+
             ],
             options={
                 'db_table': 'txc_actividad',
@@ -143,6 +146,17 @@ class Migration(migrations.Migration):
                 'db_table': 'txd_chofer',
             },
         ),
+
+        migrations.CreateModel(
+            name='TxdToken',
+            fields=[
+                ('idtoken', models.AutoField(db_column='idToken', primary_key=True, serialize=False)),
+                ('token', models.CharField(blank=True, max_length=40, null=True)),
+            ],
+            options={
+                'db_table': 'txd_Token',
+            },
+        ),
         migrations.CreateModel(
             name='TxdDenuncia',
             fields=[
@@ -153,6 +167,7 @@ class Migration(migrations.Migration):
                 ('fechahora', models.DateTimeField(blank=True, null=True)),
                 ('placa', models.CharField(blank=True, max_length=7, null=True)),
                 ('chofer', models.ForeignKey(blank=True, db_column='Chofer_id', null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='app.TxdChofer')),
+                ('token', models.ForeignKey(blank=True, db_column='Token_id', on_delete=django.db.models.deletion.DO_NOTHING, to='app.TxdToken')),
             ],
             options={
                 'db_table': 'txd_denuncia',
@@ -223,7 +238,7 @@ class Migration(migrations.Migration):
             name='TxdRecurso',
             fields=[
                 ('idrecurso', models.AutoField(db_column='idRecurso', primary_key=True, serialize=False)),
-                ('direccion', models.CharField(blank=True, max_length=100, null=True)),
+                ('direccion', models.ImageField(upload_to='photos/')),
                 ('denuncia', models.ForeignKey(db_column='Denuncia_id', on_delete=django.db.models.deletion.DO_NOTHING, to='app.TxdDenuncia')),
             ],
             options={

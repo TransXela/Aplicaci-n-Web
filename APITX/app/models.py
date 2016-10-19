@@ -18,7 +18,7 @@ class TxcActividad(models.Model):
     latitud = models.FloatField(null=True)
     longitud = models.FloatField(null=True)
     direccion = models.TextField(blank=True, null=True)
-
+    estado = models.BooleanField()
     class Meta:
         db_table = 'txc_actividad'
 
@@ -140,7 +140,7 @@ class TxdChofer(models.Model):
     nombre = models.CharField(max_length=45)
     apellidos = models.CharField(max_length=45)
     direccion = models.CharField(max_length=45, blank=True, null=True)
-    dpi = models.IntegerField()
+    dpi = models.CharField(max_length=13, blank=True, null=True)
     telefono = models.IntegerField(blank=True, null=True)
     correo = models.CharField(max_length=45, blank=True, null=True)
     foto = models.CharField(max_length=100, blank=True, null=True)
@@ -199,7 +199,7 @@ class TxdHorariodetalle(models.Model):
 
 class TxdRecurso(models.Model):
     idrecurso = models.AutoField(db_column='idRecurso', primary_key=True)  # Field name made lowercase.
-    direccion = models.CharField(max_length=100, blank=True, null=True)
+    direccion = models.ImageField(upload_to='photos/')
     denuncia = models.ForeignKey(TxdDenuncia, models.DO_NOTHING, db_column='Denuncia_id')  # Field name made lowercase.
 
     class Meta:

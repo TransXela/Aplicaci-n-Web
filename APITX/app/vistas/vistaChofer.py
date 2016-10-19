@@ -54,5 +54,5 @@ def lista_choferes_denuncias(request):
     if request.method == 'GET':
         objeto = TxdChofer.objects.all()
         print objeto
-        serializador = ChoferesDenuncias(objeto, many = true)
+        serializador = ChoferesDenuncias(objeto)
         return Response(serializador.data)

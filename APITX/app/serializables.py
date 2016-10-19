@@ -150,8 +150,14 @@ class TxcoConsejoS(serializers.ModelSerializer):
 class TxcoFechaS(serializers.ModelSerializer):
     class Meta:
         model = models.TxcoFecha
-class ConsejosFecha(serializers.ModelSerializer):
-    fechas=TxcoFechaS(many=True, read_only=True,source='TxcoFecha_set')
+class TxcoConsejosFechaS(serializers.ModelSerializer):
+    consejos = TxcoConsejoS(many=True,read_only=True,source='TxcoConsejo_set')
     class Meta:
-        model = models.TxcoConsejo
-        fields = ('idconsejo','fechas')
+        model = models.TxcoFecha
+        fields = ('idfecha','fecha','consejos','consejo')
+
+class TxcoCapituloTituloS(serializers.ModelSerializer):
+    capitulos = TxcCapituloS(many=True, read_only=True, source='txccapitulo_set')
+    class Meta:
+        model = models.TxcTitulo
+        fields = ('idtitulo','titulo','numero','capitulos')

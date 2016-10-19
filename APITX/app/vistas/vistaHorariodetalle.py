@@ -42,7 +42,7 @@ def lista_objetos(request):
                 return Response(respuesta, status=status.HTTP_406_NOT_ACCEPTABLE)
             serializador.save()
             respuesta ={'crear': {'estado": "Creado Exitosamente'}}
-            return Response(respuesta, status=status.HTTP_201_CREATED)
+            return Response(serializador.data, status=status.HTTP_201_CREATED)
         return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'DELETE'])
