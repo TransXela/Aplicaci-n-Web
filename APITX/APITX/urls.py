@@ -19,7 +19,7 @@ from rest_framework import routers
 from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.authtoken import views
 from app.vistas import vistaGrupoUsuario
-from app.vistas import vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo, vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia, vistaCapitulo, vistaPregunta, vistaTitulo
+from app.vistas import vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo, vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia, vistaCapitulo, vistaPregunta, vistaTitulo, vistaArticulo
 from APITX import settings
 from django.conf.urls.static import static
 router = routers.DefaultRouter()
@@ -98,10 +98,10 @@ urlpatterns = [
     #url(r'^tipodiahorariodetalle/$', vistadiahorariodetalle.lista_objetos),
     #url(r'^tipodiahorariodetalle/(?P<pk>[0-9]+)$', vistadiahorariodetalle.detalle_objetos),
     ##url(r'^snippets/(?P<pk>[0-9]+)$', views.snippet_detail),
-    url(r'^cultura/$', vistaActividad.lista_objetos),
-    url(r'^cultura/(?P<pk>[0-9]+)$', vistaActividad.detalle_objetos),
+    url(r'^cultura/actividad/$', vistaActividad.lista_objetos),
+    url(r'^cultura/actividad/(?P<pk>[0-9]+)$', vistaActividad.detalle_objetos),
+    url(r'^cultura/actividad/(?P<busq>([2][0][1-9]{2}-([1-9]|[1][0-2])-([0][1-9]|[1-2][0-9]|[3][0-1]))|[1-9a-z\s]+[0-9a-z\s]*)$', vistaActividad.busqueda),
     url(r'^cultura/consejos/$', vistaFechaConsejo.lista_objetos),
-    # Este metodo en esta vista no exite url(r'^cultura/(?P<busq>([2][0][1-9]{2}-([1-9]|[1][0-2])-([0][1-9]|[1-2][0-9]|[3][0-1]))|[1-9a-z\s]+[0-9a-z\s]*)$', vistaActividad.busqueda),
     url(r'^cultura/consejo/$', vistaFechaConsejo.lista_objetos),
     url(r'^cultura/consejos/(?P<pk>[0-9]+)$', vistaFechaConsejo.detalle_objetos),
     url(r'^cultura/consejodeldia/$', vistaConsejo.lista_objetos),
@@ -109,6 +109,9 @@ urlpatterns = [
     url(r'^cultura/pregunta/$',vistaPregunta.lista_objetos),
     url(r'^cultura/pregunta/(?P<pk>[0-9]+)$',vistaPregunta.detalle_objetos),
     url(r'^cultura/titulo/$',vistaTitulo.lista_objetos),
+    url(r'^cultura/titulo/(?P<pk>[0-9]+)$', vistaTitulo.detalle_objetos),
+    url(r'^cultura/articulo/$', vistaArticulo.lista_objetos),
+    url(r'^cultura/articulo/(?P<pk>[0-9]+)$', vistaArticulo.detalle_objetos),
 
 
     url(r'^', include(router.urls)),

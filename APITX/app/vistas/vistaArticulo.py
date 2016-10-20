@@ -1,8 +1,8 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from app.models import TxcArticulo
-from app.serializables import TxcArticuloS
+from app.models import TxcArticulo, TxcCapitulo
+from app.serializables import TxcArticuloS, ArticuloCapituloS, TxcCapituloS
 
 
 @api_view(['GET', 'POST'])
@@ -11,8 +11,8 @@ def lista_objetos(request):
     Lista de todas las actividades, o crear una nueva
     """
     if request.method == 'GET':
-        objeto = TxcArticulo.objects.all()
-        serializador = TxcArticuloS(objeto, many=True)
+        objeto = TxcCapitulo.objects.all()
+        serializador = ArticuloCapituloS(objeto, many=True)
         return Response(serializador.data)
 
     elif request.method == 'POST':

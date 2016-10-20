@@ -25,6 +25,12 @@ class TxcCapituloS(serializers.ModelSerializer):
     class Meta:
         model = models.TxcCapitulo
 
+class ArticuloCapituloS(serializers.ModelSerializer):
+    cap = TxcArticuloS(many=True, read_only=True, source='txcarticulo_set')
+    class Meta:
+        model = models.TxcCapitulo
+        fields = ('numero','titulo','cap')
+        
 class TxcPreguntaarticuloS(serializers.ModelSerializer):
     class Meta:
         model = models.TxcPreguntaarticulo
