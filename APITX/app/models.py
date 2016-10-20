@@ -96,7 +96,7 @@ class TxdDuenio(models.Model):
     dpi = models.IntegerField()
     telefono = models.IntegerField(blank=True, null=True)
     correo = models.CharField(max_length=45, blank=True, null=True)
-    foto = models.CharField(max_length=100)
+    foto = models.ImageField(upload_to='duenio/',blank=True, null=True)
     estado = models.IntegerField(blank=True, null=True)
 
     class Meta:
@@ -143,7 +143,7 @@ class TxdChofer(models.Model):
     dpi = models.CharField(max_length=13, blank=True, null=True)
     telefono = models.IntegerField(blank=True, null=True)
     correo = models.CharField(max_length=45, blank=True, null=True)
-    foto = models.CharField(max_length=100, blank=True, null=True)
+    foto =  models.ImageField(upload_to='chofer/',blank=True, null=True)
     licencia = models.CharField(max_length=11)
     tipolicencia = models.CharField(db_column='tipoLicencia', max_length=2, blank=True, null=True)  # Field name made lowercase.
     #nolicencia = models.IntegerField(db_column='noLicencia', blank=True, null=True)  # Field name made lowercase.
@@ -199,7 +199,7 @@ class TxdHorariodetalle(models.Model):
 
 class TxdRecurso(models.Model):
     idrecurso = models.AutoField(db_column='idRecurso', primary_key=True)  # Field name made lowercase.
-    direccion = models.ImageField(upload_to='photos/')
+    direccion = models.ImageField(upload_to='recurso/')
     denuncia = models.ForeignKey(TxdDenuncia, models.DO_NOTHING, db_column='Denuncia_id')  # Field name made lowercase.
 
     class Meta:
