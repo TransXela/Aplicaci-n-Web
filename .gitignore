@@ -1,2 +1,4 @@
 *.pyc
-*.pyc
+*.jpg
+.idea
+db.mysql
