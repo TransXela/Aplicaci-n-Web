@@ -30,7 +30,7 @@ class ArticuloCapituloS(serializers.ModelSerializer):
     class Meta:
         model = models.TxcCapitulo
         fields = ('numero','titulo','cap')
-        
+
 class TxcPreguntaarticuloS(serializers.ModelSerializer):
     class Meta:
         model = models.TxcPreguntaarticulo
@@ -124,6 +124,12 @@ class Duenios_horariodetalle(serializers.ModelSerializer):
     class Meta:
         model = models.TxdHorariodetalle
         fields = ('idhorariodetalle','fecha','horario','horarios','chofer', 'choferes','bus','buses')
+
+class listadoDueniosDetalles(serializers.ModelSerializer):
+    horariodetalle = serializers.PrimaryKeyRelatedField(write_only=True, queryset=models.TxdHorariodetalle.objects.filter(idhorariodetalle =1), source='duenio')
+    class Meta:
+        model = models.TxdDuenio
+        fields = ('idduenio','nombre','apellidos','direccion','dpi','telefono','correo','foto','estado','horariodetalle')
 
 class DueniosHorarios(serializers.ModelSerializer):
     horarios = TxdHorarioS(many=True, read_only=True, source='txdhorario_set')

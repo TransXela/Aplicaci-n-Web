@@ -91,6 +91,7 @@ urlpatterns = [
     url(r'^pmt/ruta/(?P<pk>[0-9]+)$', vistaRuta.detalle_objetos),
     url(r'^pmt/horario/$', vistaHorario.lista_objetos),
     url(r'^pmt/denuncias/pilotos/$', vistaChofer.lista_choferes_denuncias),
+    url(r'^pmt/horariosdetalle/$', vistaDuenio.lista_horariodetalle),
 
 
     #url(r'^tipodenuncia/(?P<pk>[0-9]+)$', vistaTipodenuncia.detalle_objetos),
