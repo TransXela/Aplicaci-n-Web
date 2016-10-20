@@ -72,12 +72,16 @@ def horarios_duenio(request, pk):
     """
     obtiene los horarios de un duenio
     """
-    try:
-        print request.user
-        objeto = TxdHorario.objects.filter(duenio=pk)
-    except objeto.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+    print request.user
+    if request.user.has_perm('app.change_txdhorario'):
+        try:
+            print request.user
+            objeto = TxdHorario.objects.filter(duenio=pk)
+        except objeto.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'GET':
-        serializador = TxdHorarioS(objeto, many=True)
-        return Response(serializador.data)
+        if request.method == 'GET':
+            serializador = TxdHorarioS(objeto, many=True)
+            return Response(serializador.data)
+    else:
+        return Response("no puede ver los horarios")
