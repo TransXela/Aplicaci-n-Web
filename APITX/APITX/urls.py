@@ -72,9 +72,8 @@ urlpatterns = [
     url(r'^denuncia/$', vistaDenuncia.lista_objetos,{'var': 0}),
     url(r'^denuncia/recursos$', vistaDenuncia.lista_objetos,{'var': 1}),
     url(r'^denuncia/recurso$', vistaRecurso.lista_objetos),
-    url(r'^denuncia/(?P<pk>[0-9]+)$', vistaDenuncia.detalle_objetos,{'var': 0}),
-    url(r'^denuncia/(?P<pk>[0-9]+)/recursos/$', vistaDenuncia.detalle_objetos,{'var': 1}),
-    url(r'^denuncia/obtenertoken/$', vistaDenuncia.obtenerToken),
+    url(r'^denuncia/detalle/$', vistaDenuncia.detalle_objetos,{'var': 0}),
+    url(r'^denuncia/detalle/recursos/$', vistaDenuncia.detalle_objetos,{'var': 1}),
     url(r'^denuncia/tipo/$', vistaTipodenuncia.lista_objetos),
     url(r'^denuncia/tipo/(?P<pk>[0-9]+)$', vistaTipodenuncia.detalle_objetos),
 
@@ -92,6 +91,7 @@ urlpatterns = [
     url(r'^pmt/ruta/(?P<pk>[0-9]+)$', vistaRuta.detalle_objetos),
     url(r'^pmt/horario/$', vistaHorario.lista_objetos),
     url(r'^pmt/denuncias/pilotos/$', vistaChofer.lista_choferes_denuncias),
+    url(r'^pmt/horariosdetalle/$', vistaDuenio.lista_horariodetalle),
 
 
     #url(r'^tipodenuncia/(?P<pk>[0-9]+)$', vistaTipodenuncia.detalle_objetos),
