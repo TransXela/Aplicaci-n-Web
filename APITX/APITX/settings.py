@@ -96,7 +96,6 @@ DATABASES = {
         'PASSWORD': 'root',
         'HOST': '127.0.0.1',
         'PORT': '3306',
-    }
 }
 
 
@@ -124,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC/GMT -6'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
