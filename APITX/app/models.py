@@ -8,6 +8,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.auth.models import User
 
 class TxcActividad(models.Model):
     idactividad = models.AutoField(db_column='idActividad', primary_key=True)  # Field name made lowercase.
@@ -98,6 +99,7 @@ class TxdDuenio(models.Model):
     correo = models.CharField(max_length=45, blank=True, null=True)
     foto = models.ImageField(upload_to='duenio/',blank=True, null=True)
     estado = models.IntegerField(blank=True, null=True)
+    usuario = models.ForeignKey(User, models.DO_NOTHING, db_column='usuario_id', blank=True, null=True)
 
     class Meta:
         db_table = 'txd_duenio'
@@ -112,6 +114,7 @@ class TxdPmt(models.Model):
     correo = models.CharField(max_length=45, blank=True, null=True)
     foto = models.ImageField(upload_to='duenio/',blank=True, null=True)
     estado = models.IntegerField(blank=True, null=True)
+    usuario = models.ForeignKey(User, models.DO_NOTHING, db_column='usuario_id', blank=True, null=True)
 
     class Meta:
         db_table = 'txd_pmt'
