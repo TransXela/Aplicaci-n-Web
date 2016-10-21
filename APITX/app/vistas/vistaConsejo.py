@@ -12,7 +12,7 @@ def lista_objetos(request):
     """
     if request.method == 'GET':
         objeto = TxcoConsejo.objects.all()
-        serializador = TxcoConsejoS(objeto, many=True)
+        serializador = TxcoConsejosFechaS(objeto, many=True)
         return Response(serializador.data)
 
     elif request.method == 'POST':
@@ -23,7 +23,7 @@ def lista_objetos(request):
         return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-def principal_consejo(request,pk):
+def principal_consejo(request):
     """
     Lista de las fechas y consejos
     """
@@ -33,7 +33,7 @@ def principal_consejo(request,pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializador = ConsejosFecha(objeto)
+        serializador = ConsejosFecha(objeto, many=True)
         return Response(serializador.data)
 
     elif request.method == 'PUT':

@@ -15,42 +15,58 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 
 class TxcActividadS(serializers.ModelSerializer):
     class Meta:
+        fields = ('__all__')
         model = models.TxcActividad
 
 class TxcArticuloS(serializers.ModelSerializer):
     class Meta:
+        fields = ('__all__')
         model = models.TxcArticulo
 
 class TxcCapituloS(serializers.ModelSerializer):
     class Meta:
+        fields = ('__all__')
         model = models.TxcCapitulo
+
+class ArticuloCapituloS(serializers.ModelSerializer):
+    cap = TxcArticuloS(many=True, read_only=True, source='txcarticulo_set')
+    class Meta:
+        model = models.TxcCapitulo
+        fields = ('numero','titulo','cap')
 
 class TxcPreguntaarticuloS(serializers.ModelSerializer):
     class Meta:
+        fields = ('__all__')
         model = models.TxcPreguntaarticulo
 
 class TxcTituloS(serializers.ModelSerializer):
     class Meta:
+        fields = ('__all__')
         model = models.TxcTitulo
 
 class TxcPreguntaS(serializers.ModelSerializer):
     class Meta:
+        fields = ('__all__')
         model = models.TxcPregunta
 
 class TxdTokenS(serializers.ModelSerializer):
     class Meta:
+        fields = ('__all__')
         model = models.TxdToken
 
 class TxdBusS(serializers.ModelSerializer):
     class Meta:
+        fields = ('__all__')
         model = models.TxdBus
 
 class  TxdChoferS(serializers.ModelSerializer):
     class Meta:
+        fields = ('__all__')
         model = models.TxdChofer
 
 class TxdDenunciaS(serializers.ModelSerializer):
     class Meta:
+        fields = ('__all__')
         model = models.TxdDenuncia
 
 class ChoferesDenuncias(serializers.ModelSerializer):
@@ -61,12 +77,20 @@ class ChoferesDenuncias(serializers.ModelSerializer):
 
 class TxdHorariodetalleS(serializers.ModelSerializer):
     class Meta:
+        fields = ('__all__')
         model = models.TxdHorariodetalle
 
 
 class TxdDuenioS(serializers.ModelSerializer):
     class Meta:
+        fields = ('__all__')
         model = models.TxdDuenio
+
+class TxdPmtS(serializers.ModelSerializer):
+    class Meta:
+        fields = ('__all__')
+        model = models.TxdPmt    
+
 class DueniosChoferBuses(serializers.ModelSerializer):
     choferes = TxdChoferS(many=True, read_only=True, source='txdchofer_set')
     buses = TxdBusS(many=True, read_only=True, source='txdbus_set')
@@ -76,6 +100,7 @@ class DueniosChoferBuses(serializers.ModelSerializer):
 
 class TxdRutaS(serializers.ModelSerializer):
     class Meta:
+        fields = ('__all__')
         model = models.TxdRuta
 
 class BusesRutas(serializers.ModelSerializer):
@@ -105,6 +130,7 @@ class DueniosChoferes(serializers.ModelSerializer):
 
 class TxdHorarioS(serializers.ModelSerializer):
     class Meta:
+        fields = ('__all__')
         model = models.TxdHorario
 
 class Duenios_horariodetalle(serializers.ModelSerializer):
@@ -119,6 +145,12 @@ class Duenios_horariodetalle(serializers.ModelSerializer):
         model = models.TxdHorariodetalle
         fields = ('idhorariodetalle','fecha','horario','horarios','chofer', 'choferes','bus','buses')
 
+class listadoDueniosDetalles(serializers.ModelSerializer):
+    horariodetalle = serializers.PrimaryKeyRelatedField(write_only=True, queryset=models.TxdHorariodetalle.objects.filter(idhorariodetalle =1), source='duenio')
+    class Meta:
+        model = models.TxdDuenio
+        fields = ('idduenio','nombre','apellidos','direccion','dpi','telefono','correo','foto','estado','horariodetalle')
+
 class DueniosHorarios(serializers.ModelSerializer):
     horarios = TxdHorarioS(many=True, read_only=True, source='txdhorario_set')
     class Meta:
@@ -127,10 +159,12 @@ class DueniosHorarios(serializers.ModelSerializer):
 
 class TxdRecursoS(serializers.ModelSerializer):
     class Meta:
+        fields = ('__all__')
         model = models.TxdRecurso
 
 class TxdTipodenunciaS(serializers.ModelSerializer):
     class Meta:
+        fields = ('__all__')
         model = models.TxdTipodenuncia
 class TxdDenunciaRecursosS(serializers.ModelSerializer):
     recursos = TxdRecursoS(many=True, read_only=True, source='txdrecurso_set')
@@ -146,9 +180,11 @@ class TxdDenunciaTipoS(serializers.ModelSerializer):
 
 class TxcoConsejoS(serializers.ModelSerializer):
     class Meta:
+        fields = ('__all__')
         model = models.TxcoConsejo
 class TxcoFechaS(serializers.ModelSerializer):
     class Meta:
+        fields = ('__all__')
         model = models.TxcoFecha
 class TxcoConsejosFechaS(serializers.ModelSerializer):
     consejos = TxcoConsejoS(many=True,read_only=True,source='TxcoConsejo_set')

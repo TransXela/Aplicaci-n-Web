@@ -136,7 +136,7 @@ class Migration(migrations.Migration):
                 ('dpi', models.IntegerField()),
                 ('telefono', models.IntegerField(blank=True, null=True)),
                 ('correo', models.CharField(blank=True, max_length=45, null=True)),
-                ('foto', models.CharField(blank=True, max_length=100, null=True)),
+                ('foto', models.ImageField(upload_to='chofer/',blank=True, null=True)),
                 ('licencia', models.CharField(max_length=11)),
                 ('tipolicencia', models.CharField(blank=True, db_column='tipoLicencia', max_length=2, null=True)),
                 ('nolicencia', models.IntegerField(blank=True, db_column='noLicencia', null=True)),
@@ -215,13 +215,31 @@ class Migration(migrations.Migration):
                 ('dpi', models.IntegerField()),
                 ('telefono', models.IntegerField(blank=True, null=True)),
                 ('correo', models.CharField(blank=True, max_length=45, null=True)),
-                ('foto', models.CharField(max_length=100)),
+                ('foto', models.ImageField(upload_to='duenio/',blank=True, null=True)),
                 ('estado', models.IntegerField(blank=True, null=True)),
             ],
             options={
                 'db_table': 'txd_duenio',
             },
         ),
+        migrations.CreateModel(
+            name='TxdPmt',
+            fields=[
+                ('idpmt', models.AutoField(db_column='idPmt', primary_key=True, serialize=False)),
+                ('nombre', models.CharField(max_length=45)),
+                ('apellidos', models.CharField(max_length=45)),
+                ('direccion', models.CharField(max_length=45)),
+                ('dpi', models.CharField(max_length=13)),
+                ('telefono', models.IntegerField(blank=True, null=True)),
+                ('correo', models.CharField(blank=True, max_length=45, null=True)),
+                ('foto', models.ImageField(upload_to='pmt/',blank=True, null=True)),
+                ('estado', models.IntegerField(blank=True, null=True)),
+            ],
+            options={
+                'db_table': 'txd_pmt',
+            },
+        ),
+
         migrations.CreateModel(
             name='TxdHorario',
             fields=[
@@ -238,7 +256,7 @@ class Migration(migrations.Migration):
             name='TxdRecurso',
             fields=[
                 ('idrecurso', models.AutoField(db_column='idRecurso', primary_key=True, serialize=False)),
-                ('direccion', models.ImageField(upload_to='photos/')),
+                ('direccion', models.ImageField(upload_to='recurso/')),
                 ('denuncia', models.ForeignKey(db_column='Denuncia_id', on_delete=django.db.models.deletion.DO_NOTHING, to='app.TxdDenuncia')),
             ],
             options={

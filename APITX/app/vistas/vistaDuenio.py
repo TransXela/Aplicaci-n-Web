@@ -1,8 +1,8 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from app.models import TxdDuenio, TxdChofer, TxdHorario, TxdBus
-from app.serializables import TxdDuenioS, DueniosChoferBuses,DueniosChoferes,DueniosHorarios,DueniosBuses
+from app.models import TxdDuenio, TxdChofer, TxdHorario, TxdBus, TxdHorariodetalle
+from app.serializables import TxdDuenioS, DueniosChoferBuses, DueniosChoferes, DueniosHorarios, DueniosBuses, listadoDueniosDetalles
 
 
 @api_view(['GET', 'POST'])
@@ -53,7 +53,6 @@ def principal_duenio_choferes(request,pk, var):
         else:
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-
 @api_view(['GET', 'PUT', 'DELETE'])
 def detalle_objetos(request, pk):
     """
@@ -87,3 +86,31 @@ def detalle_objetos(request, pk):
             return Response(content, status=status.HTTP_202_ACCEPTED)
         else:
             return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def lista_horariodetalle(request):
+    """
+    obtiene la lista de duenio
+    """
+    try:
+        duenios = TxdDuenio.objects.all()
+        horarios = TxdHorario.objects.all()
+        detalleshorarios = TxdHorariodetalle.objects.all()
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        y = list()
+        for duenio in duenios:
+            s =list()
+            a =list()
+            #y+=[duenio.idduenio]
+            y+=[duenio.nombre]
+            for horario in TxdHorario.objects.filter(duenio=duenio.idduenio):
+                s+=[horario.idhorario]
+                for detallehorario in TxdHorariodetalle.objects.filter(horario=horario.idhorario):
+                    y+=[detallehorario.idhorariodetalle]
+
+                print y
+        return Response(y)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)

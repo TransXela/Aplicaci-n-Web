@@ -43,5 +43,33 @@ def detalle_objetos(request, pk):
         return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        objeto.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        #objeto.delete()
+        data = {
+        "nombre": objeto.nombre,
+        "descripcion": objeto.descripcion,
+        "fecha": objeto.fecha,
+        "lugar": objeto.lugar,
+        "latitud": objeto.latitud,
+        "longitud": objeto.longitud,
+        "direccion": objeto.direccion,
+        }
+        data['estado']=0
+        print data
+        serializador = TxcActividadS(objeto, data=data)
+        if serializador.is_valid():
+            serializador.save()
+            content = {'estado': 'se deshabilito'}
+            return Response(content, status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def busqueda(request, busq):
+    try:
+        objeto = TxcActividad.objects.filter(nombre__contains=busq) | TxcActividad.objects.filter(lugar__contains=busq) | TxcActividad.objects.filter(fecha__contains=busq)
+    except objeto.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializador = TxcActividadS(objeto, many=True)
+        return Response(serializador.data)

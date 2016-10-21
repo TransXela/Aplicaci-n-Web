@@ -19,7 +19,7 @@ from rest_framework import routers
 from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.authtoken import views
 from app.vistas import vistaGrupoUsuario
-from app.vistas import vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo, vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia, vistaCapitulo, vistaPregunta, vistaTitulo
+from app.vistas import vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo, vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia, vistaCapitulo, vistaPregunta, vistaTitulo, vistaArticulo
 from APITX import settings
 from django.conf.urls.static import static
 router = routers.DefaultRouter()
@@ -72,9 +72,8 @@ urlpatterns = [
     url(r'^denuncia/$', vistaDenuncia.lista_objetos,{'var': 0}),
     url(r'^denuncia/recursos$', vistaDenuncia.lista_objetos,{'var': 1}),
     url(r'^denuncia/recurso$', vistaRecurso.lista_objetos),
-    url(r'^denuncia/(?P<pk>[0-9]+)$', vistaDenuncia.detalle_objetos,{'var': 0}),
-    url(r'^denuncia/(?P<pk>[0-9]+)/recursos/$', vistaDenuncia.detalle_objetos,{'var': 1}),
-    url(r'^denuncia/obtenertoken/$', vistaDenuncia.obtenerToken),
+    url(r'^denuncia/detalle/$', vistaDenuncia.detalle_objetos,{'var': 0}),
+    url(r'^denuncia/detalle/recursos/$', vistaDenuncia.detalle_objetos,{'var': 1}),
     url(r'^denuncia/tipo/$', vistaTipodenuncia.lista_objetos),
     url(r'^denuncia/tipo/(?P<pk>[0-9]+)$', vistaTipodenuncia.detalle_objetos),
 
@@ -92,16 +91,17 @@ urlpatterns = [
     url(r'^pmt/ruta/(?P<pk>[0-9]+)$', vistaRuta.detalle_objetos),
     url(r'^pmt/horario/$', vistaHorario.lista_objetos),
     url(r'^pmt/denuncias/pilotos/$', vistaChofer.lista_choferes_denuncias),
+    url(r'^pmt/horariosdetalle/$', vistaDuenio.lista_horariodetalle),
 
 
     #url(r'^tipodenuncia/(?P<pk>[0-9]+)$', vistaTipodenuncia.detalle_objetos),
     #url(r'^tipodiahorariodetalle/$', vistadiahorariodetalle.lista_objetos),
     #url(r'^tipodiahorariodetalle/(?P<pk>[0-9]+)$', vistadiahorariodetalle.detalle_objetos),
     ##url(r'^snippets/(?P<pk>[0-9]+)$', views.snippet_detail),
-    url(r'^cultura/$', vistaActividad.lista_objetos),
-    url(r'^cultura/(?P<pk>[0-9]+)$', vistaActividad.detalle_objetos),
+    url(r'^cultura/actividad/$', vistaActividad.lista_objetos),
+    url(r'^cultura/actividad/(?P<pk>[0-9]+)$', vistaActividad.detalle_objetos),
+    url(r'^cultura/actividad/(?P<busq>([2][0][1-9]{2}-([1-9]|[1][0-2])-([0][1-9]|[1-2][0-9]|[3][0-1]))|[1-9a-z\s]+[0-9a-z\s]*)$', vistaActividad.busqueda),
     url(r'^cultura/consejos/$', vistaFechaConsejo.lista_objetos),
-    # Este metodo en esta vista no exite url(r'^cultura/(?P<busq>([2][0][1-9]{2}-([1-9]|[1][0-2])-([0][1-9]|[1-2][0-9]|[3][0-1]))|[1-9a-z\s]+[0-9a-z\s]*)$', vistaActividad.busqueda),
     url(r'^cultura/consejo/$', vistaFechaConsejo.lista_objetos),
     url(r'^cultura/consejos/(?P<pk>[0-9]+)$', vistaFechaConsejo.detalle_objetos),
     url(r'^cultura/consejodeldia/$', vistaConsejo.lista_objetos),
@@ -109,6 +109,9 @@ urlpatterns = [
     url(r'^cultura/pregunta/$',vistaPregunta.lista_objetos),
     url(r'^cultura/pregunta/(?P<pk>[0-9]+)$',vistaPregunta.detalle_objetos),
     url(r'^cultura/titulo/$',vistaTitulo.lista_objetos),
+    url(r'^cultura/titulo/(?P<pk>[0-9]+)$', vistaTitulo.detalle_objetos),
+    url(r'^cultura/articulo/$', vistaArticulo.lista_objetos),
+    url(r'^cultura/articulo/(?P<pk>[0-9]+)$', vistaArticulo.detalle_objetos),
 
 
     url(r'^', include(router.urls)),
