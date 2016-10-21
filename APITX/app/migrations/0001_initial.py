@@ -223,6 +223,24 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
+            name='TxdPmt',
+            fields=[
+                ('idpmt', models.AutoField(db_column='idPmt', primary_key=True, serialize=False)),
+                ('nombre', models.CharField(max_length=45)),
+                ('apellidos', models.CharField(max_length=45)),
+                ('direccion', models.CharField(max_length=45)),
+                ('dpi', models.CharField(max_length=13)),
+                ('telefono', models.IntegerField(blank=True, null=True)),
+                ('correo', models.CharField(blank=True, max_length=45, null=True)),
+                ('foto', models.ImageField(upload_to='pmt/',blank=True, null=True)),
+                ('estado', models.IntegerField(blank=True, null=True)),
+            ],
+            options={
+                'db_table': 'txd_pmt',
+            },
+        ),
+
+        migrations.CreateModel(
             name='TxdHorario',
             fields=[
                 ('idhorario', models.AutoField(db_column='idHorario', primary_key=True, serialize=False)),

@@ -93,7 +93,7 @@ class TxdDuenio(models.Model):
     nombre = models.CharField(max_length=45)
     apellidos = models.CharField(max_length=45)
     direccion = models.CharField(max_length=45)
-    dpi = models.IntegerField()
+    dpi =models.CharField(max_length=13)
     telefono = models.IntegerField(blank=True, null=True)
     correo = models.CharField(max_length=45, blank=True, null=True)
     foto = models.ImageField(upload_to='duenio/',blank=True, null=True)
@@ -102,6 +102,19 @@ class TxdDuenio(models.Model):
     class Meta:
         db_table = 'txd_duenio'
 
+class TxdPmt(models.Model):
+    idpmt = models.AutoField(db_column='idPmt', primary_key=True)  # Field name made lowercase.
+    nombre = models.CharField(max_length=45)
+    apellidos = models.CharField(max_length=45)
+    direccion = models.CharField(max_length=45)
+    dpi = models.CharField(max_length=13)
+    telefono = models.IntegerField(blank=True, null=True)
+    correo = models.CharField(max_length=45, blank=True, null=True)
+    foto = models.ImageField(upload_to='duenio/',blank=True, null=True)
+    estado = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'txd_pmt'
 
 class TxdRuta(models.Model):
     idruta = models.AutoField(db_column='idRuta', primary_key=True)  # Field name made lowercase.

@@ -85,6 +85,12 @@ class TxdDuenioS(serializers.ModelSerializer):
     class Meta:
         fields = ('__all__')
         model = models.TxdDuenio
+
+class TxdPmtS(serializers.ModelSerializer):
+    class Meta:
+        fields = ('__all__')
+        model = models.TxdPmt    
+
 class DueniosChoferBuses(serializers.ModelSerializer):
     choferes = TxdChoferS(many=True, read_only=True, source='txdchofer_set')
     buses = TxdBusS(many=True, read_only=True, source='txdbus_set')
