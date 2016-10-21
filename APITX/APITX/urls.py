@@ -19,9 +19,12 @@ from rest_framework import routers
 from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.authtoken import views
 from app.vistas import vistaGrupoUsuario
-from app.vistas import vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo, vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia, vistaCapitulo, vistaPregunta, vistaTitulo, vistaArticulo
+from app.vistas import (vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo,
+                        vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia, vistaCapitulo, vistaPregunta, vistaTitulo,
+                        vistaArticulo, autenticacion)
 from APITX import settings
 from django.conf.urls.static import static
+
 router = routers.DefaultRouter()
 router.register(r'users', vistaGrupoUsuario.UserViewSet)
 router.register(r'groups', vistaGrupoUsuario.GroupViewSet)
@@ -29,6 +32,7 @@ router.register(r'groups', vistaGrupoUsuario.GroupViewSet)
 urlpatterns = [
 
     url(r'^token-auth/', views.obtain_auth_token),
+    url(r'^aut/', autenticacion.example_view),
     url(r'^admin/', admin.site.urls),
     url(r'^duenio/$', vistaDuenio.lista_objetos),
     url(r'^operador/duenios/$', vistaDuenio.lista_objetos),
