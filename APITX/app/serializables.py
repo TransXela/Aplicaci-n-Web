@@ -6,7 +6,7 @@ from rest_framework import serializers
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ('url', 'username', 'email', 'groups')
+        fields = ('id', 'username', 'email', 'password')
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -89,7 +89,7 @@ class TxdDuenioS(serializers.ModelSerializer):
 class TxdPmtS(serializers.ModelSerializer):
     class Meta:
         fields = ('__all__')
-        model = models.TxdPmt    
+        model = models.TxdPmt
 
 class DueniosChoferBuses(serializers.ModelSerializer):
     choferes = TxdChoferS(many=True, read_only=True, source='txdchofer_set')
