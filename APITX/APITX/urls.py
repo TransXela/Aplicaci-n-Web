@@ -21,7 +21,7 @@ from rest_framework.authtoken import views
 from app.vistas import vistaGrupoUsuario
 from app.vistas import (vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo,
                         vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia, vistaCapitulo, vistaPregunta, vistaTitulo,
-                        vistaArticulo, autenticacion)
+                        vistaArticulo, autenticacion, vistaUsuario)
 from APITX import settings
 from django.conf.urls.static import static
 
@@ -32,7 +32,6 @@ router.register(r'groups', vistaGrupoUsuario.GroupViewSet)
 urlpatterns = [
 
     url(r'^token-auth/', views.obtain_auth_token),
-    url(r'^aut/', autenticacion.example_view),
     url(r'^admin/', admin.site.urls),
     url(r'^duenio/$', vistaDuenio.lista_objetos),
     url(r'^operador/duenios/$', vistaDuenio.lista_objetos),
@@ -96,6 +95,10 @@ urlpatterns = [
     url(r'^pmt/horario/$', vistaHorario.lista_objetos),
     url(r'^pmt/denuncias/pilotos/$', vistaChofer.lista_choferes_denuncias),
     url(r'^pmt/horariosdetalle/$', vistaDuenio.lista_horariodetalle),
+
+    #endPoints sesion
+    url(r'^sesion/$', vistaUsuario.crear_usuario),
+    url(r'^sesion/log/$', vistaUsuario.autenticar),
 
 
     #url(r'^tipodenuncia/(?P<pk>[0-9]+)$', vistaTipodenuncia.detalle_objetos),
