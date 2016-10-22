@@ -138,7 +138,7 @@ def lista_por_duenio(request,pk):
         s =list()
         for i in TxdChofer.objects.filter(duenio=pk):
             s+=[i.idchofer]
-        objeto =TxdHorariodetalle.objects.filter(pk__in=s)
+        objeto =TxdHorariodetalle.objects.filter(chofer__in=s)
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
