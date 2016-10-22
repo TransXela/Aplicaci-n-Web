@@ -2,8 +2,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import TxdDuenio, TxdChofer, TxdHorario, TxdBus, TxdHorariodetalle
-from app.serializables import TxdDuenioS, DueniosChoferBuses, DueniosChoferes, DueniosHorarios, DueniosBuses, listadoDueniosDetalles
-
+from app.serializables import TxdDuenioS, TxdHorariodetalleS, DueniosChoferBuses, DueniosChoferes, DueniosHorarios, DueniosBuses, listadoDueniosDetalles
+from app import permisos
 
 @api_view(['GET', 'POST'])
 def lista_objetos(request):
@@ -105,28 +105,26 @@ def lista_horariodetalle(request):
     """
     obtiene la lista de duenio
     """
-    if request.user.has_perms(permisos.lista_duenios):
-        try:
-            duenios = TxdDuenio.objects.all()
-            horarios = TxdHorario.objects.all()
-            detalleshorarios = TxdHorariodetalle.objects.all()
-        except ObjectDoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        if request.method == 'GET':
-            y = list()
-            for duenio in duenios:
-                s =list()
-                a =list()
-                #y+=[duenio.idduenio]
-                y+=[duenio.nombre]
-                for horario in TxdHorario.objects.filter(duenio=duenio.idduenio):
-                    s+=[horario.idhorario]
-                    for detallehorario in TxdHorariodetalle.objects.filter(horario=horario.idhorario):
-                        y+=[detallehorario.idhorariodetalle]
-
-                    print y
-            return Response(y)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+    try:
+        duenios = TxdDuenio.objects.all()
+        horarios = TxdHorario.objects.all()
+        detalleshorarios = TxdHorariodetalle.objects.all()
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        y = list()
+        for duenio in duenios:
+            s =list()
+            d=TxdDuenioS(duenio)
+            ob={}
+            ob['duenio']=d.data
+            #y+=[duenio.idduenio]
+            #y+=[duenio.nombre]
+            for horario in TxdHorario.objects.filter(duenio=duenio.idduenio):
+                s+=[horario.idhorario]
+                detallehorario = TxdHorariodetalle.objects.filter(horario=horario.idhorario)
+                ob['detallehorarios']=TxdHorariodetalleS(detallehorario, many=True).data
+            y+=[ob]
+        return Response(y)
     else:
         return Response(status=status.HTTP_403_NOT_FOUND)

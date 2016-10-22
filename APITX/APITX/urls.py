@@ -21,7 +21,7 @@ from rest_framework.authtoken import views
 from app.vistas import vistaGrupoUsuario
 from app.vistas import (vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo,
                         vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia, vistaCapitulo, vistaPregunta, vistaTitulo,
-                        vistaArticulo, autenticacion, vistaUsuario)
+                        vistaArticulo, autenticacion, vistaUsuario, vistaPmt)
 from APITX import settings
 from django.conf.urls.static import static
 
@@ -87,6 +87,7 @@ urlpatterns = [
 
 
     #url modulo PMT
+    url(r'^pmt/(?P<pk>[0-9]+)$', vistaPmt.detalle_objetos),
     url(r'^pmt/duenio/$', vistaDuenio.lista_objetos),
     url(r'^pmt/duenio/(?P<pk>[0-9]+)$', vistaDuenio.detalle_objetos),
     url(r'^pmt/ruta/$', vistaRuta.lista_objetos),
