@@ -105,7 +105,6 @@ def lista_horariodetalle(request):
     """
     obtiene la lista de duenio
     """
-<<<<<<< HEAD
     try:
         duenios = TxdDuenio.objects.all()
         horarios = TxdHorario.objects.all()
