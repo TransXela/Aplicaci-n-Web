@@ -16,13 +16,13 @@ def obtenerToken(imei):
     h = hashlib.new("sha1", dato)
     token ={"token":h.hexdigest()}
     try:
-        tokenExistente = TxdToken.objects.get(token=token)
+        tokenExistente = TxdToken.objects.get(token=h.hexdigest())
         return tokenExistente.token
     except ObjectDoesNotExist:
         serializador = TxdTokenS(data=token)
         if serializador.is_valid():
             serializador.save()
-            return token
+            return token['token']
         else:
             return
 
@@ -57,9 +57,7 @@ def lista_objetos(request, var):
     if request.method == 'GET':
         if 'HTTP_AUTHORIZATION' in request.META:
             token = request.META['HTTP_AUTHORIZATION']
-            var2 = validar(token)
-            var2['token']=False
-            if var2['bolean']:
+            try:
                 token =TxdToken.objects.get(token=token)
                 objeto = TxdDenuncia.objects.filter(token=token.idtoken)
 
@@ -69,8 +67,9 @@ def lista_objetos(request, var):
                     serializador = TxdDenunciaRecursosS(objeto, many=True)
 
                 return Response(serializador.data)
-            else:
-                return Response(var2['respuesta'], status=status.HTTP_400_BAD_REQUEST)
+            except ObjectDoesNotExist:
+                respuesta ={'respuesta': {'estado': 'no ha hecho ni una denuncia'}}
+                return Response(respuesta['respuesta'], status=status.HTTP_400_BAD_REQUEST)
         else:
             respuesta ={'denuncia': {'estado': 'no envio el token'}}
             return Response(respuesta, status=status.HTTP_400_BAD_REQUEST)
@@ -83,8 +82,9 @@ def lista_objetos(request, var):
             var['token']=False
         else:
             if 'imei' in request.data:
-                token = obtenerToken(request.data['imei'])['token']
-                var ={'bolean':True, 'respuesta': {'estado': 'Si se hizo el token'},'token':True}
+                token = obtenerToken(request.data['imei'])
+                var = validar(token)
+                var['token']=True
             else:
                 var ={'bolean':False, 'respuesta': {'estado': 'No se efectuo la Denuncia, no tiene permisos'},'token':False}
 
@@ -114,8 +114,12 @@ def lista_objetos(request, var):
             except ObjectDoesNotExist:
                 data['estado']= 2
                 data['chofer']= ""
+            try:
+                ultimoId = (TxdDenuncia.objects.latest('iddenuncia')).iddenuncia+1
+            except ObjectDoesNotExist:
+                ultimoId =1
 
-            ultimoId = (TxdDenuncia.objects.latest('iddenuncia')).iddenuncia+1
+
             h = hashlib.new("sha1", str(ultimoId))
             idhash ={"idhash":h.hexdigest()}
             data['idhash']=idhash['idhash']
@@ -145,29 +149,23 @@ def detalle_objetos(request,var):
     if request.method == 'GET':
         if 'HTTP_AUTHORIZATION' in request.META:
             token = request.META['HTTP_AUTHORIZATION']
-            var2 = validar(token)
-            var2['token']=False
-            if var2['bolean']:
-                if 'id' in request.query_params:
-                    try:
-                        print request.query_params
-                        token =TxdToken.objects.get(token=token)
-                        objeto = TxdDenuncia.objects.get(idhash=request.query_params['id'],token=token.idtoken)
-                        if var==0:
-                            serializador = TxdDenunciaS(objeto)
-                        else:
-                            serializador = TxdDenunciaRecursosS(objeto)
+            if 'id' in request.query_params:
+                try:
+                    print request.query_params
+                    token =TxdToken.objects.get(token=token)
+                    objeto = TxdDenuncia.objects.get(idhash=request.query_params['id'],token=token.idtoken)
+                    if var==0:
+                        serializador = TxdDenunciaS(objeto)
+                    else:
+                        serializador = TxdDenunciaRecursosS(objeto)
 
-                        return Response(serializador.data)
-                    except ObjectDoesNotExist:
-                        respuesta ={'denuncia': {'estado': 'no tiene permiso para ver esta denuncia'}}
-                        return Response(respuesta, status=status.HTTP_400_BAD_REQUEST)
-                else:
-                    respuesta ={'denuncia': {'estado': 'necesita enviar parametro'}}
+                    return Response(serializador.data)
+                except ObjectDoesNotExist:
+                    respuesta ={'denuncia': {'estado': 'no tiene permiso para ver esta denuncia'}}
                     return Response(respuesta, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return Response(var2['respuesta'], status=status.HTTP_400_BAD_REQUEST)
-
+                respuesta ={'denuncia': {'estado': 'necesita enviar parametro'}}
+                return Response(respuesta, status=status.HTTP_400_BAD_REQUEST)
         else:
             respuesta ={'denuncia': {'estado': 'no envio el token'}}
             return Response(respuesta, status=status.HTTP_400_BAD_REQUEST)
