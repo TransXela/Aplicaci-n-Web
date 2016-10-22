@@ -106,6 +106,7 @@ urlpatterns = [
     url(r'^cultura/consejos/(?P<pk>[0-9]+)$', vistaFechaConsejo.detalle_objetos),
     url(r'^cultura/consejodeldia/$', vistaConsejo.lista_objetos),
     url(r'^cultura/capitulo/$', vistaCapitulo.lista_objetos),
+    url(r'^cultura/capitulo/(?P<pk>[0-9]+)$', vistaCapitulo.detalle_objetos),
     url(r'^cultura/pregunta/$',vistaPregunta.lista_objetos),
     url(r'^cultura/pregunta/(?P<pk>[0-9]+)$',vistaPregunta.detalle_objetos),
     url(r'^cultura/titulo/$',vistaTitulo.lista_objetos),
