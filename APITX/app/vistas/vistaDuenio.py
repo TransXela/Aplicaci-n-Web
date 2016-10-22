@@ -127,30 +127,5 @@ def lista_horariodetalle(request):
                 ob['detallehorarios']=TxdHorariodetalleS(detallehorario, many=True).data
             y+=[ob]
         return Response(y)
-=======
-    if request.user.has_perms(permisos.lista_duenios):
-        try:
-            duenios = TxdDuenio.objects.all()
-            horarios = TxdHorario.objects.all()
-            detalleshorarios = TxdHorariodetalle.objects.all()
-        except ObjectDoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        if request.method == 'GET':
-            y = list()
-            for duenio in duenios:
-                s =list()
-                a =list()
-                #y+=[duenio.idduenio]
-                y+=[duenio.nombre]
-                for horario in TxdHorario.objects.filter(duenio=duenio.idduenio):
-                    s+=[horario.idhorario]
-                    for detallehorario in TxdHorariodetalle.objects.filter(horario=horario.idhorario):
-                        y+=[detallehorario.idhorariodetalle]
-
-                    print y
-            return Response(y)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
->>>>>>> origin/Rama-AreaDenuncia
     else:
         return Response(status=status.HTTP_403_NOT_FOUND)
