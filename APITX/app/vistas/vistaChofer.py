@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import TxdChofer
 from app.serializables import TxdChoferS, ChoferesDenuncias
+from app import permisos
 
 @api_view(['GET', 'POST'])
 def lista_objetos(request):

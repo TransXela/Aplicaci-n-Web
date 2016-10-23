@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import TxcoConsejo
 from app.serializables import TxcoConsejoS, TxcoFechaS, TxcoConsejosFechaS
-
+from app import permisos
 
 @api_view(['GET', 'POST'])
 def lista_objetos(request):

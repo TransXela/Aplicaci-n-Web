@@ -6,7 +6,7 @@ from datetime import datetime, date,timedelta
 from django.core.exceptions import ObjectDoesNotExist
 from app.models import TxdDenuncia,TxdBus,TxdHorariodetalle,TxdToken
 from app.serializables import TxdDenunciaS, TxdDenunciaRecursosS,TxdTokenS
-
+from app import permisos
 
 def obtenerToken(imei):
     """
