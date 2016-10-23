@@ -94,7 +94,7 @@ WSGI_APPLICATION = 'APITX.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dbtransxela',
+        'NAME': 'prueba',
         'USER': 'root',
         'PASSWORD': 'root',
         'HOST': '127.0.0.1',

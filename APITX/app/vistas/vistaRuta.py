@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django.db import IntegrityError
 from app.models import TxdRuta
 from app.serializables import TxdRutaS
-
+from app import permisos
 
 @api_view(['GET', 'POST'])
 def lista_objetos(request):

@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from app.models import TxdTipodenuncia
 from app.serializables import TxdTipodenunciaS, TxdDenunciaTipoS
-
+from app import permisos
 
 @api_view(['GET', 'POST'])
 def lista_objetos(request):

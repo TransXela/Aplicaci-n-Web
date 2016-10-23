@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime, date
 from app.models import TxdHorariodetalle,TxdBus,TxdChofer,TxdDuenio
 from app.serializables import TxdHorariodetalleS,Duenios_horariodetalle,TxdDuenioS
-
+from app import permisos
 
 @api_view(['GET', 'POST'])
 def lista_objetos(request):
