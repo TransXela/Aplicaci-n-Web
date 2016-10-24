@@ -14,7 +14,9 @@ lista_duenios = [
                     'app.change_txdruta'
                  ]
 
+lista_pmt = []
 
+lista_admin = []
 
 
 def permisos_duenio():

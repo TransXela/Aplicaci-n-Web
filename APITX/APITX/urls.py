@@ -100,7 +100,7 @@ urlpatterns = [
     #endPoints sesion
     url(r'^sesion/$', vistaUsuario.crear_usuario),
     url(r'^sesion/log/$', vistaUsuario.autenticar),
-
+    url(r'^sesion/(?P<pk>[0-9]+)/$', vistaUsuario.detalle_usuario),
 
     #url(r'^tipodenuncia/(?P<pk>[0-9]+)$', vistaTipodenuncia.detalle_objetos),
     #url(r'^tipodiahorariodetalle/$', vistadiahorariodetalle.lista_objetos),
