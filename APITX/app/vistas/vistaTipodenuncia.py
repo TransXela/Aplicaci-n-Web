@@ -11,20 +11,17 @@ def lista_objetos(request):
     """
     Lista de todos los Tipodenuncias, o crea uno nuevo.
     """
-    if request.user.has_perms(permisos.lista_duenios):
-        if request.method == 'GET':
-            objeto = TxdTipodenuncia.objects.all()
-            serializador = TxdDenunciaTipoS(objeto, many=True)
-            return Response(serializador.data)
+    if request.method == 'GET':
+        objeto = TxdTipodenuncia.objects.all()
+        serializador = TxdDenunciaTipoS(objeto, many=True)
+        return Response(serializador.data)
 
-        elif request.method == 'POST':
-            serializador = TxdTipodenunciaS(data=request.data)
-            if serializador.is_valid():
-                serializador.save()
-                return Response(serializador.data, status=status.HTTP_201_CREATED)
-            return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        return Response(status=status.HTTP_403_NOT_FOUND)
+    elif request.method == 'POST':
+        serializador = TxdTipodenunciaS(data=request.data)
+        if serializador.is_valid():
+            serializador.save()
+            return Response(serializador.data, status=status.HTTP_201_CREATED)
+        return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -32,26 +29,22 @@ def detalle_objetos(request, pk):
     """
     Actuliza, elimina un objeto segun su id
     """
-    if request.user.has_perms(permisos.lista_duenios):
-        try:
-            objeto = TxdTipodenuncia.objects.get(pk=pk)
-        except ObjectDoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+    try:
+        objeto = TxdTipodenuncia.objects.get(pk=pk)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
-        if request.method == 'GET':
-            serializador = TxdTipodenunciaS(objeto)
+    if request.method == 'GET':
+        serializador = TxdTipodenunciaS(objeto)
+        return Response(serializador.data)
+
+    elif request.method == 'PUT':
+        serializador = TxdTipodenunciaS(objeto, data=request.data)
+        if serializador.is_valid():
+            serializador.save()
             return Response(serializador.data)
+        return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        elif request.method == 'PUT':
-            serializador = TxdTipodenunciaS(objeto, data=request.data)
-            if serializador.is_valid():
-                serializador.save()
-                return Response(serializador.data)
-            return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        elif request.method == 'DELETE':
-            objeto.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-    else:
-        return Response(status=status.HTTP_403_NOT_FOUND)
+    elif request.method == 'DELETE':
+        objeto.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
