@@ -15,6 +15,10 @@ from django.contrib.auth.hashers import PBKDF2PasswordHasher
 @permission_classes((IsAuthenticated,))
 def autenticar(request, format=None):
 
+    """
+    Este metodo devuelve los datos de un usuario que se esta logeando
+    """
+
     if request.method == 'GET':
         try:
             objetoUsuario = User.objects.get(username=request.user)
@@ -46,7 +50,37 @@ def crear_usuario(request):
                                             email=request.data.get('email'),
                                             password=request.data.get('password'))
             user.save()
+
             return Response(UserSerializer(User.objects.get(username=user)).data, status=status.HTTP_201_CREATED)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
     return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT','DELETE'])
+def detalle_usuario(request, pk):
+        """
+        Actualiza, elimina un objeto segun su id
+        """
+        try:
+            obUsuario =  User.objects.get(pk = pk)
+        except objeto.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if request.method == 'GET':
+            serUsuario = UserSerializer(obUsuario)
+            return Response(serUsuario.data)
+
+        elif request.method == 'PUT':
+            serUsuario = UserSerializer(obUsuario, data=request.data)
+            if serUsuario.is_valid():
+                serUsuario.save()
+                user = User.objects.get(username=request.data.get('username'))
+                user.set_password(request.data.get('password'))
+                user.save()
+                return Response(serUsuario.data)
+            return Response(serUsuario.errors,status=status.HTTP_400_BAD_REQUEST)
+        """
+        elif request.method == 'DELETE':
+            objeto.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        """
