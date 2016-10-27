@@ -58,3 +58,16 @@ def lista_choferes_denuncias(request):
         print objeto
         serializador = ChoferesDenuncias(objeto)
         return Response(serializador.data)
+
+@api_view(['GET'])
+def chofer_dpi(request, pk):
+    """
+    Obtiene un Chofer segun su dpi
+    """
+    try:
+        objeto = TxdChofer.objects.get(dpi=pk)
+    except objeto.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        serializador = TxdChoferS(objeto)
+        return Response(serializador.data)

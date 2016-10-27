@@ -102,6 +102,11 @@ urlpatterns = [
     url(r'^sesion/log/$', vistaUsuario.autenticar),
     url(r'^sesion/(?P<pk>[0-9]+)/$', vistaUsuario.detalle_usuario),
 
+    #operador
+    url(r'^piloto/(?P<pk>[0-9]+)$', vistaChofer.chofer_dpi),
+    url(r'^bus/(?P<pk>[1-9a-zA-Z]+)$', vistaBus.bus_placa),
+
+
     #url(r'^tipodenuncia/(?P<pk>[0-9]+)$', vistaTipodenuncia.detalle_objetos),
     #url(r'^tipodiahorariodetalle/$', vistadiahorariodetalle.lista_objetos),
     #url(r'^tipodiahorariodetalle/(?P<pk>[0-9]+)$', vistadiahorariodetalle.detalle_objetos),
