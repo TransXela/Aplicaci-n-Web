@@ -85,7 +85,8 @@ urlpatterns = [
     url(r'^operador/denuncias/ruta/(?P<pk>[0-9]+)$', vistaDenuncia.detalle_objetos),
     url(r'^tipodenuncia/$', vistaTipodenuncia.lista_objetos),
 
-
+    #horariodetalle
+    url(r'^horariosdetalle/piloto/(?P<pk>[0-9]+)$', vistaHorariodetalle.detalle_Choferes),
     #url modulo PMT
     url(r'^pmt/(?P<pk>[0-9]+)$', vistaPmt.detalle_objetos),
     url(r'^pmt/duenio/$', vistaDuenio.lista_objetos),

@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime, date
 from app.models import TxdHorariodetalle,TxdBus,TxdChofer,TxdDuenio
-from app.serializables import TxdHorariodetalleS,Duenios_horariodetalle,TxdDuenioS
+from app.serializables import TxdHorariodetalleS,Duenios_horariodetalle,TxdDuenioS, choferHorariDetalle
 from app import permisos
 
 @api_view(['GET', 'POST'])
@@ -152,3 +152,19 @@ def lista_por_duenio(request,pk):
         return Response(data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def detalle_Choferes(request, pk):
+    """
+    Actuliza, elimina un objeto segun su id
+    """
+    try:
+        objeto = TxdChofer.objects.get(pk=pk)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializador = choferHorariDetalle(objeto)
+        return Response(serializador.data)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
