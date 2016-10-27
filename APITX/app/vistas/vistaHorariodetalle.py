@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime, date
 from app.models import TxdHorariodetalle,TxdBus,TxdChofer,TxdDuenio
-from app.serializables import TxdHorariodetalleS,Duenios_horariodetalle,TxdDuenioS
+from app.serializables import TxdHorariodetalleS,Duenios_horariodetalle,TxdDuenioS, TxdBusS
 from app import permisos
 
 @api_view(['GET', 'POST'])
@@ -149,6 +149,25 @@ def lista_por_duenio(request,pk):
         duenio=TxdDuenio.objects.get(pk=pk)
         duenios = TxdDuenioS(duenio)
         data={"duenio":duenios.data,"diasHorarioDetalle": serializador.data}
+        return Response(data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def lista_por_bus(request,pk):
+    """
+    obtiene la lista de horariodetalle por bus
+    """
+    try:
+        objBus =TxdBus.objects.filter(pk=pk)
+        objHorarioDetalle = TxdHorariodetalle.objects.filter(bus=pk)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serBus = TxdBusS(objBus, many=True)
+        serHorarioDetalle = TxdHorariodetalleS(objHorarioDetalle, many = True)
+        data={"Bus":serBus.data,"HorarioDetalle": serHorarioDetalle.data}
         return Response(data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
