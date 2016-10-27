@@ -106,7 +106,7 @@ urlpatterns = [
     #operador
     url(r'^piloto/(?P<pk>[0-9]+)$', vistaChofer.chofer_dpi),
     url(r'^bus/(?P<pk>[1-9a-zA-Z]+)$', vistaBus.bus_placa),
-
+    url(r'^horariosdetalle/bus/(?P<pk>[1-9]+)/$', vistaHorariodetalle.lista_por_bus),
 
     #url(r'^tipodenuncia/(?P<pk>[0-9]+)$', vistaTipodenuncia.detalle_objetos),
     #url(r'^tipodiahorariodetalle/$', vistadiahorariodetalle.lista_objetos),
