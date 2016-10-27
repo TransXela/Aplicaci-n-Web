@@ -76,3 +76,20 @@ def buses_Activos(request):
             return Response(serializador.data)
     else:
         return Response(status=status.HTTP_403_NOT_FOUND)
+
+@api_view(['GET'])
+def bus_placa(request, pk):
+    """
+    Busqueda de un bus segun placa
+    """
+
+    if request.user.has_perms(permisos.lista_duenios):
+        try:
+            objeto = TxdBus.objects.get(placa=pk)
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+        if request.method == 'GET':
+            serializador = TxdBusS(objeto)
+            return Response(serializador.data)

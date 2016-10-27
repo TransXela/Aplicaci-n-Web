@@ -121,6 +121,10 @@ urlpatterns = [
     url(r'^cultura/articulo/$', vistaArticulo.lista_objetos),
     url(r'^cultura/articulo/(?P<pk>[0-9]+)$', vistaArticulo.detalle_objetos),
 
+    #operador
+    url(r'^piloto/(?P<pk>[0-9]+)$', vistaChofer.chofer_dpi),
+    url(r'^bus/(?P<pk>[1-9a-zA-Z]+)$', vistaBus.bus_placa),
+
 
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
