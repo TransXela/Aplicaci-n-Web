@@ -11,8 +11,8 @@ def lista_objetos(request):
     Lista de todos los capitulos, o crear un nuevo
     """
     if request.method == 'GET':
-        objeto = TxcTitulo.objects.all()
-        serializador = TxcoCapituloTituloS(objeto, many=True)
+        objeto = TxcCapitulo.objects.all()
+        serializador = TxcCapituloS(objeto, many=True)
         return Response(serializador.data)
 
     elif request.method == 'POST':

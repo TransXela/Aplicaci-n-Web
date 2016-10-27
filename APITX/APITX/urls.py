@@ -18,10 +18,10 @@ from django.contrib import admin
 from rest_framework import routers
 from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.authtoken import views
-from app.vistas import vistaGrupoUsuario
 from app.vistas import (vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo,
                         vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia, vistaCapitulo, vistaPregunta, vistaTitulo,
-                        vistaArticulo, autenticacion, vistaUsuario, vistaPmt)
+                        vistaArticulo, autenticacion, vistaUsuario, vistaPmt, vistaGrupoUsuario, vistaFAQ)
+
 from APITX import settings
 from django.conf.urls.static import static
 
@@ -120,13 +120,14 @@ urlpatterns = [
     url(r'^cultura/consejos/(?P<pk>[0-9]+)$', vistaFechaConsejo.detalle_objetos),
     url(r'^cultura/consejodeldia/$', vistaConsejo.lista_objetos),
     url(r'^cultura/capitulo/$', vistaCapitulo.lista_objetos),
+    url(r'^cultura/capitulo/(?P<pk>[0-9]+)$', vistaCapitulo.detalle_objetos),
     url(r'^cultura/pregunta/$',vistaPregunta.lista_objetos),
     url(r'^cultura/pregunta/(?P<pk>[0-9]+)$',vistaPregunta.detalle_objetos),
     url(r'^cultura/titulo/$',vistaTitulo.lista_objetos),
     url(r'^cultura/titulo/(?P<pk>[0-9]+)$', vistaTitulo.detalle_objetos),
     url(r'^cultura/articulo/$', vistaArticulo.lista_objetos),
     url(r'^cultura/articulo/(?P<pk>[0-9]+)$', vistaArticulo.detalle_objetos),
-
+    url(r'^cultura/preguntas/(?P<pk>[0-9]+)$', vistaFAQ.lista_objetos),
 
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
