@@ -2,8 +2,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db import IntegrityError
-from app.models import TxdRuta
-from app.serializables import TxdRutaS
+from app.models import TxdRuta,TxdDenuncia,TxdBus
+from app.serializables import TxdRutaS, TxdDenunciaS,TxdBusS
 from app import permisos
 
 @api_view(['GET', 'POST'])
@@ -59,10 +59,27 @@ def denuncias_ruta(request, pk):
     Lista de Denuncias de una ruta
     """
     try:
-        objeto = TxdRuta.objects.get(pk=pk)
-    except objeto.DoesNotExist:
+        ruta = TxdRuta.objects.get(pk=pk)
+        denuncias = TxdDenuncia.objects.all()
+        respuesta = {}
+        listadenuncias = list()
+        listadenuncias+= [TxdRutaS(ruta).data]
+    except ruta.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializador = TxdRutaS(objeto)
-        return Response(serializador.data)
+
+        for bus in TxdBus.objects.filter(ruta_id=ruta.idruta):
+            try:
+                denuncias = TxdDenuncia.objects.filter(placa=bus.placa)
+                numdenuncias = TxdDenuncia.objects.filter(placa=bus.placa).count()
+                buses = TxdBusS(bus).data
+                listadenuncias+= [buses]
+                listadenuncias+= {'numdenuncias: '+ str(numdenuncias)}
+                #denunciasdebuses = TxdDenunciaS(denuncias, many=True).data
+                #listadenuncias+= [denunciasdebuses]
+            except denuncias.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+        respuesta[''] = listadenuncias
+        #respuesta['numdenuncias'] = numdenuncias
+        return Response(respuesta)
