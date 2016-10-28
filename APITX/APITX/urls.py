@@ -20,7 +20,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.authtoken import views
 from app.vistas import (vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo,
                         vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia, vistaCapitulo, vistaPregunta, vistaTitulo,
-                        vistaArticulo, autenticacion, vistaUsuario, vistaPmt, vistaGrupoUsuario, vistaFAQ)
+                        vistaArticulo, autenticacion, vistaUsuario, vistaPmt, vistaGrupoUsuario, vistaFAQ, vistaEstadistica)
 
 from APITX import settings
 from django.conf.urls.static import static
@@ -80,7 +80,8 @@ urlpatterns = [
     url(r'^denuncia/tipo/$', vistaTipodenuncia.lista_objetos),
     url(r'^denuncia/tipo/(?P<pk>[0-9]+)$', vistaTipodenuncia.detalle_objetos),
 
-
+    #para realizar reportes por duenios
+    url(r'^duenio/RepDuenioBusD/$', vistaEstadistica.lista_objetos),
 
     url(r'^operador/denuncias/ruta/(?P<pk>[0-9]+)$', vistaDenuncia.detalle_objetos),
     url(r'^tipodenuncia/$', vistaTipodenuncia.lista_objetos),
