@@ -63,7 +63,8 @@ def denuncias_ruta(request, pk):
         denuncias = TxdDenuncia.objects.all()
         respuesta = {}
         listadenuncias = list()
-        listadenuncias+= [TxdRutaS(ruta).data]
+        listaruta = list()
+        listaruta+= [TxdRutaS(ruta).data]
     except ruta.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -74,12 +75,10 @@ def denuncias_ruta(request, pk):
                 denuncias = TxdDenuncia.objects.filter(placa=bus.placa)
                 numdenuncias = TxdDenuncia.objects.filter(placa=bus.placa).count()
                 buses = TxdBusS(bus).data
-                listadenuncias+= [buses]
-                listadenuncias+= {'numdenuncias: '+ str(numdenuncias)}
-                #denunciasdebuses = TxdDenunciaS(denuncias, many=True).data
-                #listadenuncias+= [denunciasdebuses]
+                buses['numdenuncias'] = numdenuncias
+                listadenuncias+= [buses
             except denuncias.DoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
-        respuesta[''] = listadenuncias
-        #respuesta['numdenuncias'] = numdenuncias
+        respuesta['ruta'] =  listaruta
+        respuesta['buses'] = listadenuncias
         return Response(respuesta)
