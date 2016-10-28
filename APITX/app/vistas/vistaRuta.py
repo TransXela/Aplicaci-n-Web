@@ -52,3 +52,17 @@ def detalle_objetos(request, pk):
         except IntegrityError:
             content = {'estado': 'No se puede eliminar tiene dependencias'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def denuncias_ruta(request, pk):
+    """
+    Lista de Denuncias de una ruta
+    """
+    try:
+        objeto = TxdRuta.objects.get(pk=pk)
+    except objeto.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializador = TxdRutaS(objeto)
+        return Response(serializador.data)

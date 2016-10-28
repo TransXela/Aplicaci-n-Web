@@ -4,8 +4,8 @@ from rest_framework.response import Response
 import hashlib
 from datetime import datetime, date,timedelta
 from django.core.exceptions import ObjectDoesNotExist
-from app.models import TxdDenuncia,TxdBus,TxdHorariodetalle,TxdToken
-from app.serializables import TxdDenunciaS, TxdDenunciaRecursosS,TxdTokenS
+from app.models import TxdDenuncia,TxdBus,TxdHorariodetalle,TxdToken, TxdChofer, TxdTipodenuncia
+from app.serializables import TxdDenunciaS, TxdDenunciaRecursosS,TxdTokenS, DenunciaChofer, TxdChoferS, TxdTipodenunciaS
 from app import permisos
 
 def obtenerToken(imei):
@@ -202,3 +202,53 @@ def detalle_objetos(request,var):
     elif request.method == 'DELETE':
         objeto.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['PUT'])
+def cambio_estado(request, pk):
+    """
+    Actualiza el estado de una denuncia
+    """
+    try:
+        objeto = TxdDenuncia.objects.get(pk=pk)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        data = {"descripcion": objeto.descripcion ,"fechahora": objeto.fechahora,"placa":objeto.placa,
+        "chofer":objeto.chofer.idchofer,"token":objeto.token.idtoken,"tipodenuncia":objeto.tipodenuncia.idtipodenuncia,
+        "latitud":objeto.latitud, "longitud":objeto.longitud}
+        data['estado']= request.data['estado']
+        print data
+        serializador = TxdDenunciaS(objeto,data=data)
+        if serializador.is_valid():
+            serializador.save()
+            content = {'estado': 'se actualizo'}
+            return Response(content, status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def lista_denuncias(request):
+    """
+    Lista de todas las denuncias
+    """
+    try:
+        ob={}
+        a = list()
+        objeto = TxdDenuncia.objects.all()
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        for denuncia in objeto:
+            chofer = TxdChofer.objects.filter(idchofer=denuncia.chofer.idchofer)
+            tipodenuncia = TxdTipodenuncia.objects.filter(idtipodenuncia=denuncia.tipodenuncia.idtipodenuncia)
+            print chofer
+            serializador = TxdDenunciaS(denuncia).data
+            serial = TxdChoferS(chofer,many=True).data
+            tdenuncia = TxdTipodenunciaS(tipodenuncia,many=True).data
+            a+= [serializador]
+            a+= [serial]
+            a+= [tdenuncia]
+        ob['numdenuncias'] = TxdDenuncia.objects.count()
+        ob['denuncias'] = a
+        return Response(ob)

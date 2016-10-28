@@ -75,6 +75,12 @@ class ChoferesDenuncias(serializers.ModelSerializer):
         model = models.TxdChofer
         fields = ('','denuncias')
 
+class DenunciaChofer(serializers.ModelSerializer):
+    choferes = TxdChoferS(many=True, read_only=True, source='txdchofer_set')
+    class Meta:
+        model = models.TxdDenuncia
+        fields = ('iddenuncia','choferes')
+
 class TxdHorariodetalleS(serializers.ModelSerializer):
     class Meta:
         fields = ('__all__')
