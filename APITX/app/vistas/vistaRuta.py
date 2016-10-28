@@ -69,14 +69,13 @@ def denuncias_ruta(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-
         for bus in TxdBus.objects.filter(ruta_id=ruta.idruta):
             try:
                 denuncias = TxdDenuncia.objects.filter(placa=bus.placa)
                 numdenuncias = TxdDenuncia.objects.filter(placa=bus.placa).count()
                 buses = TxdBusS(bus).data
                 buses['numdenuncias'] = numdenuncias
-                listadenuncias+= [buses
+                listadenuncias+= [buses]
             except denuncias.DoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
         respuesta['ruta'] =  listaruta
