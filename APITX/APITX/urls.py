@@ -21,7 +21,7 @@ from rest_framework.authtoken import views
 from app.vistas import vistaGrupoUsuario
 from app.vistas import (vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo,
                         vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia, vistaCapitulo, vistaPregunta, vistaTitulo,
-                        vistaArticulo, autenticacion, vistaUsuario, vistaPmt)
+                        vistaArticulo, autenticacion, vistaUsuario, vistaPmt,vistaGrupo,vistaCultura)
 from APITX import settings
 from django.conf.urls.static import static
 
@@ -36,6 +36,8 @@ urlpatterns = [
     url(r'^duenio/$', vistaDuenio.lista_objetos),
     url(r'^operador/duenios/$', vistaDuenio.lista_objetos),
     url(r'^admin/duenio/lista/$', vistaDuenio.lista_objetos),
+
+    url(r'^groups/$', vistaGrupo.Grupo_Usuario),
 
     url(r'^duenio/(?P<pk>[0-9]+)$', vistaDuenio.detalle_objetos),
     url(r'^duenio/(?P<pk>[0-9]+)/principal/$', vistaDuenio.principal_duenio_choferes,{'var': 0}),
@@ -88,6 +90,7 @@ urlpatterns = [
     #horariodetalle
     url(r'^horariosdetalle/piloto/(?P<pk>[0-9]+)$', vistaHorariodetalle.detalle_Choferes),
     #url modulo PMT
+
     url(r'^pmt/(?P<pk>[0-9]+)$', vistaPmt.detalle_objetos),
     url(r'^pmt/duenio/$', vistaDuenio.lista_objetos),
     url(r'^pmt/duenio/(?P<pk>[0-9]+)$', vistaDuenio.detalle_objetos),
@@ -106,6 +109,19 @@ urlpatterns = [
     #operador
     url(r'^piloto/(?P<pk>[0-9]+)$', vistaChofer.chofer_dpi),
     url(r'^bus/(?P<pk>[1-9a-zA-Z]+)$', vistaBus.bus_placa),
+
+    #Administrador
+
+    url(r'^users/(?P<pk>[0-9]+)$', vistaUsuario.detalle_usuario),
+    url(r'^users/group/(?P<pk>[0-9]+)$', vistaUsuario.Usuarios_Group),
+    url(r'^users/habilitar/(?P<pk>[0-9]+)$', vistaUsuario.CambiarEstado,{'var': 0}),
+    url(r'^users/deshabilitar/(?P<pk>[0-9]+)$', vistaUsuario.CambiarEstado,{'var': 1}),
+    url(r'^users/cambiargrupo/(?P<pk>[0-9]+)$', vistaUsuario.cambiarGrupo),
+    url(r'^pmt/sinusuario/$', vistaPmt.obtener_sinUser),
+    url(r'^duenio/sinusuario/$', vistaDuenio.obtener_sinUser),
+    url(r'^cultura/usuario/sinusuario/$', vistaCultura.obtener_sinUser),
+
+
 
 
     #url(r'^tipodenuncia/(?P<pk>[0-9]+)$', vistaTipodenuncia.detalle_objetos),

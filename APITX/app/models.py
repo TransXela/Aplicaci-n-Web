@@ -160,7 +160,7 @@ class TxdBus(models.Model):
     marca = models.CharField(max_length=20)
     numbus = models.IntegerField()
     observaciones = models.TextField(blank=True, null=True)
-    foto = models.CharField(max_length=100, blank=True, null=True)
+    foto = models.ImageField(upload_to='bus/',blank=True, null=True)
     duenio = models.ForeignKey(TxdDuenio, models.DO_NOTHING, db_column='Duenio_id')  # Field name made lowercase.
     ruta = models.ForeignKey(TxdRuta, models.DO_NOTHING, db_column='Ruta_id')  # Field name made lowercase.
     estado = models.IntegerField(blank=True, null=True)

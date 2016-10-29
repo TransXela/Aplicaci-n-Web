@@ -117,3 +117,15 @@ def lista_horariodetalle(request):
                 ob['detallehorarios']=TxdHorariodetalleS(detallehorario, many=True).data
             y+=[ob]
         return Response(y)
+
+@api_view(['GET'])
+def obtener_sinUser(request):
+    """
+    Lista de todos los Duenios, o crea uno nuevo.
+    """
+    if request.method == 'GET':
+        objeto = TxdDuenio.objects.filter(usuario__isnull=True)
+        serializador = TxdDuenioS(objeto, many=True)
+        return Response(serializador.data)
+    else:
+        return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)

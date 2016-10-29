@@ -1,17 +1,22 @@
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group,GroupManager,PermissionsMixin
 from app import models
 from rest_framework import serializers
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password')
+        fields = ('__all__')
 
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
+class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = ('url', 'name')
+        fields = ('__all__')
+        
+class PermisionS(serializers.ModelSerializer):
+    class Meta:
+        model = PermissionsMixin
+        fields = ('__all__')
 
 class TxcActividadS(serializers.ModelSerializer):
     class Meta:

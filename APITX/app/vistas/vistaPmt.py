@@ -11,12 +11,12 @@ def lista_objetos(request):
     Lista de todos los Duenios, o crea uno nuevo.
     """
     if request.method == 'GET':
-        objeto = TxdDuenio.objects.all()
-        serializador = TxdDuenioS(objeto, many=True)
+        objeto = TxdPmt.objects.all()
+        serializador = TxdPmtS(objeto, many=True)
         return Response(serializador.data)
 
     elif request.method == 'POST':
-        serializador = TxdDuenioS(data=request.data)
+        serializador = TxdPmtS(data=request.data)
         if serializador.is_valid():
             serializador.save()
             return Response(serializador.data, status=status.HTTP_201_CREATED)
@@ -56,3 +56,15 @@ def detalle_objetos(request, pk):
             return Response(content, status=status.HTTP_202_ACCEPTED)
         else:
             return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def obtener_sinUser(request):
+    """
+    Lista de todos los Duenios, o crea uno nuevo.
+    """
+    if request.method == 'GET':
+        objeto = TxdPmt.objects.filter(usuario__isnull=True)
+        serializador = TxdPmtS(objeto, many=True)
+        return Response(serializador.data)
+    else:
+        return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)

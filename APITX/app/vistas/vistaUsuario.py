@@ -4,11 +4,12 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User,Group
 from app.serializables import UserSerializer
 from app.models import TxdDuenio
 from app.serializables import TxdDuenioS
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
+from django.core.exceptions import ObjectDoesNotExist
 
 @api_view(['GET'])
 @authentication_classes((SessionAuthentication, BasicAuthentication,))
@@ -63,7 +64,7 @@ def detalle_usuario(request, pk):
         """
         try:
             obUsuario =  User.objects.get(pk = pk)
-        except objeto.DoesNotExist:
+        except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         if request.method == 'GET':
@@ -79,8 +80,92 @@ def detalle_usuario(request, pk):
                 user.save()
                 return Response(serUsuario.data)
             return Response(serUsuario.errors,status=status.HTTP_400_BAD_REQUEST)
-        """
+
         elif request.method == 'DELETE':
             objeto.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
+@api_view(['GET'])
+def Usuarios_Group(request, pk):
         """
+        Actualiza, elimina un objeto segun su id
+        """
+        try:
+            usuarios = User.objects.filter(groups=1)
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if request.method == 'GET':
+            serializador = UserSerializer(usuarios, many=True)
+            return Response(serializador.data)
+        else:
+            return Response(serUsuario.errors,status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT','DELETE'])
+def CambiarEstado(request, pk, var):
+        """
+        Actualiza, elimina un objeto segun su id
+        """
+        try:
+            obUsuario =  User.objects.get(pk=pk)
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if request.method == 'PUT':
+            if(var==0):
+                U = UserSerializer(obUsuario)
+                dato = U.data
+                dato['is_active']=True
+                serUsuario = UserSerializer(obUsuario, data=dato)
+                if serUsuario.is_valid():
+                    serUsuario.save()
+                    return Response(serUsuario.data)
+                else:
+                    return Response(serUsuario.errors,status=status.HTTP_400_BAD_REQUEST)
+            elif(var==1):
+                U = UserSerializer(obUsuario)
+                dato = U.data
+                dato['is_active']=False
+                serUsuario = UserSerializer(obUsuario, data=dato)
+                if serUsuario.is_valid():
+                    serUsuario.save()
+                    return Response(serUsuario.data)
+                else:
+                    return Response(serUsuario.errors,status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT','DELETE'])
+def cambiarGrupo(request, pk):
+        """
+        Actualiza, elimina un objeto segun su id
+        """
+        try:
+            obUsuario =  User.objects.get(pk = pk)
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if request.method == 'PUT':
+            if "idGrupoNuevo" in request.data:
+                serUsuario = UserSerializer(obUsuario)
+                user=serUsuario.data
+                grupos=user['groups']
+                if len(grupos)!=0:
+                    try:
+                        grupoactual= Group.objects.get(pk=grupos[0])
+                        obUsuario.groups.remove(grupoactual)
+                    except ObjectDoesNotExist:
+                         grupoactual=0
+                try:
+                    gruponuevo= Group.objects.get(pk=request.data['idGrupoNuevo'])
+                    obUsuario.groups.add(gruponuevo)
+                except ObjectDoesNotExist:
+                    gruponuevo=0
+
+                serUsuario = UserSerializer(obUsuario)
+                return Response(serUsuario.data)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)

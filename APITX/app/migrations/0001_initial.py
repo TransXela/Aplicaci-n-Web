@@ -119,7 +119,7 @@ class Migration(migrations.Migration):
                 ('marca', models.CharField(max_length=20)),
                 ('numbus', models.IntegerField()),
                 ('observaciones', models.TextField(blank=True, null=True)),
-                ('foto', models.CharField(blank=True, max_length=100, null=True)),
+                ('foto', models.ImageField(upload_to='bus/',blank=True, null=True)),
                 ('estado', models.IntegerField(blank=True, null=True)),
             ],
             options={
