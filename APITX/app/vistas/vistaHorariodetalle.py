@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from app.models import TxdHorariodetalle,TxdBus,TxdChofer,TxdDuenio
 from app.serializables import TxdHorariodetalleS,Duenios_horariodetalle,TxdDuenioS, choferHorariDetalle, TxdBusS
 from app import permisos
@@ -185,5 +185,43 @@ def lista_por_bus(request,pk):
         serHorarioDetalle = TxdHorariodetalleS(objHorarioDetalle, many = True)
         data={"Bus":serBus.data,"HorarioDetalle": serHorarioDetalle.data}
         return Response(data)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def postRangoFechas(request):
+    """
+    obtiene crea por rango de fechas
+    """
+
+    if request.method == 'POST':
+        if 'fechaInicial' in request.data and 'fechaFinal' in request.data and 'bus' in request.data and 'chofer' in request.data and 'horario' in request.data and 'estado' in request.data:
+            data= {"bus": request.data['bus'], "chofer": request.data['chofer'] ,"horario": request.data['horario'],"estado":request.data['estado']}
+            formato_fecha = "%Y-%m-%d"
+            fechaInicial= datetime.strptime(request.data['fechaInicial'], formato_fecha).date()
+            fechaFinal= datetime.strptime(request.data['fechaFinal'], formato_fecha).date()
+            fechaactual= datetime.strptime((datetime.today()).strftime('%Y-%m-%d'), formato_fecha).date()
+            dias_totales = (fechaFinal-fechaInicial).days
+            if fechaInicial<fechaFinal and fechaInicial >= fechaactual :
+                for days in range(dias_totales + 1):
+                    fecha = fechaInicial +  timedelta(days=days)
+                    data['fecha']=fecha
+                    serializador = TxdHorariodetalleS(data=data)
+                    if serializador.is_valid():
+                        serializador.save()
+                        return Response({'crearRango': {'estado': 'El rango se creo satisfactoriamente'}},status=status.HTTP_201_CREATED)
+
+                    else:
+                        return Response({'crearRango': {'estado': 'Error al intentar insertar.'}},status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({'crearRango': {'estado': 'El rango de fechas es invalido'}}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+            return Response(status=status.HTTP_202_ACCEPTED)
+        else:
+            serializador = TxdDenunciaS(data=request.data)
+            serializador.is_valid()
+            return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
