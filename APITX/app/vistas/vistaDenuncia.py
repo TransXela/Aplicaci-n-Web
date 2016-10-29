@@ -260,11 +260,10 @@ def denuncias_bus(request, pk):
         try:
             objBus = TxdBus.objects.get(pk=pk)
             objDenuncias = TxdDenuncia.objects.filter(placa = objBus.placa)
-            listaTipoDenunciaUno = list()
-            listaTipoDenunciaDos = list()
-            listaTipoDenunciaTres = list()
+            objTipoDenuncia = TxdTipodenuncia.objects.all()
+
             for objDenuncia in objDenuncias:
-                objTipoDenuncia = TxdTipodenuncia.objects.filter(pk = objDenuncia.tipodenuncia)
+
                 if objTipoDenuncia == 1:
-                    listaTipoDenunciaUno +=
+                    listaTipoDenunciaUno += TxdTipodenunciaS(obj)
 """
