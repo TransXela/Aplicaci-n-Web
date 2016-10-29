@@ -225,3 +225,9 @@ class BusRutaS(serializers.ModelSerializer):
     class Meta:
         model = models.TxdRuta
         fields = ('idruta','nombre','recorrido','bs')
+
+class ChoferDenunciaS(serializers.ModelSerializer):
+    den = TxdDenunciaS(many=True, read_only=True, source='txddenuncia_set')
+    class Meta:
+        model = models.TxdChofer
+        fields = ('idchofer','nombre','den')
