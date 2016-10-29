@@ -202,17 +202,19 @@ def postRangoFechas(request):
             fechaFinal= datetime.strptime(request.data['fechaFinal'], formato_fecha).date()
             fechaactual= datetime.strptime((datetime.today()).strftime('%Y-%m-%d'), formato_fecha).date()
             dias_totales = (fechaFinal-fechaInicial).days
+            print dias_totales
             if fechaInicial<fechaFinal and fechaInicial >= fechaactual :
                 for days in range(dias_totales + 1):
                     fecha = fechaInicial +  timedelta(days=days)
                     data['fecha']=fecha
                     serializador = TxdHorariodetalleS(data=data)
+                    print fecha
                     if serializador.is_valid():
                         serializador.save()
-                        return Response({'crearRango': {'estado': 'El rango se creo satisfactoriamente'}},status=status.HTTP_201_CREATED)
-
                     else:
-                        return Response({'crearRango': {'estado': 'Error al intentar insertar.'}},status=status.HTTP_400_BAD_REQUEST)
+                        return Response({'crearRango': {'estado': 'Error al intentar insertar alguna fecha.'}},status=status.HTTP_400_BAD_REQUEST)
+
+                return Response({'crearRango': {'estado': 'El rango se creo satisfactoriamente'}},status=status.HTTP_201_CREATED)
             else:
                 return Response({'crearRango': {'estado': 'El rango de fechas es invalido'}}, status=status.HTTP_400_BAD_REQUEST)
 
