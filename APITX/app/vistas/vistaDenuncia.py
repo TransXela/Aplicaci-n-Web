@@ -252,3 +252,19 @@ def lista_denuncias(request):
         ob['numdenuncias'] = TxdDenuncia.objects.count()
         ob['denuncias'] = a
         return Response(ob)
+
+"""
+@api_view(['GET'])
+def denuncias_bus(request, pk):
+    if request.method == 'GET':
+        try:
+            objBus = TxdBus.objects.get(pk=pk)
+            objDenuncias = TxdDenuncia.objects.filter(placa = objBus.placa)
+            listaTipoDenunciaUno = list()
+            listaTipoDenunciaDos = list()
+            listaTipoDenunciaTres = list()
+            for objDenuncia in objDenuncias:
+                objTipoDenuncia = TxdTipodenuncia.objects.filter(pk = objDenuncia.tipodenuncia)
+                if objTipoDenuncia == 1:
+                    listaTipoDenunciaUno +=
+"""
