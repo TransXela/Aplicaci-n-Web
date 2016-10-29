@@ -142,6 +142,7 @@ urlpatterns = [
     url(r'^reporte/pmt/RepDuenioBusD/$', vistaEstadistica.lista_objetos),
     url(r'^reporte/pmt/RepBusRuta/$', vistaEstadistica.lista_objetos_rutaBus),
     url(r'^reporte/pmt/RepPilotoDen/$', vistaEstadistica.lista_objetos_pilotoDenuncia),
+    url(r'^reporte/pmt/RepDuenioBuses/$', vistaEstadistica.lista_objetos_duenioBuses),
 
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
