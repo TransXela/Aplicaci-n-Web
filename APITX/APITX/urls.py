@@ -102,6 +102,9 @@ urlpatterns = [
     url(r'^denuncias/$', vistaDenuncia.lista_denuncias),
     url(r'^denuncia/estado/(?P<pk>[0-9]+)$', vistaDenuncia.cambio_estado),
     url(r'^denuncias/ruta/(?P<pk>[0-9]+)$', vistaRuta.denuncias_ruta),
+    url(r'^denuncias/ruta/bus/(?P<idB>[0-9]+)$', vistaBus.denuncias_tipodenuncia),
+    url(r'^denuncias/ruta/bus/(?P<idB>[0-9]+)/(?P<idTd>[0-9]+)$', vistaBus.denuncias_bus_tipodenuncia),
+
 
     #Administrador
     url(r'^groups/$', vistaGrupo.Grupo_Usuario),
