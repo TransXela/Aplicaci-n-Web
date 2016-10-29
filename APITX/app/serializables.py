@@ -12,7 +12,7 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('__all__')
-        
+
 class PermisionS(serializers.ModelSerializer):
     class Meta:
         model = PermissionsMixin
@@ -219,3 +219,9 @@ class TxcoCapituloTituloS(serializers.ModelSerializer):
     class Meta:
         model = models.TxcTitulo
         fields = ('idtitulo','titulo','numero','capitulos')
+
+class BusRutaS(serializers.ModelSerializer):
+    bs = TxdBusS(many=True, read_only=True, source='txdbus_set')
+    class Meta:
+        model = models.TxdRuta
+        fields = ('idruta','nombre','recorrido','bs')
