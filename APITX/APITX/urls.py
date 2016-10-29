@@ -21,7 +21,7 @@ from rest_framework.authtoken import views
 from app.vistas import vistaGrupoUsuario
 from app.vistas import (vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo,
                         vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia, vistaCapitulo, vistaPregunta, vistaTitulo,
-                        vistaArticulo, autenticacion, vistaUsuario, vistaPmt,vistaGrupo,vistaCultura,vistaEstadistica)
+                        vistaArticulo, autenticacion, vistaUsuario, vistaPmt,vistaGrupo,vistaCultura,vistaEstadistica, autentificacion)
 from APITX import settings
 from django.conf.urls.static import static
 
@@ -32,6 +32,7 @@ router.register(r'groups', vistaGrupoUsuario.GroupViewSet)
 urlpatterns = [
 
     url(r'^token-auth/', views.obtain_auth_token),
+    url(r'^obtenertoken/', autentificacion.token),
     url(r'^admin/', admin.site.urls),
     url(r'^duenio/$', vistaDuenio.lista_objetos),
     url(r'^operador/duenios/$', vistaDuenio.lista_objetos),
@@ -48,7 +49,7 @@ urlpatterns = [
     url(r'^duenio/bus/(?P<pk>[0-9]+)$', vistaBus.detalle_objetos),
     url(r'^duenio/horario/$', vistaHorario.lista_objetos),
     url(r'^duenio/horario/(?P<pk>[0-9]+)$', vistaHorario.detalle_objetos),
-    url(r'^duenio/(?P<pk>[0-9]+)/horarios/$', vistaHorario.horarios_duenio),
+    url(r'^duenio/(?P<pk>[0-9]+)/(?P<tk>[0-9a-zA-Z]+)/horarios/$', vistaHorario.horarios_duenio),
     url(r'^duenio/horariodetalle/$', vistaHorariodetalle.lista_objetos),
     url(r'^duenio/horariosdetalle/$', vistaHorariodetalle.lista_objetos), # obtiene todos los horarios y detalles
     url(r'^duenio/horariodetalle/(?P<fInicio>20[0-9][0-9]-[0-1][0-9]-[0-3][0-9])/(?P<fFin>20[0-9][0-9]-[0-1][0-9]-[0-3][0-9])$', vistaHorariodetalle.rango),

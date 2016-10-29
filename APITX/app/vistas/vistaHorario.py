@@ -5,6 +5,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from datetime import datetime
 from app.models import TxdHorario
+from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
 from app.serializables import TxdHorarioS
 from app import permisos
 
@@ -70,18 +72,30 @@ def detalle_objetos(request, pk):
 
 
 @api_view(['GET'])
-def horarios_duenio(request, pk):
+def horarios_duenio(request, pk, tk):
     """
     obtiene los horarios de un duenio
     """
-    print request.user
 
     try:
-        print request.user
-        objeto = TxdHorario.objects.filter(duenio=pk)
+        print "el token es: ", tk
+        token = Token.objects.get(key=tk)
+        print "el token es: ", token.key
+        usuario = User.objects.get(pk=token.user.id)
+        print "el usuario es: ", usuario.id
     except objeto.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response("datos incorrectos")
 
-    if request.method == 'GET':
-        serializador = TxdHorarioS(objeto, many=True)
-        return Response(serializador.data)
+    if usuario.has_perms(permisos.lista_duenios):
+
+        try:
+            print request.user
+            objeto = TxdHorario.objects.filter(duenio=pk)
+        except objeto.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if request.method == 'GET':
+            serializador = TxdHorarioS(objeto, many=True)
+            return Response(serializador.data)
+    else:
+        return Response("No se pueden mostrar los datos")
