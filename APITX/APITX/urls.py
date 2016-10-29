@@ -95,6 +95,7 @@ urlpatterns = [
     url(r'^sesion/(?P<pk>[0-9]+)/$', vistaUsuario.detalle_usuario),
 
     #operador
+    #estos dendponts por algun motivo no aparecen !
     url(r'^piloto/(?P<pk>[0-9]+)$', vistaChofer.chofer_dpi),
     url(r'^bus/(?P<pk>[1-9a-zA-Z]+)$', vistaBus.bus_placa),
 
