@@ -45,8 +45,7 @@ def detalle_objetos(request, pk):
 
     elif request.method == 'DELETE':
         data = {"nombre": objeto.nombre ,"apellidos": objeto.apellidos,"direccion":objeto.direccion,
-        "empresa":objeto.empresa,"fecha_nac":objeto.fecha_nac,"fecha_crea":objeto.fecha_crea,
-        "dpi":objeto.dpi, "telefono":objeto.telefono, "correo":objeto.correo,"foto":objeto.foto}
+        "dpi":objeto.dpi, "telefono":objeto.telefono, "correo":objeto.correo,"foto":objeto.foto, "usuario_id":objeto.idusuario}
         data['estado']= 0
         print data
         serializador = TxdPmtS(objeto,data=data)
