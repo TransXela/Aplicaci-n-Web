@@ -2,11 +2,12 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from app.models import TxdDuenio, TxdPmt, TxcCultura
-from app.serializables import UserSerializer, TxdPmtS, TxdDuenioS, TxcCulturaS
+from app.serializables import UserSerializer, TxdPmtS, TxdDuenioS, TxcCulturaS, GroupSerializer
+from django.db import connection
 
 @api_view(['POST'])
 def token(request, format=None):
@@ -17,19 +18,25 @@ def token(request, format=None):
         try:
             objUsuario = User.objects.get(username = request.data.get('user'))
         except ObjectDoesNotExist:
-            return Response("susuario y contasenia incorrecta", tatus=status.HTTP_404_NOT_FOUND)
+            return Response("susuario y contasenia incorrecta", status=status.HTTP_404_NOT_FOUND)
 
         if objUsuario.check_password(request.data.get('pass')):
 
             datos = {}
             if TxdPmt.objects.filter(usuario=objUsuario.pk).exists():
-                datos['usuario'] = TxdPmtS(TxdPmt.objects.get(usuario=objUsuario.pk)).data
+                datos['PMT'] = TxdPmtS(TxdPmt.objects.get(usuario=objUsuario.pk)).data
             elif TxdDuenio.objects.filter(usuario=objUsuario.pk).exists():
-                datos['usuario'] = TxdDuenioS(TxdDuenio.objects.get(usuario=objUsuario.pk)).data
+                datos['Duenio'] = TxdDuenioS(TxdDuenio.objects.get(usuario=objUsuario.pk)).data
             elif TxcCultura.objects.filter(usuario=objUsuario.pk).exists():
-                datos['usuario'] = TxcCulturaS(TxcCultura.objects.get(usuario=objUsuario.pk)).data
+                datos['Cultura'] = TxcCulturaS(TxcCultura.objects.get(usuario=objUsuario.pk)).data
+
+            datos['Usuario'] = UserSerializer(objUsuario).data
+            cursor = connection.cursor()
+            cursor.execute("SELECT *FROM auth_user_groups WHERE user_id = %s", [objUsuario.pk])
+            usuariogrupo = cursor.fetchall()
+            datos['Grupo'] =  GroupSerializer(Group.objects.get(pk=usuariogrupo[0][2])).data
             token, created = Token.objects.get_or_create(user=objUsuario)
-            datos['token'] = token.key
+            datos['Token'] = token.key
             return Response(datos)
         else:
             return Response("susuario y contasenia incorrecta", tatus=status.HTTP_404_NOT_FOUND)
