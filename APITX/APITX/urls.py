@@ -53,7 +53,7 @@ urlpatterns = [
     url(r'^duenio/horariodetalle/(?P<tk>[0-9a-zA-Z]+)/$', vistaHorariodetalle.lista_objetos),
     url(r'^duenio/horariosdetalle/(?P<tk>[0-9a-zA-Z]+)/$', vistaHorariodetalle.lista_objetos), # obtiene todos los horarios y detalles
     url(r'^duenio/horariodetalle/(?P<fInicio>20[0-9][0-9]-[0-1][0-9]-[0-3][0-9])/(?P<fFin>20[0-9][0-9]-[0-1][0-9]-[0-3][0-9])/(?P<tk>[0-9a-zA-Z]+)/$', vistaHorariodetalle.rango),
-    url(r'^duenio/horariosdetalle/crearrango/(?P<tk>[0-9a-zA-Z]+)//$',vistaHorariodetalle.postRangoFechas),
+    url(r'^duenio/horariosdetalle/crearrango/(?P<tk>[0-9a-zA-Z]+)/$',vistaHorariodetalle.postRangoFechas),
 
     #actualizar un horariodetalle PUT/DELETE
     url(r'^duenio/horariodetalle/(?P<pk>[0-9]+)/(?P<tk>[0-9a-zA-Z]+)/$', vistaHorariodetalle.detalle_objetos),# Obtiene uno en especifico
@@ -119,7 +119,7 @@ urlpatterns = [
     url(r'^pmt/sinusuario/(?P<tk>[0-9a-zA-Z]+)/$', vistaPmt.obtener_sinUser),
     url(r'^duenio/sinusuario/(?P<tk>[0-9a-zA-Z]+)/$', vistaDuenio.obtener_sinUser),
     url(r'^cultura/sinusuario/(?P<tk>[0-9a-zA-Z]+)/$', vistaCultura.obtener_sinUser),
-    url(r'^pmt/(?P<pk>[0-9]+)/(?P<tk>[0-9a-zA-Z]+)$', vistaPmt.detalle_objetos),
+    url(r'^pmt/(?P<pk>[0-9]+)/(?P<tk>[0-9a-zA-Z]+)/$', vistaPmt.detalle_objetos),
     url(r'^pmt/(?P<tk>[0-9a-zA-Z]+)/$', vistaPmt.lista_objetos),
     url(r'^cultura/(?P<pk>[0-9]+)/(?P<tk>[0-9a-zA-Z]+)/$', vistaCultura.detalle_objetos),
     url(r'^cultura/(?P<tk>[0-9a-zA-Z]+)/$', vistaCultura.lista_objetos),
