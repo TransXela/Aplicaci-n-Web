@@ -2,9 +2,9 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db import IntegrityError
-from app.models import TxdRuta
-from app.serializables import TxdRutaS
-
+from app.models import TxdRuta,TxdDenuncia,TxdBus
+from app.serializables import TxdRutaS, TxdDenunciaS,TxdBusS
+from app import permisos
 
 @api_view(['GET', 'POST'])
 def lista_objetos(request):
@@ -22,6 +22,7 @@ def lista_objetos(request):
             serializador.save()
             return Response(serializador.data, status=status.HTTP_201_CREATED)
         return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def detalle_objetos(request, pk):
@@ -51,3 +52,32 @@ def detalle_objetos(request, pk):
         except IntegrityError:
             content = {'estado': 'No se puede eliminar tiene dependencias'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def denuncias_ruta(request, pk):
+    """
+    Lista de Denuncias de una ruta
+    """
+    try:
+        ruta = TxdRuta.objects.get(pk=pk)
+        denuncias = TxdDenuncia.objects.all()
+        respuesta = {}
+        listadenuncias = list()
+        listaruta = list()
+        listaruta+= [TxdRutaS(ruta).data]
+    except ruta.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        for bus in TxdBus.objects.filter(ruta_id=ruta.idruta):
+            try:
+                denuncias = TxdDenuncia.objects.filter(placa=bus.placa)
+                numdenuncias = TxdDenuncia.objects.filter(placa=bus.placa).count()
+                buses = TxdBusS(bus).data
+                buses['numdenuncias'] = numdenuncias
+                listadenuncias+= [buses]
+            except denuncias.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+        respuesta['ruta'] =  listaruta
+        respuesta['buses'] = listadenuncias
+        return Response(respuesta)

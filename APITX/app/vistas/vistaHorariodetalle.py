@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime, date
 from app.models import TxdHorariodetalle,TxdBus,TxdChofer,TxdDuenio
-from app.serializables import TxdHorariodetalleS,Duenios_horariodetalle,TxdDuenioS
-
+from app.serializables import TxdHorariodetalleS,Duenios_horariodetalle,TxdDuenioS, choferHorariDetalle, TxdBusS
+from app import permisos
 
 @api_view(['GET', 'POST'])
 def lista_objetos(request):
@@ -44,6 +44,7 @@ def lista_objetos(request):
             respuesta ={'crear': {'estado": "Creado Exitosamente'}}
             return Response(serializador.data, status=status.HTTP_201_CREATED)
         return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def detalle_objetos(request, pk):
@@ -129,6 +130,7 @@ def rango(request,fInicio,fFin):
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+
 @api_view(['GET'])
 def lista_por_duenio(request,pk):
     """
@@ -138,7 +140,7 @@ def lista_por_duenio(request,pk):
         s =list()
         for i in TxdChofer.objects.filter(duenio=pk):
             s+=[i.idchofer]
-        objeto =TxdHorariodetalle.objects.filter(pk__in=s)
+        objeto =TxdHorariodetalle.objects.filter(chofer__in=s)
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -150,3 +152,38 @@ def lista_por_duenio(request,pk):
         return Response(data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def detalle_Choferes(request, pk):
+    """
+    Actuliza, elimina un objeto segun su id
+    """
+    try:
+        objeto = TxdChofer.objects.get(pk=pk)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializador = choferHorariDetalle(objeto)
+        return Response(serializador.data)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def lista_por_bus(request,pk):
+    """
+    obtiene la lista de horariodetalle por bus
+    """
+    try:
+        objBus =TxdBus.objects.filter(pk=pk)
+        objHorarioDetalle = TxdHorariodetalle.objects.filter(bus=pk)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serBus = TxdBusS(objBus, many=True)
+        serHorarioDetalle = TxdHorariodetalleS(objHorarioDetalle, many = True)
+        data={"Bus":serBus.data,"HorarioDetalle": serHorarioDetalle.data}
+        return Response(data)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)

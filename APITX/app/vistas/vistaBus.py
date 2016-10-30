@@ -4,13 +4,14 @@ from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from app.models import TxdBus
 from app.serializables import TxdBusS
-
+from app import permisos
 
 @api_view(['GET', 'POST'])
 def lista_objetos(request):
     """
     Lista de todas las Buses, o crear una nueva
     """
+
     if request.method == 'GET':
         objeto = TxdBus.objects.all()
         serializador = TxdBusS(objeto, many=True)
@@ -22,6 +23,7 @@ def lista_objetos(request):
             serializador.save()
             return Response(serializador.data, status=status.HTTP_201_CREATED)
         return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET', 'PUT','DELETE'])
 def detalle_objetos(request, pk):
@@ -51,6 +53,7 @@ def detalle_objetos(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+
 @api_view(['GET'])
 def buses_Activos(request):
     """
@@ -63,4 +66,34 @@ def buses_Activos(request):
 
     if request.method == 'GET':
         serializador = TxdBusS(objetos, many=True)
+        return Response(serializador.data)
+
+@api_view(['GET'])
+def buses_Activos(request):
+    """
+    retorna los busese que estan activos
+    """
+    if request.user.has_perms(permisos.lista_duenios):
+        try:
+            objetos = TxdBus.objects.filter(estado=1)
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if request.method == 'GET':
+            serializador = TxdBusS(objetos, many=True)
+            return Response(serializador.data)
+    else:
+        return Response(status=status.HTTP_403_NOT_FOUND)
+
+@api_view(['GET'])
+def bus_placa(request, pk):
+    """
+    Busqueda de un bus segun placa
+    """
+    try:
+        objeto = TxdBus.objects.get(placa=pk)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        serializador = TxdBusS(objeto)
         return Response(serializador.data)

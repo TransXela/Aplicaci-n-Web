@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import TxcTitulo
 from app.serializables import TxcTituloS
-
+from app import permisos
 
 @api_view(['GET', 'POST'])
 def lista_objetos(request):
@@ -21,6 +21,8 @@ def lista_objetos(request):
             serializador.save()
             return Response(serializador.data,status=status.HTTP_201_CREATED)
             return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
 @api_view(['GET', 'PUT','DELETE'])
 def detalle_objetos(request, pk):
     """

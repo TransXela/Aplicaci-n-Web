@@ -8,6 +8,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.auth.models import User
 
 class TxcActividad(models.Model):
     idactividad = models.AutoField(db_column='idActividad', primary_key=True)  # Field name made lowercase.
@@ -93,15 +94,48 @@ class TxdDuenio(models.Model):
     nombre = models.CharField(max_length=45)
     apellidos = models.CharField(max_length=45)
     direccion = models.CharField(max_length=45)
-    dpi = models.IntegerField()
+    empresa = models.CharField(max_length=45)
+    fecha_nac = models.DateTimeField()
+    fecha_crea = models.DateTimeField()
+    dpi =models.CharField(max_length=13)
     telefono = models.IntegerField(blank=True, null=True)
     correo = models.CharField(max_length=45, blank=True, null=True)
     foto = models.ImageField(upload_to='duenio/',blank=True, null=True)
     estado = models.IntegerField(blank=True, null=True)
+    usuario = models.ForeignKey(User, models.DO_NOTHING, db_column='usuario_id', blank=True, null=True)
 
     class Meta:
         db_table = 'txd_duenio'
 
+class TxcCultura(models.Model):
+    idcultura = models.AutoField(db_column='idCultura', primary_key=True)  # Field name made lowercase.
+    nombre = models.CharField(max_length=45)
+    apellidos = models.CharField(max_length=45)
+    direccion = models.CharField(max_length=45)
+    dpi = models.CharField(max_length=13)
+    telefono = models.IntegerField(blank=True, null=True)
+    correo = models.CharField(max_length=45, blank=True, null=True)
+    foto = models.ImageField(upload_to='cultura/',blank=True, null=True)
+    estado = models.IntegerField(blank=True, null=True)
+    usuario = models.ForeignKey(User, models.DO_NOTHING, db_column='usuario_id', blank=True, null=True)
+
+    class Meta:
+        db_table = 'txc_cultura'
+
+class TxdPmt(models.Model):
+    idpmt = models.AutoField(db_column='idPmt', primary_key=True)  # Field name made lowercase.
+    nombre = models.CharField(max_length=45)
+    apellidos = models.CharField(max_length=45)
+    direccion = models.CharField(max_length=45)
+    dpi = models.CharField(max_length=13)
+    telefono = models.IntegerField(blank=True, null=True)
+    correo = models.CharField(max_length=45, blank=True, null=True)
+    foto = models.ImageField(upload_to='pmt/',blank=True, null=True)
+    estado = models.IntegerField(blank=True, null=True)
+    usuario = models.ForeignKey(User, models.DO_NOTHING, db_column='usuario_id', blank=True, null=True)
+
+    class Meta:
+        db_table = 'txd_pmt'
 
 class TxdRuta(models.Model):
     idruta = models.AutoField(db_column='idRuta', primary_key=True)  # Field name made lowercase.

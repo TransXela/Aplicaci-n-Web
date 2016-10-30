@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from app.models import TxdRecurso
 from app.serializables import TxdRecursoS
-
+from app import permisos
 
 @api_view(['GET', 'POST'])
 def lista_objetos(request):
@@ -25,6 +25,7 @@ def lista_objetos(request):
             return Response(serializador.data,status=status.HTTP_201_CREATED)
         else:
             return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
+
 @api_view(['GET', 'PUT','DELETE'])
 def detalle_objetos(request, pk):
     """

@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from app.models import TxcArticulo
 from app.serializables import TxcArticuloS
 
-
 @api_view(['GET', 'POST'])
 def lista_objetos(request):
     """

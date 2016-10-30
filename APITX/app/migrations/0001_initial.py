@@ -212,6 +212,9 @@ class Migration(migrations.Migration):
                 ('nombre', models.CharField(max_length=45)),
                 ('apellidos', models.CharField(max_length=45)),
                 ('direccion', models.CharField(max_length=45)),
+                ('empresa', models.CharField(max_length=45)),
+                ('fecha_nac', models.DateTimeField()),
+                ('fecha_crea', models.DateTimeField()),
                 ('dpi', models.IntegerField()),
                 ('telefono', models.IntegerField(blank=True, null=True)),
                 ('correo', models.CharField(blank=True, max_length=45, null=True)),
@@ -222,6 +225,42 @@ class Migration(migrations.Migration):
                 'db_table': 'txd_duenio',
             },
         ),
+        migrations.CreateModel(
+            name='TxdPmt',
+            fields=[
+                ('idpmt', models.AutoField(db_column='idPmt', primary_key=True, serialize=False)),
+                ('nombre', models.CharField(max_length=45)),
+                ('apellidos', models.CharField(max_length=45)),
+                ('direccion', models.CharField(max_length=45)),
+                ('dpi', models.CharField(max_length=13)),
+                ('telefono', models.IntegerField(blank=True, null=True)),
+                ('correo', models.CharField(blank=True, max_length=45, null=True)),
+                ('foto', models.ImageField(upload_to='pmt/',blank=True, null=True)),
+                ('estado', models.IntegerField(blank=True, null=True)),
+            ],
+            options={
+                'db_table': 'txd_pmt',
+            },
+        ),
+
+        migrations.CreateModel(
+            name='TxcCultura',
+            fields=[
+                ('idcultura', models.AutoField(db_column='idCultura', primary_key=True, serialize=False)),
+                ('nombre', models.CharField(max_length=45)),
+                ('apellidos', models.CharField(max_length=45)),
+                ('direccion', models.CharField(max_length=45)),
+                ('dpi', models.CharField(max_length=13)),
+                ('telefono', models.IntegerField(blank=True, null=True)),
+                ('correo', models.CharField(blank=True, max_length=45, null=True)),
+                ('foto', models.ImageField(upload_to='cultura/',blank=True, null=True)),
+                ('estado', models.IntegerField(blank=True, null=True)),
+            ],
+            options={
+                'db_table': 'txc_cultura',
+            },
+        ),
+
         migrations.CreateModel(
             name='TxdHorario',
             fields=[

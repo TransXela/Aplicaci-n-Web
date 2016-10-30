@@ -6,6 +6,7 @@ from django.db import IntegrityError
 from datetime import datetime
 from app.models import TxdHorario
 from app.serializables import TxdHorarioS
+from app import permisos
 
 @api_view(['GET', 'POST'])
 def lista_objetos(request):
@@ -67,21 +68,20 @@ def detalle_objetos(request, pk):
             content = {'estado': 'No se puede eliminar tiene dependencias'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['GET'])
 def horarios_duenio(request, pk):
     """
     obtiene los horarios de un duenio
     """
     print request.user
-    if request.user.has_perm('app.change_txdhorario'):
-        try:
-            print request.user
-            objeto = TxdHorario.objects.filter(duenio=pk)
-        except objeto.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
 
-        if request.method == 'GET':
-            serializador = TxdHorarioS(objeto, many=True)
-            return Response(serializador.data)
-    else:
-        return Response("no puede ver los horarios")
+    try:
+        print request.user
+        objeto = TxdHorario.objects.filter(duenio=pk)
+    except objeto.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializador = TxdHorarioS(objeto, many=True)
+        return Response(serializador.data)

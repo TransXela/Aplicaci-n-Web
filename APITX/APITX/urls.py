@@ -18,10 +18,13 @@ from django.contrib import admin
 from rest_framework import routers
 from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.authtoken import views
-from app.vistas import vistaGrupoUsuario, vistaFAQ
-from app.vistas import vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo, vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia, vistaCapitulo, vistaPregunta, vistaTitulo, vistaArticulo
+from app.vistas import (vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo,
+                        vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia, vistaCapitulo, vistaPregunta, vistaTitulo,
+                        vistaArticulo, autenticacion, vistaUsuario, vistaPmt, vistaGrupoUsuario, vistaFAQ, vistaEstadistica)
+
 from APITX import settings
 from django.conf.urls.static import static
+
 router = routers.DefaultRouter()
 router.register(r'users', vistaGrupoUsuario.UserViewSet)
 router.register(r'groups', vistaGrupoUsuario.GroupViewSet)
@@ -77,13 +80,16 @@ urlpatterns = [
     url(r'^denuncia/tipo/$', vistaTipodenuncia.lista_objetos),
     url(r'^denuncia/tipo/(?P<pk>[0-9]+)$', vistaTipodenuncia.detalle_objetos),
 
-
+    #para realizar reportes por duenios
+    url(r'^duenio/RepDuenioBusD/$', vistaEstadistica.lista_objetos),
 
     url(r'^operador/denuncias/ruta/(?P<pk>[0-9]+)$', vistaDenuncia.detalle_objetos),
     url(r'^tipodenuncia/$', vistaTipodenuncia.lista_objetos),
 
-
+    #horariodetalle
+    url(r'^horariosdetalle/piloto/(?P<pk>[0-9]+)$', vistaHorariodetalle.detalle_Choferes),
     #url modulo PMT
+    url(r'^pmt/(?P<pk>[0-9]+)$', vistaPmt.detalle_objetos),
     url(r'^pmt/duenio/$', vistaDuenio.lista_objetos),
     url(r'^pmt/duenio/(?P<pk>[0-9]+)$', vistaDuenio.detalle_objetos),
     url(r'^pmt/ruta/$', vistaRuta.lista_objetos),
@@ -93,6 +99,19 @@ urlpatterns = [
     url(r'^pmt/denuncias/pilotos/$', vistaChofer.lista_choferes_denuncias),
     url(r'^pmt/horariosdetalle/$', vistaDuenio.lista_horariodetalle),
 
+    #endPoints sesion
+    url(r'^sesion/$', vistaUsuario.crear_usuario),
+    url(r'^sesion/log/$', vistaUsuario.autenticar),
+    url(r'^sesion/(?P<pk>[0-9]+)/$', vistaUsuario.detalle_usuario),
+
+    #operador
+    #estos dendponts por algun motivo no aparecen !
+    url(r'^piloto/(?P<pk>[0-9]+)$', vistaChofer.chofer_dpi),
+    url(r'^bus/(?P<pk>[1-9a-zA-Z]+)$', vistaBus.bus_placa),
+    url(r'^horariosdetalle/bus/(?P<pk>[1-9]+)/$', vistaHorariodetalle.lista_por_bus),
+    url(r'^denuncias/$', vistaDenuncia.lista_denuncias),
+    url(r'^denuncia/estado/(?P<pk>[0-9]+)$', vistaDenuncia.cambio_estado),
+    url(r'^denuncias/ruta/(?P<pk>[0-9]+)$', vistaRuta.denuncias_ruta),
 
     #url(r'^tipodenuncia/(?P<pk>[0-9]+)$', vistaTipodenuncia.detalle_objetos),
     #url(r'^tipodiahorariodetalle/$', vistadiahorariodetalle.lista_objetos),
