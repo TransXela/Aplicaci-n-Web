@@ -22,7 +22,7 @@ def autenticar(request, tk, format=None):
     Este metodo devuelve los datos de un usuario que se esta logeando
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'GET':
             try:
                 objetoUsuario = User.objects.get(username=request.user)
@@ -53,7 +53,7 @@ def crear_usuario(request, tk):
     este metodo crea un nuevo usuario y retorna los datos creados
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'POST':
             serializador = UserSerializer(data = request.data)
             if serializador.is_valid():
@@ -75,7 +75,7 @@ def detalle_usuario(request, pk, tk):
         Actualiza, elimina un objeto segun su id
         """
         usuario = autentificacion.autenticacion(tk)
-        if usuario.has_perms(permisos.lista_duenios):
+        if usuario.has_perms(permisos.duenios):
             try:
                 obUsuario =  User.objects.get(pk = pk)
             except ObjectDoesNotExist:
@@ -107,7 +107,7 @@ def Usuarios_Group(request, pk, tk):
         Actualiza, elimina un objeto segun su id
         """
         usuario = autentificacion.autenticacion(tk)
-        if usuario.has_perms(permisos.lista_duenios):
+        if usuario.has_perms(permisos.duenios):
             try:
                 usuarios = User.objects.filter(groups=1)
             except ObjectDoesNotExist:
@@ -127,7 +127,7 @@ def CambiarEstado(request, pk, var, tk):
         Actualiza, elimina un objeto segun su id
         """
         usuario = autentificacion.autenticacion(tk)
-        if usuario.has_perms(permisos.lista_duenios):
+        if usuario.has_perms(permisos.duenios):
             try:
                 obUsuario =  User.objects.get(pk=pk)
             except ObjectDoesNotExist:
@@ -167,7 +167,7 @@ def cambiarGrupo(request, pk, tk):
         Actualiza, elimina un objeto segun su id
         """
         usuario = autentificacion.autenticacion(tk)
-        if usuario.has_perms(permisos.lista_duenios):
+        if usuario.has_perms(permisos.duenios):
             try:
                 obUsuario =  User.objects.get(pk = pk)
             except ObjectDoesNotExist:

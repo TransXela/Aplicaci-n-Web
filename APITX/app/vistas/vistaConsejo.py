@@ -12,7 +12,7 @@ def lista_objetos(request, tk):
     Lista de todas los consejos, o crear uno nuevo
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'GET':
             objeto = TxcoConsejo.objects.all()
             serializador = TxcoConsejosFechaS(objeto, many=True)
@@ -33,7 +33,7 @@ def principal_consejo(request, tk):
     Lista de las fechas y consejos
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             objeto = TxcoConsejo.objects.get(pk=pk)
         except objeto.DoesNotExist:
@@ -62,7 +62,7 @@ def detalle_objetos(request, pk, tk):
     Actualiza, elimina un objeto segun su id
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             objeto = TxcoConsejo.objects.get(pk=pk)
         except objeto.DoesNotExist:

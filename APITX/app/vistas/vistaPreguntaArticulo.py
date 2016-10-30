@@ -12,7 +12,7 @@ def lista_objetos(request, tk):
     Lista de todas las actividades, o crear una nueva
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'GET':
             objeto = TxcPreguntaarticulo.objects.all()
             serializador = TxcPreguntaarticuloS(objeto, many=True)
@@ -33,7 +33,7 @@ def detalle_objetos(request, pk, tk):
     Actualiza, elimina un objeto segun su id
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             objeto = TxcPreguntaarticulo.objects.get(pk=pk)
         except objeto.DoesNotExist:

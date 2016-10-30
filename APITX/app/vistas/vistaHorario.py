@@ -17,7 +17,7 @@ def lista_objetos(request, tk):
     Lista de todos los Horarios, o crea uno nuevo.
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'GET':
             objeto = TxdHorario.objects.all()
             serializador = TxdHorarioS(objeto, many=True)
@@ -45,7 +45,7 @@ def detalle_objetos(request, pk, tk):
     """
 
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             objeto = TxdHorario.objects.get(pk=pk)
         except ObjectDoesNotExist:
@@ -86,7 +86,7 @@ def horarios_duenio(request, pk, tk):
     obtiene los horarios de un duenio
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             objeto = TxdHorario.objects.filter(duenio=pk)
         except objeto.DoesNotExist:

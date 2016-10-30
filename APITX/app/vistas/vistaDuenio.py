@@ -12,7 +12,7 @@ def lista_objetos(request, tk):
     Lista de todos los Duenios, o crea uno nuevo.
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'GET':
             objeto = TxdDuenio.objects.all()
             serializador = TxdDuenioS(objeto, many=True)
@@ -33,7 +33,7 @@ def principal_duenio_choferes(request,pk, var, tk):
     Lista los buses y choferes
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             objeto = TxdDuenio.objects.get(pk=pk)
         except objeto.DoesNotExist:
@@ -68,7 +68,7 @@ def detalle_objetos(request, pk, tk):
     Actuliza, elimina un objeto segun su id
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             objeto = TxdDuenio.objects.get(pk=pk)
         except objeto.DoesNotExist:
@@ -107,7 +107,7 @@ def lista_horariodetalle(request, tk):
     obtiene la lista de duenio
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             duenios = TxdDuenio.objects.all()
             horarios = TxdHorario.objects.all()
@@ -139,7 +139,7 @@ def obtener_sinUser(request, tk):
     Lista de todos los Duenios, o crea uno nuevo.
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'GET':
             objeto = TxdDuenio.objects.filter(usuario__isnull=True)
             serializador = TxdDuenioS(objeto, many=True)

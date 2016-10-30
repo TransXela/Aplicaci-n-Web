@@ -13,7 +13,7 @@ def lista_objetos(request, tk):
     Lista de todos los Rutas, o crea uno nuevo.
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'GET':
             objeto = TxdRuta.objects.all()
             serializador = TxdRutaS(objeto, many=True)
@@ -34,7 +34,7 @@ def detalle_objetos(request, pk, tk):
     Actuliza, elimina un objeto segun su id
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             objeto = TxdRuta.objects.get(pk=pk)
         except objeto.DoesNotExist:
@@ -67,7 +67,7 @@ def denuncias_ruta(request, pk, tk):
     Lista de Denuncias de una ruta
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             ruta = TxdRuta.objects.get(pk=pk)
             denuncias = TxdDenuncia.objects.all()

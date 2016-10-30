@@ -12,7 +12,7 @@ def lista_objetos(request, tk):
     Lista de todos los choferes, o crea uno nuevo
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'GET':
             objeto = TxdChofer.objects.all()
             serializador = TxdChoferS(objeto, many = true)
@@ -33,7 +33,7 @@ def detalle_objetos(request, pk, tk):
     Actuliza o elimina o chofer segun su id
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             objeto = TxdChofer.objects.get(pk=pk)
         except objeto.DoesNotExist:
@@ -62,7 +62,7 @@ def lista_choferes_denuncias(request, tk):
     Lista de todos los choferes con sus denuncias
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'GET':
             objeto = TxdChofer.objects.all()
             print objeto
@@ -77,7 +77,7 @@ def chofer_dpi(request, pk, tk):
     Obtiene un Chofer segun su dpi
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             objeto = TxdChofer.objects.get(dpi=pk)
         except objeto.DoesNotExist:

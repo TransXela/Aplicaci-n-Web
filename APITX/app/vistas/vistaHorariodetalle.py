@@ -14,7 +14,7 @@ def lista_objetos(request, tk):
     Lista de todos los Horariodetalles, o crea uno nuevo.
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'GET':
             objeto = TxdHorariodetalle.objects.all()
             serializador = TxdHorariodetalleS(objeto, many=True)
@@ -56,7 +56,7 @@ def detalle_objetos(request, pk, tk):
     Actuliza, elimina un objeto segun su id
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             objeto = TxdHorariodetalle.objects.get(pk=pk)
         except ObjectDoesNotExist:
@@ -123,7 +123,7 @@ def rango(request,fInicio,fFin, tk):
     Actuliza, elimina un objeto segun su id
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         formato_fecha = "%Y-%m-%d"
         inicio = datetime.strptime(fInicio, formato_fecha).date()
         fin = datetime.strptime(fFin, formato_fecha).date()
@@ -148,7 +148,7 @@ def lista_por_duenio(request,pk, tk):
     obtiene la lista de duenio
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             s =list()
             for i in TxdChofer.objects.filter(duenio=pk):
@@ -174,7 +174,7 @@ def detalle_Choferes(request, pk, tk):
     Actuliza, elimina un objeto segun su id
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             objeto = TxdChofer.objects.get(pk=pk)
         except ObjectDoesNotExist:
@@ -194,7 +194,7 @@ def lista_por_bus(request,pk, tk):
     obtiene la lista de horariodetalle por bus
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             objBus =TxdBus.objects.filter(pk=pk)
             objHorarioDetalle = TxdHorariodetalle.objects.filter(bus=pk)
@@ -217,7 +217,7 @@ def postRangoFechas(request, tk):
     obtiene crea por rango de fechas
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'POST':
             if 'fechaInicial' in request.data and 'fechaFinal' in request.data and 'bus' in request.data and 'chofer' in request.data and 'horario' in request.data and 'estado' in request.data:
                 data= {"bus": request.data['bus'], "chofer": request.data['chofer'] ,"horario": request.data['horario'],"estado":request.data['estado']}

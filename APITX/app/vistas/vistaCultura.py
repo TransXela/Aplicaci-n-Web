@@ -12,7 +12,7 @@ def lista_objetos(request, tk):
     Lista de todos los usuarios de cultura, o crea uno nuevo.
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'GET':
             objeto = TxcCultura.objects.all()
             serializador = TxcCulturaS(objeto, many=True)
@@ -33,7 +33,7 @@ def detalle_objetos(request, pk, tk):
     Actuliza, elimina un objeto segun su id
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             objeto = TxcCultura.objects.get(pk=pk)
         except objeto.DoesNotExist:
@@ -71,7 +71,7 @@ def obtener_sinUser(request, tk):
     Lista de todos los Duenios, o crea uno nuevo.
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'GET':
             objeto = TxcCultura.objects.filter(usuario__isnull=True)
             serializador = TxcCulturaS(objeto, many=True)

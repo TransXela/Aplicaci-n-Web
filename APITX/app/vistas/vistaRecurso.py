@@ -13,7 +13,7 @@ def lista_objetos(request, tk):
     Lista de todas las Buses, o crear una nueva
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'GET':
             objeto = TxdRecurso.objects.all()
             serializador = TxdRecursoS(objeto, many=True)
@@ -37,7 +37,7 @@ def detalle_objetos(request, pk, tk):
     Actualiza, elimina un objeto segun su id
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             objeto = TxdRecurso.objects.get(pk=pk)
         except ObjectDoesNotExist:

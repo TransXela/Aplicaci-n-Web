@@ -13,7 +13,7 @@ def lista_objetos(request, pk):
     Lista de todas las Buses, o crear una nueva
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'GET':
             objeto = PermissionsMixin().groups
             print objeto
@@ -35,7 +35,7 @@ def detalle_objetos(request, pk):
     Actualiza, elimina un objeto segun su id
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             objeto = Group.objects.get(pk=pk)
         except ObjectDoesNotExist:
@@ -65,7 +65,7 @@ def Grupo_Usuario(request, pk):
     Lista de todas las Buses, o crear una nueva
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'GET':
             objeto = Group.objects.all()
 

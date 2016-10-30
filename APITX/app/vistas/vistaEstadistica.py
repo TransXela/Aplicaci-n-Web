@@ -13,7 +13,7 @@ def lista_objetos(request, tk):
     Lista todas las denuncias
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'GET':
             objeto = TxdDenuncia.objects.all()
             serializador = TxdDenunciaS(objeto, many=True)
@@ -28,7 +28,7 @@ def lista_objetos_rutaBus(request, tk):
     Lista todos las rutas y buses
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'GET':
             objeto = TxdRuta.objects.all()
             serializador = BusRutaS(objeto, many=True)
@@ -43,7 +43,7 @@ def lista_objetos_pilotoDenuncia(request, tk):
     Lista todos las rutas y buses
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'GET':
             objeto = TxdChofer.objects.all()
             serializador = ChoferDenunciaS(objeto, many=True)
@@ -58,7 +58,7 @@ def lista_objetos_duenioBuses(request, tk):
     Lista todos los buses de un duenio
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'GET':
             objeto = TxdDuenio.objects.all()
             serializador = BusDuenioS(objeto, many=True)

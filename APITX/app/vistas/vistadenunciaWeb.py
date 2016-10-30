@@ -13,7 +13,7 @@ def lista_objetos(request, tk):
     Lista de todas las Buses, o crear una nueva
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'GET':
             objeto = TxdDenuncia.objects.all()
             serializador = TxdDenunciaS(objeto, many=True)
@@ -34,7 +34,7 @@ def detalle_objetos(request, pk, tk):
     Actualiza, elimina un objeto segun su id
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             objeto = TxdDenuncia.objects.get(pk=pk)
         except ObjectDoesNotExist:
@@ -63,7 +63,7 @@ def buses_Activos(request, tk):
     retorna los busese que estan activos
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             objetos = TxdDenuncia.objects.filter(estado=1)
         except ObjectDoesNotExist:

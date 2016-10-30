@@ -13,7 +13,7 @@ def lista_objetos(request, tk):
     Lista de todas las Buses, o crear una nueva
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         if request.method == 'GET':
             objeto = TxdBus.objects.all()
             serializador = TxdBusS(objeto, many=True)
@@ -34,7 +34,7 @@ def detalle_objetos(request, pk, tk):
     Actualiza, elimina un objeto segun su id
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             objeto = TxdBus.objects.get(pk=pk)
         except ObjectDoesNotExist:
@@ -64,7 +64,7 @@ def buses_Activos(request, tk):
     retorna los busese que estan activos
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             objetos = TxdBus.objects.filter(estado=1)
         except ObjectDoesNotExist:
@@ -83,7 +83,7 @@ def buses_Activos(request, tk):
     retorna los busese que estan activos
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             objetos = TxdBus.objects.filter(estado=1)
         except ObjectDoesNotExist:
@@ -102,7 +102,7 @@ def bus_placa(request, pk, tk):
     Busqueda de un bus segun placa
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         try:
             objeto = TxdBus.objects.get(placa=pk)
         except ObjectDoesNotExist:
@@ -120,7 +120,7 @@ def denuncias_tipodenuncia(request, idB, tk):
     Filtro de Denuncias de un bus segun tipo de denuncia
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         respuesta = {}
         listatdenuncia = list()
         try:
@@ -147,7 +147,7 @@ def denuncias_bus_tipodenuncia(request, idB,idTd, tk):
     Filtro de Denuncias de un bus segun tipo de denuncia
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.lista_duenios):
+    if usuario.has_perms(permisos.duenios):
         respuesta = {}
         lista = list()
         try:
