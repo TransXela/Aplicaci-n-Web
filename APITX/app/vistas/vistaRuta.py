@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db import IntegrityError
-from app.models import TxdRuta,TxdDenuncia,TxdBus
+from app.models import TxdRuta,TxdDenuncia,TxdBus, TxdHorariodetalle
 from app.serializables import TxdRutaS, TxdDenunciaS,TxdBusS
 from app import permisos
 from app.vistas import autentificacion
@@ -91,5 +91,31 @@ def denuncias_ruta(request, pk, tk):
             respuesta['ruta'] =  listaruta
             respuesta['buses'] = listadenuncias
             return Response(respuesta)
+    else:
+        return Response("No tiene los permisos necesarios", status=status.HTTP_403_NOT_FOUND)
+
+@api_view(['GET', 'POST'])
+def lista_numDenuncias(request,tk):
+    """
+    Lista de todos los Rutas, o crea uno nuevo.
+    """
+    usuario = autentificacion.autenticacion(tk)
+    if usuario.has_perms(permisos.duenios):
+        if request.method == 'GET':
+            objeto = TxdRuta.objects.all()
+            a= list()
+            for ruta in objeto:
+                cant = 0
+                buses = TxdBus.objects.filter(ruta=ruta.idruta)
+                for bus in buses:
+                    detalles=TxdHorariodetalle.objects.filter(bus=bus.idbus)
+                    for detalle in detalles:
+                        cant+= len(TxdDenuncia.objects.filter(chofer=detalle.chofer.idchofer))
+                ob={}
+                ob={"idruta":ruta.idruta, "nombre":ruta.nombre, "recorrido":ruta.recorrido, "TotalDenuncias":cant}
+                a+=[ob]
+            rutas={}
+            rutas['rutas'] = a
+            return Response(rutas)
     else:
         return Response("No tiene los permisos necesarios", status=status.HTTP_403_NOT_FOUND)

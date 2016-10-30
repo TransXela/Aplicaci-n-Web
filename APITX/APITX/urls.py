@@ -59,7 +59,7 @@ urlpatterns = [
     url(r'^duenio/horariodetalle/(?P<pk>[0-9]+)/(?P<tk>[0-9a-zA-Z]+)/$', vistaHorariodetalle.detalle_objetos),# Obtiene uno en especifico
     url(r'^duenio/(?P<pk>[0-9]+)/horariosdetalle/(?P<tk>[0-9a-zA-Z]+)/$', vistaHorariodetalle.lista_por_duenio),# Otiene el listado de horarios de un duenio
 
-    url(r'^ruta//(?P<tk>[0-9a-zA-Z]+)/$', vistaRuta.lista_objetos),
+    url(r'^ruta/(?P<tk>[0-9a-zA-Z]+)/$', vistaRuta.lista_objetos),
     url(r'^ruta/(?P<pk>[0-9]+)/(?P<tk>[0-9a-zA-Z]+)/$', vistaRuta.detalle_objetos),
     url(r'^duenio/bus/(?P<pk>[0-9]+)/editar/(?P<tk>[0-9a-zA-Z]+)/$', vistaBus.detalle_objetos),
     url(r'^recurso/(?P<tk>[0-9a-zA-Z]+)/$', vistaRecurso.lista_objetos),
@@ -101,6 +101,7 @@ urlpatterns = [
     url(r'^bus/(?P<pk>[1-9a-zA-Z]+)/(?P<tk>[0-9a-zA-Z]+)/$', vistaBus.bus_placa),
     url(r'^horariosdetalle/bus/(?P<pk>[1-9]+)/(?P<tk>[0-9a-zA-Z]+)/$', vistaHorariodetalle.lista_por_bus),
     url(r'^denuncias/(?P<tk>[0-9a-zA-Z]+)/$', vistaDenuncia.lista_denuncias),
+    url(r'^denuncias/rutas/(?P<tk>[0-9a-zA-Z]+)/$', vistaRuta.lista_numDenuncias),
     url(r'^denuncia/estado/(?P<pk>[0-9]+)/(?P<tk>[0-9a-zA-Z]+)/$', vistaDenuncia.cambio_estado),
     url(r'^denuncias/ruta/(?P<pk>[0-9]+)/(?P<tk>[0-9a-zA-Z]+)/$', vistaRuta.denuncias_ruta),
     url(r'^denuncias/ruta/bus/(?P<idB>[0-9]+)/(?P<tk>[0-9a-zA-Z]+)/$', vistaBus.denuncias_tipodenuncia),
@@ -109,6 +110,7 @@ urlpatterns = [
 
     #Administrador
     url(r'^groups/(?P<tk>[0-9a-zA-Z]+)/$', vistaGrupo.Grupo_Usuario),
+    url(r'^groups/(?P<pk>[0-9]+)/(?P<tk>[0-9a-zA-Z]+)/$', vistaGrupo.detalle_objetos),
     url(r'^users/(?P<pk>[0-9]+)/(?P<tk>[0-9a-zA-Z]+)$', vistaUsuario.detalle_usuario),
     url(r'^users/group/(?P<pk>[0-9]+)/(?P<tk>[0-9a-zA-Z]+)/$', vistaUsuario.Usuarios_Group),
     url(r'^users/habilitar/(?P<pk>[0-9]+)/(?P<tk>[0-9a-zA-Z]+)/$', vistaUsuario.CambiarEstado,{'var': 0}),

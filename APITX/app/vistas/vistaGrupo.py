@@ -8,7 +8,7 @@ from app import permisos
 from app.vistas import autentificacion
 
 @api_view(['GET', 'POST'])
-def lista_objetos(request, pk):
+def lista_objetos(request, tk):
     """
     Lista de todas las Buses, o crear una nueva
     """
@@ -30,7 +30,7 @@ def lista_objetos(request, pk):
         return Response("No tiene los permisos necesarios", status=status.HTTP_403_NOT_FOUND)
 
 @api_view(['GET', 'PUT','DELETE'])
-def detalle_objetos(request, pk):
+def detalle_objetos(request, pk,tk):
     """
     Actualiza, elimina un objeto segun su id
     """
@@ -60,7 +60,7 @@ def detalle_objetos(request, pk):
         return Response("No tiene los permisos necesarios", status=status.HTTP_403_NOT_FOUND)
 
 @api_view(['GET',])
-def Grupo_Usuario(request, pk):
+def Grupo_Usuario(request, tk):
     """
     Lista de todas las Buses, o crear una nueva
     """

@@ -228,27 +228,28 @@ def cambio_estado(request, pk):
             return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-def lista_denuncias(request):
+def lista_denuncias(request,tk):
     """
     Lista de todas las denuncias
     """
     try:
         ob={}
         a = list()
+        ob2={}
         objeto = TxdDenuncia.objects.all()
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     if request.method == 'GET':
         for denuncia in objeto:
+
             chofer = TxdChofer.objects.filter(idchofer=denuncia.chofer.idchofer)
             tipodenuncia = TxdTipodenuncia.objects.filter(idtipodenuncia=denuncia.tipodenuncia.idtipodenuncia)
             print chofer
-            serializador = TxdDenunciaS(denuncia).data
-            serial = TxdChoferS(chofer,many=True).data
-            tdenuncia = TxdTipodenunciaS(tipodenuncia,many=True).data
-            a+= [serializador]
-            a+= [serial]
-            a+= [tdenuncia]
+            data={}
+            data ['denuncia'] = TxdDenunciaS(denuncia).data
+            data['chofer'] = TxdChoferS(chofer,many=True).data
+            data['tipodenuncia'] = TxdTipodenunciaS(tipodenuncia,many=True).data
+            a+= [data]
         ob['numdenuncias'] = TxdDenuncia.objects.count()
         ob['denuncias'] = a
         return Response(ob)
