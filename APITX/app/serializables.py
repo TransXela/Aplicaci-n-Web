@@ -1,17 +1,22 @@
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group,GroupManager,PermissionsMixin
 from app import models
 from rest_framework import serializers
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password')
+        fields = ('__all__')
 
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
+class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = ('url', 'name')
+        fields = ('__all__')
+
+class PermisionS(serializers.ModelSerializer):
+    class Meta:
+        model = PermissionsMixin
+        fields = ('__all__')
 
 class TxcActividadS(serializers.ModelSerializer):
     class Meta:
@@ -154,7 +159,7 @@ class Duenios_horariodetalle(serializers.ModelSerializer):
 
     class Meta:
         model = models.TxdHorariodetalle
-        fields = ('idhorariodetalle','fecha','horario','horarios','chofer', 'choferes','bus','buses')
+        fields = ('idhorariodetalle','fecha','estado','horario','horarios','chofer', 'choferes','bus','buses')
 
 class choferHorariDetalle(serializers.ModelSerializer):
     horariosDetalle = TxdHorariodetalleS(many=True, read_only=True, source='txdhorariodetalle_set')
@@ -214,3 +219,21 @@ class TxcoCapituloTituloS(serializers.ModelSerializer):
     class Meta:
         model = models.TxcTitulo
         fields = ('idtitulo','titulo','numero','capitulos')
+
+class BusRutaS(serializers.ModelSerializer):
+    bs = TxdBusS(many=True, read_only=True, source='txdbus_set')
+    class Meta:
+        model = models.TxdRuta
+        fields = ('idruta','nombre','recorrido','bs')
+
+class ChoferDenunciaS(serializers.ModelSerializer):
+    den = TxdDenunciaS(many=True, read_only=True, source='txddenuncia_set')
+    class Meta:
+        model = models.TxdChofer
+        fields = ('idchofer','nombre','dpi','den')
+
+class BusDuenioS(serializers.ModelSerializer):
+    buss = TxdBusS(many=True, read_only=True, source='txdbus_set')
+    class Meta:
+        model = models.TxdDuenio
+        fields = ('idduenio','nombre','dpi','estado','buss')
