@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from app.models import TxcActividad
 from app.serializables import TxcActividadS
 from app import permisos
+from django.core.exceptions import ObjectDoesNotExist
+from datetime import datetime
+import time
 
 @api_view(['GET', 'POST'])
 def lista_objetos(request):
@@ -77,3 +80,19 @@ def busqueda(request, busq):
     if request.method == 'GET':
         serializador = TxcActividadS(objeto, many=True)
         return Response(serializador.data)
+
+@api_view(['GET'])
+def busqueda_act_fechas(request):
+    """
+    Lista de todas las actividades a partir de una fecha
+    """
+    if request.method == 'GET':
+        try:
+            actFech=list()
+            for x in TxcActividad.objects.filter(fecha__gt=datetime.now()):
+                serializador = TxcActividadS(x)
+                actFech+=[serializador.data]
+            return Response(actFech)
+
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
