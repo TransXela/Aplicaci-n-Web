@@ -7,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from app.models import TxdDenuncia,TxdBus,TxdHorariodetalle,TxdToken, TxdChofer, TxdTipodenuncia
 from app.serializables import TxdDenunciaS, TxdDenunciaRecursosS,TxdTokenS, DenunciaChofer, TxdChoferS, TxdTipodenunciaS
 from app import permisos
+from app.vistas import autentificacion
 
 def obtenerToken(imei):
     """
@@ -204,55 +205,63 @@ def detalle_objetos(request,var):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['PUT'])
-def cambio_estado(request, pk):
+def cambio_estado(request, pk, tk):
     """
     Actualiza el estado de una denuncia
     """
-    try:
-        objeto = TxdDenuncia.objects.get(pk=pk)
-    except ObjectDoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+    usuario = autentificacion.autenticacion(tk)
+    if usuario.has_perms(permisos.duenios):
+        try:
+            objeto = TxdDenuncia.objects.get(pk=pk)
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'PUT':
-        data = {"descripcion": objeto.descripcion ,"fechahora": objeto.fechahora,"placa":objeto.placa,
-        "chofer":objeto.chofer.idchofer,"token":objeto.token.idtoken,"tipodenuncia":objeto.tipodenuncia.idtipodenuncia,
-        "latitud":objeto.latitud, "longitud":objeto.longitud}
-        data['estado']= request.data['estado']
-        print data
-        serializador = TxdDenunciaS(objeto,data=data)
-        if serializador.is_valid():
-            serializador.save()
-            content = {'estado': 'se actualizo'}
-            return Response(content, status=status.HTTP_202_ACCEPTED)
-        else:
-            return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
+        if request.method == 'PUT':
+            data = {"descripcion": objeto.descripcion ,"fechahora": objeto.fechahora,"placa":objeto.placa,
+            "chofer":objeto.chofer.idchofer,"token":objeto.token.idtoken,"tipodenuncia":objeto.tipodenuncia.idtipodenuncia,
+            "latitud":objeto.latitud, "longitud":objeto.longitud}
+            data['estado']= request.data['estado']
+            print data
+            serializador = TxdDenunciaS(objeto,data=data)
+            if serializador.is_valid():
+                serializador.save()
+                content = {'estado': 'se actualizo'}
+                return Response(content, status=status.HTTP_202_ACCEPTED)
+            else:
+                return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response("No tiene los permisos necesarios", status=status.HTTP_403_NOT_FOUND)
 
 @api_view(['GET'])
-def lista_denuncias(request,tk):
+def lista_denuncias(request, tk):
     """
     Lista de todas las denuncias
     """
-    try:
-        ob={}
-        a = list()
-        ob2={}
-        objeto = TxdDenuncia.objects.all()
-    except ObjectDoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    if request.method == 'GET':
-        for denuncia in objeto:
+    usuario = autentificacion.autenticacion(tk)
+    if usuario.has_perms(permisos.duenios):
+        try:
+            ob={}
+            a = list()
+            ob2={}
+            objeto = TxdDenuncia.objects.all()
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        if request.method == 'GET':
+            for denuncia in objeto:
 
-            chofer = TxdChofer.objects.filter(idchofer=denuncia.chofer.idchofer)
-            tipodenuncia = TxdTipodenuncia.objects.filter(idtipodenuncia=denuncia.tipodenuncia.idtipodenuncia)
-            print chofer
-            data={}
-            data ['denuncia'] = TxdDenunciaS(denuncia).data
-            data['chofer'] = TxdChoferS(chofer,many=True).data
-            data['tipodenuncia'] = TxdTipodenunciaS(tipodenuncia,many=True).data
-            a+= [data]
-        ob['numdenuncias'] = TxdDenuncia.objects.count()
-        ob['denuncias'] = a
-        return Response(ob)
+                chofer = TxdChofer.objects.filter(idchofer=denuncia.chofer.idchofer)
+                tipodenuncia = TxdTipodenuncia.objects.filter(idtipodenuncia=denuncia.tipodenuncia.idtipodenuncia)
+                print chofer
+                data={}
+                data ['denuncia'] = TxdDenunciaS(denuncia).data
+                data['chofer'] = TxdChoferS(chofer,many=True).data
+                data['tipodenuncia'] = TxdTipodenunciaS(tipodenuncia,many=True).data
+                a+= [data]
+            ob['numdenuncias'] = TxdDenuncia.objects.count()
+            ob['denuncias'] = a
+            return Response(ob)
+    else:
+        return Response("No tiene los permisos necesarios", status=status.HTTP_403_NOT_FOUND)
 
 """
 @api_view(['GET'])
