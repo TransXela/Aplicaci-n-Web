@@ -12,7 +12,7 @@ def lista_objetos(request, tk):
     Lista de todos los capitulos, o crear un nuevo
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.duenios):
+    if usuario.has_perms(permisos.cultura):
         if request.method == 'GET':
             objeto = TxcCapitulo.objects.all()
             serializador = TxcCapituloS(objeto, many=True)
@@ -33,7 +33,7 @@ def detalle_objetos(request, pk, tk):
     Actualiza, elimina un objeto segun su id
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.duenios):
+    if usuario.has_perms(permisos.cultura):
         try:
             objeto = TxcCapitulo.objects.get(pk=pk)
         except objeto.DoesNotExist:

@@ -15,7 +15,7 @@ def lista_objetos(request, pk, tk):
     Lista de todas las actividades, o crear una nueva
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.duenios):
+    if usuario.has_perms(permisos.cultura):
         if request.method == 'GET':
             try:
                 todo=list()

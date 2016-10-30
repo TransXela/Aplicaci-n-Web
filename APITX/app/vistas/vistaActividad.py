@@ -12,7 +12,7 @@ def lista_objetos(request, tk):
     Lista de todas las actividades, o crear una nueva
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.duenios):
+    if usuario.has_perms(permisos.cultura):
         if request.method == 'GET':
             objeto = TxcActividad.objects.all()
             serializador = TxcActividadS(objeto, many=True)
@@ -33,7 +33,7 @@ def detalle_objetos(request, pk, tk):
     Actualiza, elimina un objeto segun su id
     """
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.duenios):
+    if usuario.has_perms(permisos.cultura):
         try:
             objeto = TxcActividad.objects.get(pk=pk)
         except objeto.DoesNotExist:
@@ -76,7 +76,7 @@ def detalle_objetos(request, pk, tk):
 @api_view(['GET'])
 def busqueda(request, busq, tk):
     usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.duenios):
+    if usuario.has_perms(permisos.cultura):
         try:
             objeto = TxcActividad.objects.filter(nombre__contains=busq) | TxcActividad.objects.filter(lugar__contains=busq) | TxcActividad.objects.filter(fecha__contains=busq)
         except objeto.DoesNotExist:
