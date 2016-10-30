@@ -44,3 +44,11 @@ def token(request, format=None):
             return Response(datos)
         else:
             return Response("susuario y contasenia incorrecta", tatus=status.HTTP_404_NOT_FOUND)
+
+def autenticacion(tk):
+    try:
+        token = Token.objects.get(key=tk)
+        usuario = User.objects.get(pk=token.user.id)
+        return usuario
+    except objeto.DoesNotExist:
+        return Response("datos incorrectos", status=status.HTTP_403_NOT_FOUND)
