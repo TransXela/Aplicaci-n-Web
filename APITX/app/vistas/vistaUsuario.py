@@ -68,7 +68,9 @@ def crear_usuario(request, tk):
                     except ObjectDoesNotExist:
                         n=0
 
-                return Response(UserSerializer(User.objects.get(username=user)).data, status=status.HTTP_201_CREATED)
+                data = {"id":user.id ,"username":user.username, "email": user.email, "password" :user.password}
+                print data
+                return Response(data, status=status.HTTP_201_CREATED)
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
