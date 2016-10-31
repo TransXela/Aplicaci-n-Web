@@ -3,8 +3,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime, date, timedelta
-from app.models import TxdHorariodetalle,TxdBus,TxdChofer,TxdDuenio
-from app.serializables import TxdHorariodetalleS,Duenios_horariodetalle,TxdDuenioS, choferHorariDetalle, TxdBusS
+from app.models import TxdHorariodetalle,TxdBus,TxdChofer,TxdDuenio, TxdHorario
+from app.serializables import TxdHorariodetalleS,Duenios_horariodetalle,TxdDuenioS, choferHorariDetalle, TxdBusS, TxdHorarioS, TxdChoferS, Buses_horariodetalle
 from app import permisos
 from app.vistas import autentificacion
 
@@ -201,13 +201,13 @@ def lista_por_bus(request,pk, tk):
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        if request.method == 'GET':
-            serBus = TxdBusS(objBus, many=True)
-            serHorarioDetalle = TxdHorariodetalleS(objHorarioDetalle, many = True)
-            data={"Bus":serBus.data,"HorarioDetalle": serHorarioDetalle.data}
-            return Response(data)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            if request.method == 'GET':
+                serBus = TxdBusS(objBus, many=True)
+                serHorarioDetalle =  Buses_horariodetalle(objHorarioDetalle, many=True)
+                data={"Bus":serBus.data,"HorarioDetalle": serHorarioDetalle.data}
+                return Response(data)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response("No tiene los permisos necesarios", status=status.HTTP_403_NOT_FOUND)
 
