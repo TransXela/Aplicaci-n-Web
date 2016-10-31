@@ -1,8 +1,8 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from app.models import TxdDenuncia, TxdBus, TxdRuta, TxdChofer, TxdDuenio
-from app.serializables import TxdDenunciaS, BusRutaS, ChoferDenunciaS, BusDuenioS
+from app.models import TxdDenuncia, TxdBus, TxdRuta, TxdChofer, TxdDuenio,TxdTipodenuncia
+from app.serializables import TxdDenunciaS, BusRutaS, ChoferDenunciaS, BusDuenioS,PilotoDuenioS,TxdBusS, TxdTipodenunciaS,TipoDenDenunciaS
 
 @api_view(['GET'])
 def lista_objetos(request):
@@ -41,9 +41,65 @@ def lista_objetos_pilotoDenuncia(request):
 def lista_objetos_duenioBuses(request):
 
     """
-    Lista todos los buses de un duenio
+    Lista todos los buses de todos los duenios
     """
     if request.method == 'GET':
         objeto = TxdDuenio.objects.all()
         serializador = BusDuenioS(objeto, many=True)
+        return Response(serializador.data)
+
+@api_view(['GET'])
+def lista_objetos_duenioBusesId(request, pk):
+
+    """
+    Lista todos los buses de un duenio por id
+    """
+    try:
+        objeto = TxdDuenio.objects.get(pk=pk)
+    except objeto.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializador = BusDuenioS(objeto)
+        return Response(serializador.data)
+
+@api_view(['GET'])
+def lista_objetos_duenioChofId(request, pk):
+
+    """
+    Lista todos los pilotos de un duenio por id
+    """
+    try:
+        objeto = TxdDuenio.objects.get(pk=pk)
+    except objeto.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializador = PilotoDuenioS(objeto)
+        return Response(serializador.data)
+
+@api_view(['GET'])
+def lista_objetos_busChofId(request, pk):
+
+    """
+    Lista todos los buses de un duenio por id
+    """
+    try:
+        objeto = TxdBus.objects.filter(duenio=pk)
+    except objeto.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializador = TxdBusS(objeto, many=True)
+        return Response(serializador.data)
+
+@api_view(['GET'])
+def lista_objetos_tipoDenDenuncia(request):
+
+    """
+    Lista todas las denuncias
+    """
+    if request.method == 'GET':
+        objeto = TxdTipodenuncia.objects.all()
+        serializador = TipoDenDenunciaS(objeto, many=True)
         return Response(serializador.data)

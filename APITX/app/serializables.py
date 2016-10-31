@@ -237,3 +237,15 @@ class BusDuenioS(serializers.ModelSerializer):
     class Meta:
         model = models.TxdDuenio
         fields = ('idduenio','nombre','dpi','estado','buss')
+
+class PilotoDuenioS(serializers.ModelSerializer):
+    plt = TxdChoferS(many=True, read_only=True, source='txdchofer_set')
+    class Meta:
+        model = models.TxdDuenio
+        fields = ('idduenio','nombre','dpi','estado','plt')
+
+class TipoDenDenunciaS(serializers.ModelSerializer):
+    dnc = TxdDenunciaS(many=True, read_only=True, source='txddenuncia_set')
+    class Meta:
+        model = models.TxdTipodenuncia
+        fields = ('idtipodenuncia','descripcion','dnc')

@@ -144,6 +144,10 @@ urlpatterns = [
     url(r'^reporte/pmt/RepBusRuta/$', vistaEstadistica.lista_objetos_rutaBus),
     url(r'^reporte/pmt/RepPilotoDen/$', vistaEstadistica.lista_objetos_pilotoDenuncia),
     url(r'^reporte/pmt/RepDuenioBuses/$', vistaEstadistica.lista_objetos_duenioBuses),
+    url(r'^reporte/pmt/RepDuenioBusesId/(?P<pk>[0-9]+)$', vistaEstadistica.lista_objetos_duenioBusesId),
+    url(r'^reporte/pmt/RepDuenioChoferId/(?P<pk>[0-9]+)$', vistaEstadistica.lista_objetos_duenioChofId),
+    url(r'^reporte/pmt/RepBusChofId/(?P<pk>[0-9]+)$', vistaEstadistica.lista_objetos_busChofId),    
+    url(r'^reporte/duenio/RepTipoDenD/$', vistaEstadistica.lista_objetos_tipoDenDenuncia),
 
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
