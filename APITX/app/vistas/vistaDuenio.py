@@ -32,7 +32,7 @@ def principal_duenio_choferes(request,pk, var, tk):
     """
     Lista los buses y choferes
     """
-    usuario = autentificacion.autenticacionGrupo(tk, 3)
+    usuario = autentificacion.autenticacionGrupo(tk)
     if usuario.has_perms(permisos.duenios):
         try:
             objeto = TxdDuenio.objects.get(pk=pk)
