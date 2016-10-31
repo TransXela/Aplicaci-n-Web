@@ -61,6 +61,12 @@ def crear_usuario(request, tk):
                                                 email=request.data.get('email'),
                                                 password=request.data.get('password'))
                 user.save()
+                if 'idgroup' in request.data:
+                    try:
+                        grupo = Group.objects.get(pk=request.data['idgroup'])
+                        user.groups.add(grupo)
+                    except ObjectDoesNotExist:
+                        n=0
 
                 return Response(UserSerializer(User.objects.get(username=user)).data, status=status.HTTP_201_CREATED)
             else:
@@ -102,6 +108,24 @@ def detalle_usuario(request, pk, tk):
             return Response("No tiene los permisos necesarios", status=status.HTTP_403_NOT_FOUND)
 
 @api_view(['GET'])
+def lista_usuario(request,tk):
+        """
+        Actualiza, elimina un objeto segun su id
+        """
+        usuario = autentificacion.autenticacion(tk)
+        if usuario.has_perms(permisos.duenios):
+            try:
+                obUsuario =  User.objects.all()
+            except ObjectDoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            if request.method == 'GET':
+                serUsuario = UserSerializer(obUsuario,many=True)
+                return Response(serUsuario.data)
+        else:
+            return Response("No tiene los permisos necesarios", status=status.HTTP_403_NOT_FOUND)
+
+@api_view(['GET'])
 def Usuarios_Group(request, pk, tk):
         """
         Actualiza, elimina un objeto segun su id
@@ -109,7 +133,7 @@ def Usuarios_Group(request, pk, tk):
         usuario = autentificacion.autenticacion(tk)
         if usuario.has_perms(permisos.duenios):
             try:
-                usuarios = User.objects.filter(groups=1)
+                usuarios = User.objects.filter(groups=pk)
             except ObjectDoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
 

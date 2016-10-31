@@ -111,6 +111,8 @@ urlpatterns = [
     #Administrador
     url(r'^groups/(?P<tk>[0-9a-zA-Z]+)/$', vistaGrupo.Grupo_Usuario),
     url(r'^groups/(?P<pk>[0-9]+)/(?P<tk>[0-9a-zA-Z]+)/$', vistaGrupo.detalle_objetos),
+    url(r'^users/crearusuario/(?P<tk>[0-9a-zA-Z]+)/$', vistaUsuario.crear_usuario),
+    url(r'^users/(?P<tk>[0-9a-zA-Z]+)/$', vistaUsuario.lista_usuario),
     url(r'^users/(?P<pk>[0-9]+)/(?P<tk>[0-9a-zA-Z]+)$', vistaUsuario.detalle_usuario),
     url(r'^users/group/(?P<pk>[0-9]+)/(?P<tk>[0-9a-zA-Z]+)/$', vistaUsuario.Usuarios_Group),
     url(r'^users/habilitar/(?P<pk>[0-9]+)/(?P<tk>[0-9a-zA-Z]+)/$', vistaUsuario.CambiarEstado,{'var': 0}),
