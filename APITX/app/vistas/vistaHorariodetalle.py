@@ -201,15 +201,15 @@ def lista_por_bus(request,pk, tk):
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-            if request.method == 'GET':
-                serBus = TxdBusS(objBus, many=True)
-                serHorarioDetalle =  Buses_horariodetalle(objHorarioDetalle, many=True)
-                data={"Bus":serBus.data,"HorarioDetalle": serHorarioDetalle.data}
-                return Response(data)
-            else:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+        if request.method == 'GET':
+            serBus = TxdBusS(objBus, many=True)
+            serHorarioDetalle =  Buses_horariodetalle(objHorarioDetalle, many=True)
+            data={"Bus":serBus.data,"HorarioDetalle": serHorarioDetalle.data}
+            return Response(data)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response("No tiene los permisos necesarios", status=status.HTTP_403_NOT_FOUND)
+        return Response({"estado": "No tiene los permisos necesarios"}, status=status.HTTP_403_NOT_FOUND)
 
 @api_view(['POST'])
 def postRangoFechas(request, tk):
