@@ -108,9 +108,7 @@ def lista_numDenuncias(request,tk):
                 cant = 0
                 buses = TxdBus.objects.filter(ruta=ruta.idruta)
                 for bus in buses:
-                    detalles=TxdHorariodetalle.objects.filter(bus=bus.idbus)
-                    for detalle in detalles:
-                        cant+= len(TxdDenuncia.objects.filter(chofer=detalle.chofer.idchofer))
+                    cant+= TxdDenuncia.objects.filter(placa=bus.placa,chofer__isnull=False).count()
                 ob={}
                 ob={"idruta":ruta.idruta, "nombre":ruta.nombre, "recorrido":ruta.recorrido, "TotalDenuncias":cant}
                 a+=[ob]
