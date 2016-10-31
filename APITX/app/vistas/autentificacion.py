@@ -48,3 +48,18 @@ def autenticacion(tk):
         return usuario
     except objeto.DoesNotExist:
         return Response("datos incorrectos", status=status.HTTP_403_NOT_FOUND)
+
+def autenticacionGrupo(tk, Grupo):
+    try:
+        token = Token.objects.get(key=tk)
+        usuario = User.objects.get(pk=token.user.id)
+        cursor = connection.cursor()
+        cursor.execute("SELECT *FROM auth_user_groups WHERE user_id = %s", [usuario.pk])
+        usuariogrupo = cursor.fetchall()
+        objGrupo = Group.objects.get(pk=usuariogrupo[0][2])
+        if objGrupo.pk == Grupo:
+            return usuario
+        else:
+            return Response("datos incorrectos", status=status.HTTP_403_NOT_FOUND)
+    except objeto.DoesNotExist:
+        return Response("datos incorrectos", status=status.HTTP_403_NOT_FOUND)
