@@ -109,7 +109,7 @@ def detalle_usuario(request, pk, tk):
         else:
             return Response("No tiene los permisos necesarios", status=status.HTTP_403_NOT_FOUND)
 
-@api_view(['GET'])
+@api_view(['GET','POST'])
 def lista_usuario(request,tk):
         """
         Actualiza, elimina un objeto segun su id
@@ -124,6 +124,26 @@ def lista_usuario(request,tk):
             if request.method == 'GET':
                 serUsuario = UserSerializer(obUsuario,many=True)
                 return Response(serUsuario.data)
+            elif request.method == 'POST':
+                serializador = UserSerializer(data = request.data)
+                if serializador.is_valid():
+                    user = User.objects.create_user(username=request.data.get('username'),
+                                                    email=request.data.get('email'),
+                                                    password=request.data.get('password'))
+                    user.save()
+                    if 'idgroup' in request.data:
+                        try:
+                            grupo = Group.objects.get(pk=request.data['idgroup'])
+                            user.groups.add(grupo)
+                        except ObjectDoesNotExist:
+                            n=0
+
+                    data = {"id":user.id ,"username":user.username, "email": user.email, "password" :user.password}
+                    print data
+                    return Response(data, status=status.HTTP_201_CREATED)
+                else:
+                    return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
+
         else:
             return Response("No tiene los permisos necesarios", status=status.HTTP_403_NOT_FOUND)
 
