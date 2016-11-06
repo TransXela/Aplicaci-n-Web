@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime, date, timedelta
 from app.models import TxdHorariodetalle,TxdBus,TxdChofer,TxdDuenio, TxdHorario
-from app.serializables import TxdHorariodetalleS,Duenios_horariodetalle,TxdDuenioS, choferHorariDetalle, TxdBusS, TxdHorarioS, TxdChoferS, Buses_horariodetalle
+from app.serializables import TxdHorariodetalleS,Duenios_horariodetalle,TxdDuenioS, choferHorariDetalle, TxdBusS, TxdHorarioS, TxdChoferS, Buses_horariodetalle, choferHorariDetalleCompleto
 from app import permisos
 from app.vistas import autentificacion
 
@@ -177,11 +177,12 @@ def detalle_Choferes(request, pk, tk):
     if usuario.has_perms(permisos.duenios):
         try:
             objeto = TxdChofer.objects.get(pk=pk)
+            #objHorarioDetalle = TxdHorariodetalle.objects.filter(bus=pk)
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         if request.method == 'GET':
-            serializador = choferHorariDetalle(objeto)
+            serializador = choferHorariDetalleCompleto(objeto)
             return Response(serializador.data)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
