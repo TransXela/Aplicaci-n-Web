@@ -37,6 +37,7 @@ urlpatterns = [
     url(r'^duenio/$', vistaDuenio.lista_objetos),
     url(r'^operador/duenios/(?P<tk>[0-9a-zA-Z]+)/$', vistaDuenio.lista_objetos),
     url(r'^admin/duenio/lista/(?P<tk>[0-9a-zA-Z]+)/$', vistaDuenio.lista_objetos),
+    url(r'user/(?P<tk>[0-9a-zA-Z]+)/$', vistaGrupoUsuario.UserViewSet),
 
     url(r'^duenio/(?P<pk>[0-9]+)/(?P<tk>[0-9a-zA-Z]+)/$', vistaDuenio.detalle_objetos),
     url(r'^duenio/(?P<pk>[0-9]+)/principal/(?P<tk>[0-9a-zA-Z]+)/$', vistaDuenio.principal_duenio_choferes,{'var': 0}),
