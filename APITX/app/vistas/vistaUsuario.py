@@ -141,10 +141,8 @@ def lista_usuario(request,tk):
                             user.groups.add(grupo)
                         except ObjectDoesNotExist:
                             n=0
-
-                    data = {"id":user.id ,"username":user.username, "email": user.email, "password" :user.password}
-                    print data
-                    return Response(data, status=status.HTTP_201_CREATED)
+                    serializador = UserSerializer(user)
+                    return Response(serializador.data, status=status.HTTP_201_CREATED)
                 else:
                     return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
 
