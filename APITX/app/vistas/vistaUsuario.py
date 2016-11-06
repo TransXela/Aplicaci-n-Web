@@ -69,8 +69,8 @@ def crear_usuario(request, tk):
                         n=0
 
                 data = {"id":user.id ,"username":user.username, "email": user.email, "password" :user.password}
-                print data
-                return Response(data, status=status.HTTP_201_CREATED)
+                serializador = UserSerializer(user)
+                return Response(serializador.data, status=status.HTTP_201_CREATED)
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)

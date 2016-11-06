@@ -26,8 +26,8 @@ from APITX import settings
 from django.conf.urls.static import static
 
 router = routers.DefaultRouter()
-router.register(r'users', vistaGrupoUsuario.UserViewSet)
-router.register(r'groups', vistaGrupoUsuario.GroupViewSet)
+#router.register(r'users', vistaGrupoUsuario.UserViewSet)
+#router.register(r'groups', vistaGrupoUsuario.GroupViewSet)
 
 urlpatterns = [
 
