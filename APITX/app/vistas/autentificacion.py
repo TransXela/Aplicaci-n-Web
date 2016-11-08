@@ -39,15 +39,15 @@ def token(request, format=None):
             datos['Token'] = token.key
             return Response(datos)
         else:
-            return Response("susuario y contasenia incorrecta", tatus=status.HTTP_404_NOT_FOUND)
+            return Response("susuario y contasenia incorrecta", status=status.HTTP_404_NOT_FOUND)
 
 def autenticacion(tk):
     try:
-        token = Token.objects.get(key=tk)
+        objToken = Token.objects.get(key=tk)
         usuario = User.objects.get(pk=token.user.id)
-        return usuario
-    except objeto.DoesNotExist:
-        return Response("datos incorrectos", status=status.HTTP_403_NOT_FOUND)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    return usuario
 
 def autenticacionGrupo(tk, Grupo):
     try:

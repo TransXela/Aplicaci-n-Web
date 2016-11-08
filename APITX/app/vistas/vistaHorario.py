@@ -12,18 +12,24 @@ from app import permisos
 from app.vistas import autentificacion
 
 @api_view(['GET', 'POST'])
-def lista_objetos(request, tk):
+def lista_objetos(request):
     """
     Lista de todos los Horarios, o crea uno nuevo.
     """
-    usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.duenios):
-        if request.method == 'GET':
-            objeto = TxdHorario.objects.all()
-            serializador = TxdHorarioS(objeto, many=True)
-            return Response(serializador.data)
+    try:
+        objToken = Token.objects.get(key=request.query_params.get('tk'))
+        usuario = User.objects.get(pk=objToken.user.id)
+    except ObjectDoesNotExist:
+        content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
+        return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-        elif request.method == 'POST':
+    if request.method == 'GET':
+        objeto = TxdHorario.objects.all()
+        serializador = TxdHorarioS(objeto, many=True)
+        return Response(serializador.data)
+
+    elif request.method == 'POST':
+        if usuario.has_perm('app.add_txdhorario'):
             serializador = TxdHorarioS(data=request.data)
             if serializador.is_valid():
                 inicio = datetime.strptime(str(request.data.get('horainicio')),'%H:%M')
@@ -35,27 +41,34 @@ def lista_objetos(request, tk):
                     respuesta ={"crear": {"estado": "Hora inicio debe ser menor/diferente a hora fin"}}
                     return Response(respuesta, status=status.HTTP_400_BAD_REQUEST)
             return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        return Response("No tiene los permisos necesarios", status=status.HTTP_403_NOT_FOUND)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ingresar datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def detalle_objetos(request, pk, tk):
+def detalle_objetos(request):
     """
     Actualiza, elimina un objeto segun su id
     """
+    try:
+        objToken = Token.objects.get(key=request.query_params.get('tk'))
+        usuario = User.objects.get(pk=objToken.user.id)
+    except ObjectDoesNotExist:
+        content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
+        return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-    usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.duenios):
-        try:
-            objeto = TxdHorario.objects.get(pk=pk)
-        except ObjectDoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+    try:
+        objeto = TxdHorario.objects.get(pk=pk)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
-        if request.method == 'GET':
-            serializador = TxdHorarioS(objeto)
-            return Response(serializador.data)
+    if request.method == 'GET':
+        serializador = TxdHorarioS(objeto)
+        return Response(serializador.data)
 
-        elif request.method == 'PUT':
+    elif request.method == 'PUT':
+        if usuario.has_perm('app.change_txdhorario'):
             serializador = TxdHorarioS(objeto, data=request.data)
             if serializador.is_valid():
                 inicio = datetime.strptime(str(request.data.get('horainicio')),'%H:%M')
@@ -69,31 +82,41 @@ def detalle_objetos(request, pk, tk):
                     return Response(respuesta, status=status.HTTP_400_BAD_REQUEST)
 
             return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para editar datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-        elif request.method == 'DELETE':
+    elif request.method == 'DELETE':
+        if usuario.has_perm('app.delete_txdhorario'):
             try:
                 objeto.delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
             except IntegrityError:
                 content = {'estado': 'No se puede eliminar tiene dependencias'}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        return Response("No tiene los permisos necesarios", status=status.HTTP_403_NOT_FOUND)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para eliminar datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+
 
 @api_view(['GET'])
-def horarios_duenio(request, pk, tk):
+def horarios_duenio(request):
     """
     obtiene los horarios de un duenio
     """
-    usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.duenios):
-        try:
-            objeto = TxdHorario.objects.filter(duenio=pk)
-        except objeto.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+    try:
+        objToken = Token.objects.get(key=request.query_params.get('tk'))
+        usuario = User.objects.get(pk=objToken.user.id)
+    except ObjectDoesNotExist:
+        content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
+        return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-        if request.method == 'GET':
-            serializador = TxdHorarioS(objeto, many=True)
-            return Response(serializador.data)
-    else:
-        return Response("No tiene los permisos necesarios", status=status.HTTP_403_NOT_FOUND)
+    try:
+        objeto = TxdHorario.objects.filter(duenio=pk)
+    except objeto.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializador = TxdHorarioS(objeto, many=True)
+        return Response(serializador.data)
