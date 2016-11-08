@@ -6,10 +6,11 @@ from app.models import TxdTipodenuncia
 from app.serializables import TxdTipodenunciaS, TxdDenunciaTipoS
 
 @api_view(['GET', 'POST'])
-def lista_objetos(request, tk):
+def lista_objetos(request):
     """
     Lista de todos los Tipodenuncias, o crea uno nuevo.
     """
+
     if request.method == 'GET':
         objeto = TxdTipodenuncia.objects.all()
         serializador = TxdDenunciaTipoS(objeto, many=True)
@@ -23,7 +24,7 @@ def lista_objetos(request, tk):
         return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def detalle_objetos(request, pk, tk):
+def detalle_objetos(request, pk):
     """
     Actuliza, elimina un objeto segun su id
     """

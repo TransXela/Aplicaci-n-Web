@@ -1,27 +1,34 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime, date, timedelta
 from app.models import TxdHorariodetalle,TxdBus,TxdChofer,TxdDuenio, TxdHorario
 from app.serializables import TxdHorariodetalleS,Duenios_horariodetalle,TxdDuenioS, choferHorariDetalle, TxdBusS, TxdHorarioS, TxdChoferS, Buses_horariodetalle, choferHorariDetalleCompleto
 from app import permisos
 from app.vistas import autentificacion
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 
 @api_view(['GET', 'POST'])
-def lista_objetos(request, tk):
+def lista_objetos(request):
     """
     Lista de todos los Horariodetalles, o crea uno nuevo.
     """
-    usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.duenios):
-        if request.method == 'GET':
-            objeto = TxdHorariodetalle.objects.all()
-            serializador = TxdHorariodetalleS(objeto, many=True)
-            return Response(serializador.data)
+    try:
+        objToken = Token.objects.get(key=request.query_params.get('tk'))
+        usuario = User.objects.get(pk=objToken.user.id)
+    except ObjectDoesNotExist:
+        content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
+        return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-        elif request.method == 'POST':
+    if request.method == 'GET':
+        objeto = TxdHorariodetalle.objects.all()
+        serializador = TxdHorariodetalleS(objeto, many=True)
+        return Response(serializador.data)
 
+    elif request.method == 'POST':
+        if usuario.has_perm('app.add_txdhorariodetalle'):
             serializador = TxdHorariodetalleS(data=request.data)
             if serializador.is_valid():
                 try:
@@ -47,27 +54,35 @@ def lista_objetos(request, tk):
                 respuesta ={'crear': {'estado": "Creado Exitosamente'}}
                 return Response(serializador.data, status=status.HTTP_201_CREATED)
             return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        return Response("No tiene los permisos necesarios", status=status.HTTP_403_NOT_FOUND)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ingresar datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def detalle_objetos(request, pk, tk):
+def detalle_objetos(request, pk):
     """
     Actuliza, elimina un objeto segun su id
     """
-    usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.duenios):
-        try:
-            objeto = TxdHorariodetalle.objects.get(pk=pk)
-        except ObjectDoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+    try:
+        objToken = Token.objects.get(key=request.query_params.get('tk'))
+        usuario = User.objects.get(pk=objToken.user.id)
+    except ObjectDoesNotExist:
+        content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
+        return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-        if request.method == 'GET':
-            serializador = TxdHorariodetalleS(objeto)
-            return Response(serializador.data)
+    try:
+        objeto = TxdHorariodetalle.objects.get(pk=pk)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializador = TxdHorariodetalleS(objeto)
+        return Response(serializador.data)
 
 
-        elif request.method == 'PUT':
+    elif request.method == 'PUT':
+        if usuario.has_perm('app.change_txdhorariodetalle'):
             serializador = TxdHorariodetalleS(objeto, data=request.data)
             if serializador.is_valid():
                 try:
@@ -93,8 +108,13 @@ def detalle_objetos(request, pk, tk):
                 respuesta ={'modificar': {'estado": "Modificado Exitosamente'}}
                 return Response(respuesta, status=status.HTTP_202_ACCEPTED)
             return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para editar datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-        elif request.method == 'DELETE':
+
+    elif request.method == 'DELETE':
+        if usuario.has_perm('app.delete_txdhorariodetalle'):
             formato_fecha = "%Y-%m-%d"
             fecha2 = datetime.combine(objeto.fecha,  datetime.min.time())
             stringF=str(datetime.now().year)+"-"+str(datetime.now().month)+"-"+str(datetime.now().day)
@@ -114,112 +134,133 @@ def detalle_objetos(request, pk, tk):
                     return Response(content, status=status.HTTP_202_ACCEPTED)
                 else:
                     return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
-    else:
-        return Response("No tiene los permisos necesarios", status=status.HTTP_403_NOT_FOUND)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para eliminar datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+
 
 @api_view(['GET'])
-def rango(request,fInicio,fFin, tk):
+def rango(request,fInicio,fFin):
     """
     Actuliza, elimina un objeto segun su id
     """
-    usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.duenios):
-        formato_fecha = "%Y-%m-%d"
-        inicio = datetime.strptime(fInicio, formato_fecha).date()
-        fin = datetime.strptime(fFin, formato_fecha).date()
+    try:
+        objToken = Token.objects.get(key=request.query_params.get('tk'))
+        usuario = User.objects.get(pk=objToken.user.id)
+    except ObjectDoesNotExist:
+        content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
+        return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-        try:
-            hoy = date.today()
-            objeto = TxdHorariodetalle.objects.filter(bus=1)
-        except ObjectDoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+    formato_fecha = "%Y-%m-%d"
+    inicio = datetime.strptime(fInicio, formato_fecha).date()
+    fin = datetime.strptime(fFin, formato_fecha).date()
 
-        if request.method == 'GET':
-            serializador = TxdHorariodetalleS(objeto)
-            return Response(serializador.data)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+    try:
+        hoy = date.today()
+        objeto = TxdHorariodetalle.objects.filter(bus=1)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializador = TxdHorariodetalleS(objeto)
+        return Response(serializador.data)
     else:
-        return Response("No tiene los permisos necesarios", status=status.HTTP_403_NOT_FOUND)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
-def lista_por_duenio(request,pk, tk):
+def lista_por_duenio(request,pk):
     """
     obtiene la lista de duenio
     """
-    usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.duenios):
-        try:
-            s =list()
-            for i in TxdChofer.objects.filter(duenio=pk):
-                s+=[i.idchofer]
-            objeto =TxdHorariodetalle.objects.filter(chofer__in=s)
-        except ObjectDoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+    try:
+        objToken = Token.objects.get(key=request.query_params.get('tk'))
+        usuario = User.objects.get(pk=objToken.user.id)
+    except ObjectDoesNotExist:
+        content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
+        return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-        if request.method == 'GET':
-            serializador = Duenios_horariodetalle(objeto, many=True)
-            duenio=TxdDuenio.objects.get(pk=pk)
-            duenios = TxdDuenioS(duenio)
-            data={"duenio":duenios.data,"diasHorarioDetalle": serializador.data}
-            return Response(data)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+    try:
+        s =list()
+        for i in TxdChofer.objects.filter(duenio=pk):
+            s+=[i.idchofer]
+        objeto =TxdHorariodetalle.objects.filter(chofer__in=s)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializador = Duenios_horariodetalle(objeto, many=True)
+        duenio=TxdDuenio.objects.get(pk=pk)
+        duenios = TxdDuenioS(duenio)
+        data={"duenio":duenios.data,"diasHorarioDetalle": serializador.data}
+        return Response(data)
     else:
-        return Response("No tiene los permisos necesarios", status=status.HTTP_403_NOT_FOUND)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
-def detalle_Choferes(request, pk, tk):
+def detalle_Choferes(request, pk):
     """
     Actuliza, elimina un objeto segun su id
     """
-    usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.duenios):
-        try:
-            objeto = TxdChofer.objects.get(pk=pk)
-            #objHorarioDetalle = TxdHorariodetalle.objects.filter(bus=pk)
-        except ObjectDoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+    try:
+        objToken = Token.objects.get(key=request.query_params.get('tk'))
+        usuario = User.objects.get(pk=objToken.user.id)
+    except ObjectDoesNotExist:
+        content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
+        return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-        if request.method == 'GET':
-            serializador = choferHorariDetalleCompleto(objeto)
-            return Response(serializador.data)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+    try:
+        objeto = TxdChofer.objects.get(pk=pk)
+        #objHorarioDetalle = TxdHorariodetalle.objects.filter(bus=pk)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializador = choferHorariDetalleCompleto(objeto)
+        return Response(serializador.data)
     else:
-        return Response("No tiene los permisos necesarios", status=status.HTTP_403_NOT_FOUND)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-def lista_por_bus(request,pk, tk):
+def lista_por_bus(request,pk):
     """
     obtiene la lista de horariodetalle por bus
     """
-    usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.duenios):
-        try:
-            objBus =TxdBus.objects.filter(pk=pk)
-            objHorarioDetalle = TxdHorariodetalle.objects.filter(bus=pk)
-        except ObjectDoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+    try:
+        objToken = Token.objects.get(key=request.query_params.get('tk'))
+        usuario = User.objects.get(pk=objToken.user.id)
+    except ObjectDoesNotExist:
+        content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
+        return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-        if request.method == 'GET':
-            serBus = TxdBusS(objBus, many=True)
-            serHorarioDetalle =  Buses_horariodetalle(objHorarioDetalle, many=True)
-            data={"Bus":serBus.data,"HorarioDetalle": serHorarioDetalle.data}
-            return Response(data)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+    try:
+        objBus =TxdBus.objects.filter(pk=pk)
+        objHorarioDetalle = TxdHorariodetalle.objects.filter(bus=pk)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serBus = TxdBusS(objBus, many=True)
+        serHorarioDetalle =  Buses_horariodetalle(objHorarioDetalle, many=True)
+        data={"Bus":serBus.data,"HorarioDetalle": serHorarioDetalle.data}
+        return Response(data)
     else:
-        return Response({"estado": "No tiene los permisos necesarios"}, status=status.HTTP_403_NOT_FOUND)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
-def postRangoFechas(request, tk):
+def postRangoFechas(request):
     """
     obtiene crea por rango de fechas
     """
-    usuario = autentificacion.autenticacion(tk)
-    if usuario.has_perms(permisos.duenios):
-        if request.method == 'POST':
+    try:
+        objToken = Token.objects.get(key=request.query_params.get('tk'))
+        usuario = User.objects.get(pk=objToken.user.id)
+    except ObjectDoesNotExist:
+        content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
+        return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+    if request.method == 'POST':
+        if usuario.has_perms(permisos.duenios):
             if 'fechaInicial' in request.data and 'fechaFinal' in request.data and 'bus' in request.data and 'chofer' in request.data and 'horario' in request.data and 'estado' in request.data:
                 data= {"bus": request.data['bus'], "chofer": request.data['chofer'] ,"horario": request.data['horario'],"estado":request.data['estado']}
                 formato_fecha = "%Y-%m-%d"
@@ -253,6 +294,7 @@ def postRangoFechas(request, tk):
                 serializador.is_valid()
                 return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ingresar datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
     else:
-        return Response("No tiene los permisos necesarios", status=status.HTTP_403_NOT_FOUND)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
