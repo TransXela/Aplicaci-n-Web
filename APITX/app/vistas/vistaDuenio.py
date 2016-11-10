@@ -23,9 +23,13 @@ def lista_objetos(request):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
-        objeto = TxdDuenio.objects.all()
-        serializador = TxdDuenioS(objeto, many=True)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txdduenio'):
+            objeto = TxdDuenio.objects.all()
+            serializador = TxdDuenioS(objeto, many=True)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     elif request.method == 'POST':
         if usuario.has_perm('app.add_txdduenio'):

@@ -21,6 +21,9 @@ class TxcActividad(models.Model):
     direccion = models.TextField(blank=True, null=True)
     estado = models.BooleanField()
     class Meta:
+        permissions = (
+            ("view_txcactividad", "Can see available actividad"),
+        )
         db_table = 'txc_actividad'
 
 
@@ -30,6 +33,9 @@ class TxcTitulo(models.Model):
     numero = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        permissions = (
+            ("view_txctitulo", "Can see available titulo"),
+        )
         db_table = 'txc_titulo'
 
 
@@ -40,6 +46,9 @@ class TxcCapitulo(models.Model):
     titulo_0 = models.ForeignKey(TxcTitulo, models.DO_NOTHING, db_column='Titulo_id')  # Field name made lowercase. Field renamed because of name conflict.
 
     class Meta:
+        permissions = (
+            ("view_txccapitulo", "Can see available capitulo"),
+        )
         db_table = 'txc_capitulo'
 
 
@@ -51,6 +60,9 @@ class TxcArticulo(models.Model):
     capitulo = models.ForeignKey(TxcCapitulo, models.DO_NOTHING, db_column='Capitulo_id')  # Field name made lowercase.
 
     class Meta:
+        permissions = (
+            ("view_txcarticulo", "Can see available articulo"),
+        )
         db_table = 'txc_articulo'
 
 
@@ -60,6 +72,9 @@ class TxcPregunta(models.Model):
     respuesta = models.TextField(blank=True, null=True)
 
     class Meta:
+        permissions = (
+            ("view_txcpregunta", "Can see available pregunta"),
+        )
         db_table = 'txc_pregunta'
 
 
@@ -69,6 +84,9 @@ class TxcPreguntaarticulo(models.Model):
     articulo = models.ForeignKey(TxcArticulo, models.DO_NOTHING, db_column='Articulo_id')  # Field name made lowercase.
 
     class Meta:
+        permissions = (
+            ("view_txcpreguntaarticulo", "Can see available txcpreguntaarticulo"),
+        )
         db_table = 'txc_preguntaarticulo'
 
 
@@ -77,6 +95,9 @@ class TxcoConsejo(models.Model):
     consejo = models.TextField(blank=True, null=True)
 
     class Meta:
+        permissions = (
+            ("view_txcoconsejo", "Can see available consejo"),
+        )
         db_table = 'txco_consejo'
 
 
@@ -86,6 +107,9 @@ class TxcoFecha(models.Model):
     consejo = models.ForeignKey(TxcoConsejo, models.DO_NOTHING, db_column='Consejo_id')  # Field name made lowercase.
 
     class Meta:
+        permissions = (
+            ("view_txcofecha", "Can see available fecha"),
+        )
         db_table = 'txco_fecha'
 
 
@@ -105,6 +129,9 @@ class TxdDuenio(models.Model):
     usuario = models.ForeignKey(User, models.DO_NOTHING, db_column='usuario_id', blank=True, null=True)
 
     class Meta:
+        permissions = (
+            ("view_txdduenio", "Can see available duenio"),
+        )
         db_table = 'txd_duenio'
 
 class TxcCultura(models.Model):
@@ -120,6 +147,9 @@ class TxcCultura(models.Model):
     usuario = models.ForeignKey(User, models.DO_NOTHING, db_column='usuario_id', blank=True, null=True)
 
     class Meta:
+        permissions = (
+            ("view_txccultura", "Can see available cultura"),
+        )
         db_table = 'txc_cultura'
 
 class TxdPmt(models.Model):
@@ -135,6 +165,9 @@ class TxdPmt(models.Model):
     usuario = models.ForeignKey(User, models.DO_NOTHING, db_column='usuario_id', blank=True, null=True)
 
     class Meta:
+        permissions = (
+            ("view_txdpmt", "Can see available pmt"),
+        )
         db_table = 'txd_pmt'
 
 class TxdRuta(models.Model):
@@ -143,6 +176,9 @@ class TxdRuta(models.Model):
     recorrido = models.TextField(blank=True, null=True)
 
     class Meta:
+        permissions = (
+            ("view_txdruta", "Can see available ruta"),
+        )
         db_table = 'txd_ruta'
 
 class TxdToken(models.Model):
@@ -150,6 +186,9 @@ class TxdToken(models.Model):
     token = models.CharField(max_length=40, blank=True, null=True)
 
     class Meta:
+        permissions = (
+            ("view_txdtoken", "Can see available Token"),
+        )
         db_table = 'txd_Token'
 
 class TxdBus(models.Model):
@@ -166,6 +205,9 @@ class TxdBus(models.Model):
     estado = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        permissions = (
+            ("view_txdbus", "Can see available bus"),
+        )
         db_table = 'txd_bus'
 
 
@@ -185,6 +227,9 @@ class TxdChofer(models.Model):
     duenio = models.ForeignKey(TxdDuenio, models.DO_NOTHING, db_column='Duenio_id')  # Field name made lowercase.
 
     class Meta:
+        permissions = (
+            ("view_txdchofer", "Can see available chofer"),
+        )
         db_table = 'txd_chofer'
 
 
@@ -193,6 +238,9 @@ class TxdTipodenuncia(models.Model):
     descripcion = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
+        permissions = (
+            ("view_txdtipodenuncia", "Can see available tipodenuncia"),
+        )
         db_table = 'txd_tipodenuncia'
 
 
@@ -209,6 +257,9 @@ class TxdDenuncia(models.Model):
     latitud= models.FloatField(blank=True, null=True)
     longitud= models.FloatField(blank=True, null=True)
     class Meta:
+        permissions = (
+            ("view_txddenuncia", "Can see available denuncia"),
+        )
         db_table = 'txd_denuncia'
 
 class TxdHorario(models.Model):
@@ -217,6 +268,9 @@ class TxdHorario(models.Model):
     horafin = models.TimeField()
     duenio = models.ForeignKey(TxdDuenio, models.DO_NOTHING, db_column='Duenio_id')  # Field name made lowercase
     class Meta:
+        permissions = (
+            ("view_txdhorario", "Can see available horario"),
+        )
         db_table = 'txd_horario'
 
 
@@ -228,6 +282,9 @@ class TxdHorariodetalle(models.Model):
     fecha = models.DateField()
     estado = models.IntegerField(blank=True, null=True)
     class Meta:
+        permissions = (
+            ("view_txdhorariodetalle", "Can see available horariodetalle"),
+        )
         db_table = 'txd_horariodetalle'
 
 
@@ -237,6 +294,9 @@ class TxdRecurso(models.Model):
     denuncia = models.ForeignKey(TxdDenuncia, models.DO_NOTHING, db_column='Denuncia_id')  # Field name made lowercase.
 
     class Meta:
+        permissions = (
+            ("view_txdrecurso", "Can see available recurso"),
+        )
         db_table = 'txd_recurso'
 
 
@@ -245,6 +305,9 @@ class TxuRol(models.Model):
     rol = models.CharField(max_length=45, blank=True, null=True)
 
     class Meta:
+        permissions = (
+            ("view_txurol", "Can see available rol"),
+        )
         db_table = 'txu_rol'
 
 
@@ -261,4 +324,7 @@ class TxuUsuario(models.Model):
     rol = models.ForeignKey(TxuRol, models.DO_NOTHING, db_column='Rol_id')  # Field name made lowercase.
 
     class Meta:
+        permissions = (
+            ("view_txuusuario", "Can see available usuario"),
+        )
         db_table = 'txu_usuario'
