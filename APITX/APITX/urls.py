@@ -143,11 +143,16 @@ urlpatterns = [
     url(r'^cultura/articulo/$', vistaArticulo.lista_objetos),
     url(r'^cultura/articulo/(?P<pk>[0-9]+)/$', vistaArticulo.detalle_objetos),
 
-    #para realizar reportes por duenios
+    #para realizar reportes para pmt
     url(r'^reporte/pmt/RepDuenioBusD/$', vistaEstadistica.lista_objetos),
     url(r'^reporte/pmt/RepBusRuta/$', vistaEstadistica.lista_objetos_rutaBus),
     url(r'^reporte/pmt/RepPilotoDen/$', vistaEstadistica.lista_objetos_pilotoDenuncia),
     url(r'^reporte/pmt/RepDuenioBuses/$', vistaEstadistica.lista_objetos_duenioBuses),
+    #generar reportes para duenios
+    url(r'^reporte/duenio/RepDuenioBusesId/(?P<pk>[0-9]+)$', vistaEstadistica.lista_objetos_duenioBusesId),
+    url(r'^reporte/duenio/RepDuenioChoferId/(?P<pk>[0-9]+)$', vistaEstadistica.lista_objetos_duenioChofId),
+    url(r'^reporte/duenio/RepBusChofId/(?P<pk>[0-9]+)$', vistaEstadistica.lista_objetos_busChofId),
+    url(r'^reporte/duenio/RepTipoDenD/$', vistaEstadistica.lista_objetos_tipoDenDenuncia),
 
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
