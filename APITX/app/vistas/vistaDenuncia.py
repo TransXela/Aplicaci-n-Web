@@ -6,11 +6,8 @@ from datetime import datetime, date,timedelta
 from django.core.exceptions import ObjectDoesNotExist
 from app.models import TxdDenuncia,TxdBus,TxdHorariodetalle,TxdToken, TxdChofer, TxdTipodenuncia
 from app.serializables import TxdDenunciaS, TxdDenunciaRecursosS,TxdTokenS, DenunciaChofer, TxdChoferS, TxdTipodenunciaS
-from app import permisos
-from app.vistas import autentificacion
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
 
 def obtenerToken(imei):
     """

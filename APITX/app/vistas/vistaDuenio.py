@@ -6,8 +6,6 @@ from django.contrib.auth.models import User
 from app.models import TxdDuenio, TxdChofer, TxdHorario, TxdBus, TxdHorariodetalle
 from app.serializables import (TxdDuenioS, TxdHorariodetalleS, DueniosChoferBuses, DueniosChoferes, DueniosHorarios, DueniosBuses,
                                 listadoDueniosDetalles)
-from app import permisos
-from app.vistas import autentificacion
 from django.core.exceptions import ObjectDoesNotExist
 
 @api_view(['GET', 'POST'])
@@ -54,31 +52,36 @@ def principal_duenio_choferes(request,pk, var):
         content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-    try:
-        objeto = TxdDuenio.objects.get(pk=pk)
-    except ObjectDoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
     if request.method == 'GET':
-        if var==0:
+        if usuario.has_perm('app.view_txdduenio'):
+            try:
+                objeto = TxdDuenio.objects.get(pk=pk)
+            except ObjectDoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
 
-            serializador = TxdDuenioS(objeto)
-            data = serializador.data
-            data['no_Choferes']=len(TxdChofer.objects.filter(duenio=pk))
-            data['no_Buses']=len(TxdBus.objects.filter(duenio=pk))
-            data['no_Horarios']=len(TxdHorario.objects.filter(duenio=pk))
-            return Response(data)
-        elif var==1:
-            serializador = DueniosChoferes(objeto)
-            return Response(serializador.data)
-        elif var==2:
-            serializador = DueniosHorarios(objeto)
-            return Response(serializador.data)
-        elif var==3:
-            serializador = DueniosBuses(objeto)
-            return Response(serializador.data)
+            if var==0:
+
+                serializador = TxdDuenioS(objeto)
+                data = serializador.data
+                data['no_Choferes']=len(TxdChofer.objects.filter(duenio=pk))
+                data['no_Buses']=len(TxdBus.objects.filter(duenio=pk))
+                data['no_Horarios']=len(TxdHorario.objects.filter(duenio=pk))
+                return Response(data)
+            elif var==1:
+                serializador = DueniosChoferes(objeto)
+                return Response(serializador.data)
+            elif var==2:
+                serializador = DueniosHorarios(objeto)
+                return Response(serializador.data)
+            elif var==3:
+                serializador = DueniosBuses(objeto)
+                return Response(serializador.data)
+            else:
+                return Response(status=status.HTTP_204_NO_CONTENT)
         else:
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def detalle_objetos(request, pk):
@@ -98,8 +101,13 @@ def detalle_objetos(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializador = TxdDuenioS(objeto)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txdduenio'):
+            serializador = TxdDuenioS(objeto)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
 
     elif request.method == 'PUT':
         if usuario.has_perm('app.change_txdduenio'):
@@ -142,28 +150,33 @@ def lista_horariodetalle(request):
         content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-    try:
-        duenios = TxdDuenio.objects.all()
-        horarios = TxdHorario.objects.all()
-        detalleshorarios = TxdHorariodetalle.objects.all()
-    except ObjectDoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
     if request.method == 'GET':
-        y = list()
-        for duenio in duenios:
-            s =list()
-            d=TxdDuenioS(duenio)
-            ob={}
-            ob['duenio']=d.data
-            #y+=[duenio.idduenio]
-            #y+=[duenio.nombre]
-            for horario in TxdHorario.objects.filter(duenio=duenio.idduenio):
-                s+=[horario.idhorario]
-                detallehorario = TxdHorariodetalle.objects.filter(horario=horario.idhorario)
-                ob['detallehorarios']=TxdHorariodetalleS(detallehorario, many=True).data
-            y+=[ob]
-        return Response(y)
+        if usuario.has_perm('app.view_txdduenio'):
+            try:
+                duenios = TxdDuenio.objects.all()
+                horarios = TxdHorario.objects.all()
+                detalleshorarios = TxdHorariodetalle.objects.all()
+            except ObjectDoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            y = list()
+            for duenio in duenios:
+                s =list()
+                d=TxdDuenioS(duenio)
+                ob={}
+                ob['duenio']=d.data
+                #y+=[duenio.idduenio]
+                #y+=[duenio.nombre]
+                for horario in TxdHorario.objects.filter(duenio=duenio.idduenio):
+                    s+=[horario.idhorario]
+                    detallehorario = TxdHorariodetalle.objects.filter(horario=horario.idhorario)
+                    ob['detallehorarios']=TxdHorariodetalleS(detallehorario, many=True).data
+                y+=[ob]
+            return Response(y)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
 
 @api_view(['GET'])
 def obtener_sinUser(request):
@@ -178,8 +191,13 @@ def obtener_sinUser(request):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
-        objeto = TxdDuenio.objects.filter(usuario__isnull=True)
-        serializador = TxdDuenioS(objeto, many=True)
-        return Response(serializador.data)
-    else:
-        return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
+        if usuario.has_perm('app.view_txdduenio'):
+            try:
+                objeto = TxdDuenio.objects.filter(usuario__isnull=True)
+                serializador = TxdDuenioS(objeto, many=True)
+                return Response(serializador.data)
+            else:
+                return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)

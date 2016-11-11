@@ -4,8 +4,6 @@ from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from app.models import TxdBus,TxdDenuncia, TxdTipodenuncia
 from app.serializables import TxdBusS,TxdDenunciaS, TxdTipodenunciaS
-from app import permisos
-from app.vistas import autentificacion
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -23,9 +21,14 @@ def lista_objetos(request):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
-        objeto = TxdBus.objects.all()
-        serializador = TxdBusS(objeto, many=True)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txdbus'):
+            objeto = TxdBus.objects.all()
+            serializador = TxdBusS(objeto, many=True)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
 
     elif request.method == 'POST':
         if usuario.has_perm('app.add_txdbus'):
@@ -58,8 +61,13 @@ def detalle_objetos(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializador = TxdBusS(objeto)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txdbus'):
+            serializador = TxdBusS(objeto)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
 
     elif request.method == 'PUT':
         if usuario.has_perms('app.change_txdbus'):
@@ -95,14 +103,20 @@ def buses_Activos(request):
         content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-    try:
-        objetos = TxdBus.objects.filter(estado=1)
-    except ObjectDoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializador = TxdBusS(objetos, many=True)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txdbus'):
+            try:
+                objetos = TxdBus.objects.filter(estado=1)
+            except ObjectDoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            serializador = TxdBusS(objetos, many=True)
+            return Response(serializador.data)
+
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 @api_view(['GET'])
 def buses_Activos(request):
@@ -116,14 +130,20 @@ def buses_Activos(request):
         content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-    try:
-        objetos = TxdBus.objects.filter(estado=1)
-    except ObjectDoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializador = TxdBusS(objetos, many=True)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txdbus'):
+            try:
+                objetos = TxdBus.objects.filter(estado=1)
+            except ObjectDoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            serializador = TxdBusS(objetos, many=True)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
 
 @api_view(['GET'])
 def bus_placa(request, pk):
@@ -137,13 +157,18 @@ def bus_placa(request, pk):
         content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-    try:
-        objeto = TxdBus.objects.get(placa=pk)
-    except ObjectDoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
     if request.method == 'GET':
-        serializador = TxdBusS(objeto)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txdbus'):
+            try:
+                objeto = TxdBus.objects.get(placa=pk)
+            except ObjectDoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            serializador = TxdBusS(objeto)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
 @api_view(['GET'])
@@ -158,23 +183,30 @@ def denuncias_tipodenuncia(request, idB):
         content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-    respuesta = {}
-    listatdenuncia = list()
-    try:
-        objeto = TxdBus.objects.get(idbus=idB)
-        tiposdenuncias = TxdTipodenuncia.objects.all()
-    except ObjectDoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+
     if request.method == 'GET':
-        for tipodenuncia in tiposdenuncias:
-            denunciasportipo = TxdDenuncia.objects.filter(tipodenuncia_id=tipodenuncia.idtipodenuncia) & TxdDenuncia.objects.filter(placa=objeto.placa)
-            numdenuncias = denunciasportipo.count()
-            if numdenuncias != 0:
-                jsontipo = {"idtipoDenuncia":tipodenuncia.idtipodenuncia,"descripcion":tipodenuncia.descripcion, "NumeroDenuncias": numdenuncias}
-                listatdenuncia+= [jsontipo]
-        respuesta['bus'] = TxdBusS(objeto).data
-        respuesta['TiposDenuncia'] = listatdenuncia
-        return Response(respuesta)
+
+        if usuario.has_perm('app.view_txdbus'):
+            respuesta = {}
+            listatdenuncia = list()
+            try:
+                objeto = TxdBus.objects.get(idbus=idB)
+                tiposdenuncias = TxdTipodenuncia.objects.all()
+            except ObjectDoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            for tipodenuncia in tiposdenuncias:
+                denunciasportipo = TxdDenuncia.objects.filter(tipodenuncia_id=tipodenuncia.idtipodenuncia) & TxdDenuncia.objects.filter(placa=objeto.placa)
+                numdenuncias = denunciasportipo.count()
+                if numdenuncias != 0:
+                    jsontipo = {"idtipoDenuncia":tipodenuncia.idtipodenuncia,"descripcion":tipodenuncia.descripcion, "NumeroDenuncias": numdenuncias}
+                    listatdenuncia+= [jsontipo]
+            respuesta['bus'] = TxdBusS(objeto).data
+            respuesta['TiposDenuncia'] = listatdenuncia
+            return Response(respuesta)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 @api_view(['GET'])
 def denuncias_bus_tipodenuncia(request, idB,idTd):
@@ -188,18 +220,25 @@ def denuncias_bus_tipodenuncia(request, idB,idTd):
         content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-    respuesta = {}
-    lista = list()
-    try:
-        objeto = TxdBus.objects.get(idbus=idB)
-        tipodenuncia = TxdTipodenuncia.objects.get(idtipodenuncia=idTd)
-        denuncias = TxdDenuncia.objects.filter(tipodenuncia_id=idTd) & TxdDenuncia.objects.filter(placa=objeto.placa)
-    except ObjectDoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
     if request.method == 'GET':
-        serializador = TxdTipodenunciaS(tipodenuncia).data
-        lista+= [serializador]
-        respuesta['tipodenuncia'] = lista
-        respuesta['denuncias'] = TxdDenunciaS(denuncias,many=True).data
-        respuesta2 = {"tipodenuncia": respuesta['tipodenuncia']}, {"denuncias": respuesta['denuncias']}
-        return Response(respuesta2)
+        if usuario.has_perm('app.view_txdbus'):
+            respuesta = {}
+            lista = list()
+            try:
+                objeto = TxdBus.objects.get(idbus=idB)
+                tipodenuncia = TxdTipodenuncia.objects.get(idtipodenuncia=idTd)
+                denuncias = TxdDenuncia.objects.filter(tipodenuncia_id=idTd) & TxdDenuncia.objects.filter(placa=objeto.placa)
+            except ObjectDoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            serializador = TxdTipodenunciaS(tipodenuncia).data
+            lista+= [serializador]
+            respuesta['tipodenuncia'] = lista
+            respuesta['denuncias'] = TxdDenunciaS(denuncias,many=True).data
+            respuesta2 = {"tipodenuncia": respuesta['tipodenuncia']}, {"denuncias": respuesta['denuncias']}
+            return Response(respuesta2)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)

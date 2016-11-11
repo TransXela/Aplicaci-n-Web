@@ -3,8 +3,6 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import TxcPreguntaarticulo
 from app.serializables import TxcPreguntaarticuloS
-from app import permisos
-from app.vistas import autentificacion
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -22,9 +20,13 @@ def lista_objetos(request):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
-        objeto = TxcPreguntaarticulo.objects.all()
-        serializador = TxcPreguntaarticuloS(objeto, many=True)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txcpreguntaarticulo'):
+            objeto = TxcPreguntaarticulo.objects.all()
+            serializador = TxcPreguntaarticuloS(objeto, many=True)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     elif request.method == 'POST':
         if usuario.has_perm('app.add_txcpreguntaarticulo'):
@@ -57,8 +59,12 @@ def detalle_objetos(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializador = TxcPreguntaarticuloS(objeto)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txcpreguntaarticulo'):    
+            serializador = TxcPreguntaarticuloS(objeto)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     elif request.method == 'PUT':
         if usuario.has_perm('app.change_txcpreguntaarticulo'):

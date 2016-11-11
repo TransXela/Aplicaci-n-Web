@@ -3,8 +3,6 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import TxcActividad
 from app.serializables import TxcActividadS
-from app import permisos
-from app.vistas import autentificacion
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -22,9 +20,13 @@ def lista_objetos(request):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
-        objeto = TxcActividad.objects.all()
-        serializador = TxcActividadS(objeto, many=True)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txcactividad'):
+            objeto = TxcActividad.objects.all()
+            serializador = TxcActividadS(objeto, many=True)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     elif request.method == 'POST':
         if usuario.has_perm('app.add_txcactividad'):
@@ -55,8 +57,12 @@ def detalle_objetos(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializador = TxcActividadS(objeto)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txcactividad'):
+            serializador = TxcActividadS(objeto)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     elif request.method == 'PUT':
         if usuario.has_perm('app.change_txcactividad'):
@@ -106,11 +112,15 @@ def busqueda(request, busq):
         content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-    try:
-        objeto = TxcActividad.objects.filter(nombre__contains=busq) | TxcActividad.objects.filter(lugar__contains=busq) | TxcActividad.objects.filter(fecha__contains=busq)
-    except objeto.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
     if request.method == 'GET':
-        serializador = TxcActividadS(objeto, many=True)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txcactividad'):
+            try:
+                objeto = TxcActividad.objects.filter(nombre__contains=busq) | TxcActividad.objects.filter(lugar__contains=busq) | TxcActividad.objects.filter(fecha__contains=busq)
+            except objeto.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            serializador = TxcActividadS(objeto, many=True)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)

@@ -3,8 +3,6 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import TxdChofer
 from app.serializables import TxdChoferS, ChoferesDenuncias
-from app import permisos
-from app.vistas import autentificacion
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -22,9 +20,14 @@ def lista_objetos(request):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
-        objeto = TxdChofer.objects.all()
-        serializador = TxdChoferS(objeto, many = true)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txdchofer'):
+            objeto = TxdChofer.objects.all()
+            serializador = TxdChoferS(objeto, many = true)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
 
     elif request.method == 'POST':
         if usuario.has_perm('app.add_txdchofer'):
@@ -55,8 +58,13 @@ def detalle_objetos(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializador = TxdChoferS(objeto)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txdchofer'):
+            serializador = TxdChoferS(objeto)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
 
     elif request.method == 'PUT':
         if usuario.has_perm('app.change_txdchofer'):
@@ -92,10 +100,14 @@ def lista_choferes_denuncias(request):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
-        objeto = TxdChofer.objects.all()
-        print objeto
-        serializador = ChoferesDenuncias(objeto)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txdchofer'):
+            objeto = TxdChofer.objects.all()
+            serializador = ChoferesDenuncias(objeto)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
 
 @api_view(['GET'])
 def chofer_dpi(request, pk):
@@ -109,11 +121,15 @@ def chofer_dpi(request, pk):
         content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-    try:
-        objeto = TxdChofer.objects.get(dpi=pk)
-    except objeto.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-        
     if request.method == 'GET':
-        serializador = TxdChoferS(objeto)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txdchofer'):
+            try:
+                objeto = TxdChofer.objects.get(dpi=pk)
+            except objeto.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            serializador = TxdChoferS(objeto)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)

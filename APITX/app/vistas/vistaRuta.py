@@ -4,8 +4,6 @@ from rest_framework.response import Response
 from django.db import IntegrityError
 from app.models import TxdRuta,TxdDenuncia,TxdBus, TxdHorariodetalle
 from app.serializables import TxdRutaS, TxdDenunciaS,TxdBusS
-from app import permisos
-from app.vistas import autentificacion
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -23,9 +21,13 @@ def lista_objetos(request):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
-        objeto = TxdRuta.objects.all()
-        serializador = TxdRutaS(objeto, many=True)
-        return Response(serializador.data)
+        if usuario.has_perm('app.views_txdruta'):
+            objeto = TxdRuta.objects.all()
+            serializador = TxdRutaS(objeto, many=True)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     elif request.method == 'POST':
         if usuario.has_perm('app.add_txdruta'):
@@ -57,8 +59,12 @@ def detalle_objetos(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializador = TxdRutaS(objeto)
-        return Response(serializador.data)
+        if usuario.has_perm('app.views_txdruta'):
+            serializador = TxdRutaS(objeto)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     elif request.method == 'PUT':
         if usuario.has_perm('app.change_txdruta'):
@@ -97,29 +103,34 @@ def denuncias_ruta(request, pk):
         content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-    try:
-        ruta = TxdRuta.objects.get(pk=pk)
-        denuncias = TxdDenuncia.objects.all()
-        respuesta = {}
-        listadenuncias = list()
-        listaruta = list()
-        listaruta+= [TxdRutaS(ruta).data]
-    except ruta.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
     if request.method == 'GET':
-        for bus in TxdBus.objects.filter(ruta_id=ruta.idruta):
+        if usuario.has_perm('app.views_txdruta'):
             try:
-                denuncias = TxdDenuncia.objects.filter(placa=bus.placa)
-                numdenuncias = TxdDenuncia.objects.filter(placa=bus.placa).count()
-                buses = TxdBusS(bus).data
-                buses['numdenuncias'] = numdenuncias
-                listadenuncias+= [buses]
-            except denuncias.DoesNotExist:
+                ruta = TxdRuta.objects.get(pk=pk)
+                denuncias = TxdDenuncia.objects.all()
+                respuesta = {}
+                listadenuncias = list()
+                listaruta = list()
+                listaruta+= [TxdRutaS(ruta).data]
+            except ruta.DoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
-        respuesta['ruta'] =  listaruta
-        respuesta['buses'] = listadenuncias
-        return Response(respuesta)
+
+            for bus in TxdBus.objects.filter(ruta_id=ruta.idruta):
+                try:
+                    denuncias = TxdDenuncia.objects.filter(placa=bus.placa)
+                    numdenuncias = TxdDenuncia.objects.filter(placa=bus.placa).count()
+                    buses = TxdBusS(bus).data
+                    buses['numdenuncias'] = numdenuncias
+                    listadenuncias+= [buses]
+                except denuncias.DoesNotExist:
+                    return Response(status=status.HTTP_404_NOT_FOUND)
+            respuesta['ruta'] =  listaruta
+            respuesta['buses'] = listadenuncias
+            return Response(respuesta)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
 
 @api_view(['GET'])
 def lista_numDenuncias(request):
@@ -134,16 +145,20 @@ def lista_numDenuncias(request):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
-        objeto = TxdRuta.objects.all()
-        a= list()
-        for ruta in objeto:
-            cant = 0
-            buses = TxdBus.objects.filter(ruta=ruta.idruta)
-            for bus in buses:
-                cant+= TxdDenuncia.objects.filter(placa=bus.placa,chofer__isnull=False).count()
-            ob={}
-            ob={"idruta":ruta.idruta, "nombre":ruta.nombre, "recorrido":ruta.recorrido, "TotalDenuncias":cant}
-            a+=[ob]
-        rutas={}
-        rutas['rutas'] = a
-        return Response(rutas)
+        if usuario.has_perm('app.views_txdruta'):
+            objeto = TxdRuta.objects.all()
+            a= list()
+            for ruta in objeto:
+                cant = 0
+                buses = TxdBus.objects.filter(ruta=ruta.idruta)
+                for bus in buses:
+                    cant+= TxdDenuncia.objects.filter(placa=bus.placa,chofer__isnull=False).count()
+                ob={}
+                ob={"idruta":ruta.idruta, "nombre":ruta.nombre, "recorrido":ruta.recorrido, "TotalDenuncias":cant}
+                a+=[ob]
+            rutas={}
+            rutas['rutas'] = a
+            return Response(rutas)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)

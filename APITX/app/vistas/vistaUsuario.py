@@ -9,46 +9,7 @@ from app.serializables import UserSerializer
 from app.models import TxdDuenio
 from app.serializables import TxdDuenioS
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
-from django.core.exceptions import ObjectDoesNotExist
-from app import permisos
-from app.vistas import autentificacion
 from rest_framework.authtoken.models import Token
-
-@api_view(['GET'])
-@authentication_classes((SessionAuthentication, BasicAuthentication,))
-@permission_classes((IsAuthenticated,))
-def autenticar(request, format=None):
-
-    """
-    Este metodo devuelve los datos de un usuario que se esta logeando
-    """
-    try:
-        objToken = Token.objects.get(key=request.query_params.get('tk'))
-        usuario = User.objects.get(pk=objToken.user.id)
-    except ObjectDoesNotExist:
-        content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
-        return Response(content, status=status.HTTP_403_FORBIDDEN)
-
-    if request.method == 'GET':
-        try:
-            objetoUsuario = User.objects.get(username=request.user)
-        except ObjectDoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        duenio = TxdDuenio.objects.get(usuario=objetoUsuario.id)
-        serializador = TxdDuenioS(duenio)
-        return Response(serializador.data)
-
-
-
-
-        """
-        content = {
-            'user': unicode(request.user),  # `django.contrib.auth.User` instance.
-            'auth': unicode(request.auth),  # None
-        }
-        return Response(content)
-        """
 
 
 @api_view(['POST'])
@@ -113,8 +74,12 @@ def detalle_usuario(request, pk):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         if request.method == 'GET':
-            serUsuario = UserSerializer(obUsuario)
-            return Response(serUsuario.data)
+            if usuario.has_perms('app.view_txdpmt', 'app.view_txdduenio', 'app.view_txccultura'):
+                serUsuario = UserSerializer(obUsuario)
+                return Response(serUsuario.data)
+            else:
+                content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+                return Response(content, status=status.HTTP_403_FORBIDDEN)
 
         elif request.method == 'PUT':
             if usuario.has_perm('app.change_user'):
@@ -159,8 +124,12 @@ def lista_usuario(request):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         if request.method == 'GET':
-            serUsuario = UserSerializer(obUsuario,many=True)
-            return Response(serUsuario.data)
+            if usuario.has_perms('app.view_txdpmt', 'app.view_txdduenio', 'app.view_txccultura'):
+                serUsuario = UserSerializer(obUsuario,many=True)
+                return Response(serUsuario.data)
+            else:
+                content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+                return Response(content, status=status.HTTP_403_FORBIDDEN)
 
         elif request.method == 'POST':
             if usuario.has_perm('app.add_user'):
@@ -198,18 +167,23 @@ def Usuarios_Group(request, pk):
             content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-        try:
-            usuarios = User.objects.filter(groups=pk)
-        except ObjectDoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
         if request.method == 'GET':
-            serializador = UserSerializer(usuarios, many=True)
-            return Response(serializador.data)
+            if usuario.has_perms('app.view_txdpmt', 'app.view_txdduenio', 'app.view_txccultura'):
+                try:
+                    usuarios = User.objects.filter(groups=pk)
+                except ObjectDoesNotExist:
+                    return Response(status=status.HTTP_404_NOT_FOUND)
+
+                serializador = UserSerializer(usuarios, many=True)
+                return Response(serializador.data)
+            else:
+                content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+                return Response(content, status=status.HTTP_403_FORBIDDEN)
+
         else:
             return Response(serUsuario.errors,status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT','DELETE'])
+@api_view(['PUT'])
 def CambiarEstado(request, pk, var):
         """
         Actualiza, elimina un objeto segun su id
@@ -256,7 +230,7 @@ def CambiarEstado(request, pk, var):
 
 
 
-@api_view(['GET', 'PUT','DELETE'])
+@api_view(['PUT'])
 def cambiarGrupo(request, pk):
         """
         Actualiza, elimina un objeto segun su id

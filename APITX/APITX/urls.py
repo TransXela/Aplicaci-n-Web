@@ -31,8 +31,7 @@ router = routers.DefaultRouter()
 
 urlpatterns = [
 
-    url(r'^token-auth/', views.obtain_auth_token),
-    url(r'^obtenertoken/', autentificacion.token),
+    url(r'^obtenertoken/', autenticacion.obtenertoken),
     url(r'^admin/', admin.site.urls),
     url(r'^duenio/$', vistaDuenio.lista_objetos),
     url(r'^operador/duenios/$', vistaDuenio.lista_objetos),

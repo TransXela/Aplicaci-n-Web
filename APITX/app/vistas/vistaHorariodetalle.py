@@ -3,9 +3,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from datetime import datetime, date, timedelta
 from app.models import TxdHorariodetalle,TxdBus,TxdChofer,TxdDuenio, TxdHorario
-from app.serializables import TxdHorariodetalleS,Duenios_horariodetalle,TxdDuenioS, choferHorariDetalle, TxdBusS, TxdHorarioS, TxdChoferS, Buses_horariodetalle, choferHorariDetalleCompleto
-from app import permisos
-from app.vistas import autentificacion
+from app.serializables import (TxdHorariodetalleS,Duenios_horariodetalle,TxdDuenioS, choferHorariDetalle, TxdBusS, TxdHorarioS,
+                                TxdChoferS, Buses_horariodetalle, choferHorariDetalleCompleto)
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -23,9 +22,14 @@ def lista_objetos(request):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
-        objeto = TxdHorariodetalle.objects.all()
-        serializador = TxdHorariodetalleS(objeto, many=True)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txdhorariodetalle'):
+            objeto = TxdHorariodetalle.objects.all()
+            serializador = TxdHorariodetalleS(objeto, many=True)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
 
     elif request.method == 'POST':
         if usuario.has_perm('app.add_txdhorariodetalle'):
@@ -77,8 +81,12 @@ def detalle_objetos(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializador = TxdHorariodetalleS(objeto)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txdhorariodetalle'):
+            serializador = TxdHorariodetalleS(objeto)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
     elif request.method == 'PUT':
@@ -152,19 +160,23 @@ def rango(request,fInicio,fFin):
         content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-    formato_fecha = "%Y-%m-%d"
-    inicio = datetime.strptime(fInicio, formato_fecha).date()
-    fin = datetime.strptime(fFin, formato_fecha).date()
-
-    try:
-        hoy = date.today()
-        objeto = TxdHorariodetalle.objects.filter(bus=1)
-    except ObjectDoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
     if request.method == 'GET':
-        serializador = TxdHorariodetalleS(objeto)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txdhorariodetalle'):
+            formato_fecha = "%Y-%m-%d"
+            inicio = datetime.strptime(fInicio, formato_fecha).date()
+            fin = datetime.strptime(fFin, formato_fecha).date()
+
+            try:
+                hoy = date.today()
+                objeto = TxdHorariodetalle.objects.filter(bus=1)
+            except ObjectDoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            serializador = TxdHorariodetalleS(objeto)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -180,20 +192,25 @@ def lista_por_duenio(request,pk):
         content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-    try:
-        s =list()
-        for i in TxdChofer.objects.filter(duenio=pk):
-            s+=[i.idchofer]
-        objeto =TxdHorariodetalle.objects.filter(chofer__in=s)
-    except ObjectDoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializador = Duenios_horariodetalle(objeto, many=True)
-        duenio=TxdDuenio.objects.get(pk=pk)
-        duenios = TxdDuenioS(duenio)
-        data={"duenio":duenios.data,"diasHorarioDetalle": serializador.data}
-        return Response(data)
+        if usuario.has_perm('app.view_txdhorariodetalle'):
+            try:
+                s =list()
+                for i in TxdChofer.objects.filter(duenio=pk):
+                    s+=[i.idchofer]
+                objeto =TxdHorariodetalle.objects.filter(chofer__in=s)
+            except ObjectDoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            serializador = Duenios_horariodetalle(objeto, many=True)
+            duenio=TxdDuenio.objects.get(pk=pk)
+            duenios = TxdDuenioS(duenio)
+            data={"duenio":duenios.data,"diasHorarioDetalle": serializador.data}
+            return Response(data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -209,15 +226,19 @@ def detalle_Choferes(request, pk):
         content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-    try:
-        objeto = TxdChofer.objects.get(pk=pk)
-        #objHorarioDetalle = TxdHorariodetalle.objects.filter(bus=pk)
-    except ObjectDoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
     if request.method == 'GET':
-        serializador = choferHorariDetalleCompleto(objeto)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txdhorariodetalle'):
+            try:
+                objeto = TxdChofer.objects.get(pk=pk)
+                #objHorarioDetalle = TxdHorariodetalle.objects.filter(bus=pk)
+            except ObjectDoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            serializador = choferHorariDetalleCompleto(objeto)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -233,17 +254,22 @@ def lista_por_bus(request,pk):
         content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-    try:
-        objBus =TxdBus.objects.filter(pk=pk)
-        objHorarioDetalle = TxdHorariodetalle.objects.filter(bus=pk)
-    except ObjectDoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serBus = TxdBusS(objBus, many=True)
-        serHorarioDetalle =  Buses_horariodetalle(objHorarioDetalle, many=True)
-        data={"Bus":serBus.data,"HorarioDetalle": serHorarioDetalle.data}
-        return Response(data)
+        if usuario.has_perm('app.view_txdhorariodetalle'):
+            try:
+                objBus =TxdBus.objects.filter(pk=pk)
+                objHorarioDetalle = TxdHorariodetalle.objects.filter(bus=pk)
+            except ObjectDoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            serBus = TxdBusS(objBus, many=True)
+            serHorarioDetalle =  Buses_horariodetalle(objHorarioDetalle, many=True)
+            data={"Bus":serBus.data,"HorarioDetalle": serHorarioDetalle.data}
+            return Response(data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 

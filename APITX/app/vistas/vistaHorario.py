@@ -8,8 +8,6 @@ from app.models import TxdHorario
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from app.serializables import TxdHorarioS
-from app import permisos
-from app.vistas import autentificacion
 
 @api_view(['GET', 'POST'])
 def lista_objetos(request):
@@ -24,9 +22,14 @@ def lista_objetos(request):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
-        objeto = TxdHorario.objects.all()
-        serializador = TxdHorarioS(objeto, many=True)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txdhorario'):
+            objeto = TxdHorario.objects.all()
+            serializador = TxdHorarioS(objeto, many=True)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
 
     elif request.method == 'POST':
         if usuario.has_perm('app.add_txdhorario'):
@@ -64,8 +67,12 @@ def detalle_objetos(request):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializador = TxdHorarioS(objeto)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txdhorario'):
+            serializador = TxdHorarioS(objeto)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     elif request.method == 'PUT':
         if usuario.has_perm('app.change_txdhorario'):
@@ -112,11 +119,16 @@ def horarios_duenio(request):
         content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-    try:
-        objeto = TxdHorario.objects.filter(duenio=pk)
-    except objeto.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializador = TxdHorarioS(objeto, many=True)
-        return Response(serializador.data)
+        if usuario.has_perm('app.view_txdhorario'):
+            try:
+                objeto = TxdHorario.objects.filter(duenio=pk)
+            except objeto.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            serializador = TxdHorarioS(objeto, many=True)
+            return Response(serializador.data)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
