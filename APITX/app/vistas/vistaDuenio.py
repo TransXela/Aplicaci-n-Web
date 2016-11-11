@@ -196,8 +196,11 @@ def obtener_sinUser(request):
                 objeto = TxdDuenio.objects.filter(usuario__isnull=True)
                 serializador = TxdDuenioS(objeto, many=True)
                 return Response(serializador.data)
-            else:
-                return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
+            except ObjectDoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
         else:
             content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+    else:
+        return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)

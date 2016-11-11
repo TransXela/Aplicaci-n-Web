@@ -89,11 +89,12 @@ def detalle_objetos(request, pk):
                 serializador.save()
                 content = {'estado': 'se deshabilito'}
                 return Response(content, status=status.HTTP_202_ACCEPTED)
-            else:
-                return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
         else:
             content = {'Permiso denegado': 'El usuario no tiene permisos para eliminar datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+    else:
+        return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -115,8 +116,10 @@ def obtener_sinUser(request):
                 objeto = TxcCultura.objects.filter(usuario__isnull=True)
                 serializador = TxcCulturaS(objeto, many=True)
                 return Response(serializador.data)
-            else:
-                return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
+            except ObjectDoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
         else:
             content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
+    else:
+        return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)

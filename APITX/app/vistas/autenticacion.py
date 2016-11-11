@@ -30,7 +30,7 @@ def token(request, format=None):
         try:
             objUsuario = User.objects.get(username = request.data.get('user'))
         except ObjectDoesNotExist:
-            return Response("susuario y contasenia incorrecta", status=status.HTTP_404_NOT_FOUND)
+            return Response("usuario y contasenia incorrecta", status=status.HTTP_404_NOT_FOUND)
 
         if objUsuario.check_password(request.data.get('pass')):
 
@@ -51,4 +51,4 @@ def token(request, format=None):
             datos['Token'] = token.key
             return Response(datos)
         else:
-            return Response("susuario y contasenia incorrecta", status=status.HTTP_404_NOT_FOUND)
+            return Response("usuario y contasenia incorrecta", status=status.HTTP_404_NOT_FOUND)

@@ -21,7 +21,7 @@ from rest_framework.authtoken import views
 from app.vistas import vistaGrupoUsuario
 from app.vistas import (vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo,
                         vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia, vistaCapitulo, vistaPregunta, vistaTitulo,
-                        vistaArticulo, autenticacion, vistaUsuario, vistaPmt,vistaGrupo,vistaCultura,vistaEstadistica, autentificacion)
+                        vistaArticulo, autenticacion, vistaUsuario, vistaPmt,vistaGrupo,vistaCultura,vistaEstadistica)
 from APITX import settings
 from django.conf.urls.static import static
 
@@ -31,7 +31,7 @@ router = routers.DefaultRouter()
 
 urlpatterns = [
 
-    url(r'^obtenertoken/', autenticacion.obtenertoken),
+    url(r'^obtenertoken/', autenticacion.token),
     url(r'^admin/', admin.site.urls),
     url(r'^duenio/$', vistaDuenio.lista_objetos),
     url(r'^operador/duenios/$', vistaDuenio.lista_objetos),
@@ -92,7 +92,6 @@ urlpatterns = [
 
     #endPoints sesion
     url(r'^sesion/$', vistaUsuario.crear_usuario),
-    url(r'^sesion/log/$', vistaUsuario.autenticar),
     url(r'^sesion/(?P<pk>[0-9]+)/$', vistaUsuario.detalle_usuario),
 
     #operador
