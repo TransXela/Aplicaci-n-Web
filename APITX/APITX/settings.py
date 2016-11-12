@@ -83,16 +83,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'APITX.wsgi.application'
 
+
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dbtransxela',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': '127.0.0.1',
+        'NAME': 'transxela',
+        'USER': 'transxela01',
+        'PASSWORD': 'jjDLtuVcFt',
+        'HOST': 'mysql.transxela.site',
         'PORT': '3306',
     }
 }
@@ -133,4 +134,4 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_URL = '/statics/'
+STATIC_URL = '/static/'

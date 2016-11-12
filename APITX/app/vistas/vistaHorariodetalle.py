@@ -44,7 +44,7 @@ def lista_objetos(request):
                 try:
                     bus = TxdBus.objects.get(pk=request.data['bus'], estado=1)
                 except ObjectDoesNotExist:
-                    respuesta ={'crear': {'estado": "No puede asignar un bus deshabilitado.'}}
+                    respuesta ={'crear': {'estado': 'No puede asignar un bus deshabilitado.'}}
                     return Response(respuesta, status=status.HTTP_406_NOT_ACCEPTABLE)
 
                 formato_fecha = "%Y-%m-%d"
@@ -52,10 +52,10 @@ def lista_objetos(request):
                 stringF=str(datetime.now().year)+"-"+str(datetime.now().month)+"-"+str(datetime.now().day)
                 fecha1 = datetime.strptime(stringF, formato_fecha)
                 if fecha2 < fecha1:
-                    respuesta ={'crear': {'estado": "La fecha debe ser mayor igual a la fecha actual.'}}
+                    respuesta ={'crear': {'estado': 'La fecha debe ser mayor igual a la fecha actual.'}}
                     return Response(respuesta, status=status.HTTP_406_NOT_ACCEPTABLE)
                 serializador.save()
-                respuesta ={'crear': {'estado": "Creado Exitosamente'}}
+                respuesta ={'crear': {'estado': 'Creado Exitosamente'}}
                 return Response(serializador.data, status=status.HTTP_201_CREATED)
             return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -102,7 +102,7 @@ def detalle_objetos(request, pk):
                 try:
                     bus = TxdBus.objects.get(pk=request.data['bus'], estado=1)
                 except ObjectDoesNotExist:
-                    respuesta ={'modificar': {'estado": "No puede asignar un bus deshabilitado.'}}
+                    respuesta ={'modificar': {'estado': 'No puede asignar un bus deshabilitado.'}}
                     return Response(respuesta, status=status.HTTP_406_NOT_ACCEPTABLE)
 
                 formato_fecha = "%Y-%m-%d"
@@ -110,7 +110,7 @@ def detalle_objetos(request, pk):
                 stringF=str(datetime.now().year)+"-"+str(datetime.now().month)+"-"+str(datetime.now().day)
                 fecha1 = datetime.strptime(stringF, formato_fecha)
                 if fecha2 < fecha1:
-                    respuesta ={'modificar': {'estado": "La fecha debe ser mayor igual a la fecha actual.'}}
+                    respuesta ={'modificar': {'estado': 'La fecha debe ser mayor igual a la fecha actual.'}}
                     return Response(respuesta, status=status.HTTP_406_NOT_ACCEPTABLE)
                 serializador.save()
                 respuesta ={'modificar': {'estado": "Modificado Exitosamente'}}
