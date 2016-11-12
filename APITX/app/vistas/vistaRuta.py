@@ -21,7 +21,7 @@ def lista_objetos(request):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
-        if usuario.has_perm('app.views_txdruta'):
+        if usuario.has_perm('app.view_txdruta'):
             objeto = TxdRuta.objects.all()
             serializador = TxdRutaS(objeto, many=True)
             return Response(serializador.data)
@@ -59,7 +59,7 @@ def detalle_objetos(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        if usuario.has_perm('app.views_txdruta'):
+        if usuario.has_perm('app.view_txdruta'):
             serializador = TxdRutaS(objeto)
             return Response(serializador.data)
         else:
@@ -104,7 +104,7 @@ def denuncias_ruta(request, pk):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
-        if usuario.has_perm('app.views_txdruta'):
+        if usuario.has_perm('app.view_txdruta'):
             try:
                 ruta = TxdRuta.objects.get(pk=pk)
                 denuncias = TxdDenuncia.objects.all()
@@ -145,7 +145,7 @@ def lista_numDenuncias(request):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
-        if usuario.has_perm('app.views_txdruta'):
+        if usuario.has_perm('app.view_txdruta'):
             objeto = TxdRuta.objects.all()
             a= list()
             for ruta in objeto:

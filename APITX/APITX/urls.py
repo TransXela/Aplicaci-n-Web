@@ -147,9 +147,9 @@ urlpatterns = [
     url(r'^reporte/pmt/RepPilotoDen/$', vistaEstadistica.lista_objetos_pilotoDenuncia),
     url(r'^reporte/pmt/RepDuenioBuses/$', vistaEstadistica.lista_objetos_duenioBuses),
     #generar reportes para duenios
-    url(r'^reporte/duenio/RepDuenioBusesId/(?P<pk>[0-9]+)$', vistaEstadistica.lista_objetos_duenioBusesId),
-    url(r'^reporte/duenio/RepDuenioChoferId/(?P<pk>[0-9]+)$', vistaEstadistica.lista_objetos_duenioChofId),
-    url(r'^reporte/duenio/RepBusChofId/(?P<pk>[0-9]+)$', vistaEstadistica.lista_objetos_busChofId),
+    url(r'^reporte/duenio/RepDuenioBusesId/(?P<pk>[0-9]+)/$', vistaEstadistica.lista_objetos_duenioBusesId),
+    url(r'^reporte/duenio/RepDuenioChoferId/(?P<pk>[0-9]+)/$', vistaEstadistica.lista_objetos_duenioChofId),
+    url(r'^reporte/duenio/RepBusChofId/(?P<pk>[0-9]+)/$', vistaEstadistica.lista_objetos_busChofId),
     url(r'^reporte/duenio/RepTipoDenD/$', vistaEstadistica.lista_objetos_tipoDenDenuncia),
 
     url(r'^', include(router.urls)),
