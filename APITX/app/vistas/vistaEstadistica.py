@@ -21,7 +21,7 @@ def lista_objetos(request):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
-        if usuario.has_perm('app.views_txdDuenuncia'):
+        if usuario.has_perm('app.view_txddenuncia'):
             objeto = TxdDenuncia.objects.all()
             serializador = TxdDenunciaS(objeto, many=True)
             return Response(serializador.data)
@@ -43,7 +43,7 @@ def lista_objetos_rutaBus(request):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
-        if usuario.has_perm('app.views_txdRuta'):
+        if usuario.has_perm('app.view_txdruta'):
             objeto = TxdRuta.objects.all()
             serializador = BusRutaS(objeto, many=True)
             return Response(serializador.data)
@@ -64,7 +64,7 @@ def lista_objetos_pilotoDenuncia(request):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
-        if usuario.has_perm('app.views_txdChofer'):
+        if usuario.has_perm('app.view_txdchofer'):
             objeto = TxdChofer.objects.all()
             serializador = ChoferDenunciaS(objeto, many=True)
             return Response(serializador.data)
@@ -86,7 +86,7 @@ def lista_objetos_duenioBuses(request):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
-        if usuario.has_perm('app.views_txdDuenio'):
+        if usuario.has_perm('app.view_txdduenio'):
             objeto = TxdDuenio.objects.all()
             serializador = BusDuenioS(objeto, many=True)
             return Response(serializador.data)
