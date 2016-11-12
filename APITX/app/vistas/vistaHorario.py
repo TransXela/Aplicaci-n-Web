@@ -50,7 +50,7 @@ def lista_objetos(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def detalle_objetos(request):
+def detalle_objetos(request, pk):
     """
     Actualiza, elimina un objeto segun su id
     """
@@ -108,7 +108,7 @@ def detalle_objetos(request):
 
 
 @api_view(['GET'])
-def horarios_duenio(request):
+def horarios_duenio(request, pk):
     """
     obtiene los horarios de un duenio
     """
@@ -124,7 +124,7 @@ def horarios_duenio(request):
         if usuario.has_perm('app.view_txdhorario'):
             try:
                 objeto = TxdHorario.objects.filter(duenio=pk)
-            except objeto.DoesNotExist:
+            except ObjectDoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
 
             serializador = TxdHorarioS(objeto, many=True)

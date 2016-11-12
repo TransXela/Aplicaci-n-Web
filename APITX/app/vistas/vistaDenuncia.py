@@ -240,7 +240,7 @@ def cambio_estado(request, pk):
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 @api_view(['GET'])
-def lista_denuncias(request, tk):
+def lista_denuncias(request):
     """
     Lista de todas las denuncias
     """
@@ -251,39 +251,31 @@ def lista_denuncias(request, tk):
         content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-    try:
-        ob={}
-        a = list()
-        ob2={}
-        objeto = TxdDenuncia.objects.all()
-    except ObjectDoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
     if request.method == 'GET':
-        for denuncia in objeto:
+        if usuario.has_perm('app.view_txddenuncia'):
+            try:
+                ob={}
+                a = list()
+                ob2={}
+                objeto = TxdDenuncia.objects.all()
+            except ObjectDoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
 
-            chofer = TxdChofer.objects.filter(idchofer=denuncia.chofer.idchofer)
-            tipodenuncia = TxdTipodenuncia.objects.filter(idtipodenuncia=denuncia.tipodenuncia.idtipodenuncia)
-            print chofer
-            data={}
-            data ['denuncia'] = TxdDenunciaS(denuncia).data
-            data['chofer'] = TxdChoferS(chofer,many=True).data
-            data['tipodenuncia'] = TxdTipodenunciaS(tipodenuncia,many=True).data
-            a+= [data]
-        ob['numdenuncias'] = TxdDenuncia.objects.count()
-        ob['denuncias'] = a
-        return Response(ob)
+            for denuncia in objeto:
 
-"""
-@api_view(['GET'])
-def denuncias_bus(request, pk):
-    if request.method == 'GET':
-        try:
-            objBus = TxdBus.objects.get(pk=pk)
-            objDenuncias = TxdDenuncia.objects.filter(placa = objBus.placa)
-            objTipoDenuncia = TxdTipodenuncia.objects.all()
-
-            for objDenuncia in objDenuncias:
-
-                if objTipoDenuncia == 1:
-                    listaTipoDenunciaUno += TxdTipodenunciaS(obj)
-"""
+                chofer = TxdChofer.objects.filter(idchofer=denuncia.chofer.idchofer)
+                tipodenuncia = TxdTipodenuncia.objects.filter(idtipodenuncia=denuncia.tipodenuncia.idtipodenuncia)
+                print chofer
+                data={}
+                data ['denuncia'] = TxdDenunciaS(denuncia).data
+                data['chofer'] = TxdChoferS(chofer,many=True).data
+                data['tipodenuncia'] = TxdTipodenunciaS(tipodenuncia,many=True).data
+                a+= [data]
+            ob['numdenuncias'] = TxdDenuncia.objects.count()
+            ob['denuncias'] = a
+            return Response(ob)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)

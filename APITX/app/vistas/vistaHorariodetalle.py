@@ -286,7 +286,7 @@ def postRangoFechas(request):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'POST':
-        if usuario.has_perms(permisos.duenios):
+        if usuario.has_perm('app.add_txdhorariodetalle'):
             if 'fechaInicial' in request.data and 'fechaFinal' in request.data and 'bus' in request.data and 'chofer' in request.data and 'horario' in request.data and 'estado' in request.data:
                 data= {"bus": request.data['bus'], "chofer": request.data['chofer'] ,"horario": request.data['horario'],"estado":request.data['estado']}
                 formato_fecha = "%Y-%m-%d"

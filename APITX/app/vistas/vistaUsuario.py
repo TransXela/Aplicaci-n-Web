@@ -124,7 +124,7 @@ def lista_usuario(request):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         if request.method == 'GET':
-            if usuario.has_perms('app.view_txdpmt', 'app.view_txdduenio', 'app.view_txccultura'):
+            if usuario.has_perm('app.view_txdpmt') | usuario.has_perm('app.view_txdduenio') | usuario.has_perm('app.view_txccultura'):
                 serUsuario = UserSerializer(obUsuario,many=True)
                 return Response(serUsuario.data)
             else:

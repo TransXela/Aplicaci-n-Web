@@ -20,7 +20,7 @@ def lista_objetos(request):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'GET':
-        if usuario.has_perm('app.views_txctitulo'):
+        if usuario.has_perm('app.view_txctitulo'):
             objeto = TxcTitulo.objects.all()
             serializador = TxcTituloS(objeto, many=True)
             return Response(serializador.data)
@@ -59,7 +59,7 @@ def detalle_objetos(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        if usuario.has_perm('app.views_txctitulo'):    
+        if usuario.has_perm('app.view_txctitulo'):    
             serializador = TxcTituloS(objeto)
             return Response(serializador.data)
         else:
