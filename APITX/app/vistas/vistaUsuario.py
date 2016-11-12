@@ -25,7 +25,7 @@ def crear_usuario(request):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == 'POST':
-        if usuario.has_perm('app.add_user'):
+        if usuario.has_perm('auth.add_user'):
             serializador = UserSerializer(data = request.data)
             if serializador.is_valid():
                 serializador.save()
@@ -82,7 +82,7 @@ def detalle_usuario(request, pk):
                 return Response(content, status=status.HTTP_403_FORBIDDEN)
 
         elif request.method == 'PUT':
-            if usuario.has_perm('app.change_user'):
+            if usuario.has_perm('auth.change_user'):
                 serUsuario = UserSerializer(obUsuario, data=request.data)
                 if serUsuario.is_valid():
                     serUsuario.save()
@@ -97,7 +97,7 @@ def detalle_usuario(request, pk):
 
 
         elif request.method == 'DELETE':
-            if usuario.has_perm('app.delete_user'):
+            if usuario.has_perm('auth.delete_user'):
                 objeto.delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
             else:
@@ -129,7 +129,7 @@ def lista_usuario(request):
                 return Response(content, status=status.HTTP_403_FORBIDDEN)
 
         elif request.method == 'POST':
-            if usuario.has_perm('app.add_user'):
+            if usuario.has_perm('auth.add_user'):
                 serializador = UserSerializer(data = request.data)
                 if serializador.is_valid():
                     user = User.objects.create_user(username=request.data.get('username'),
@@ -203,7 +203,7 @@ def CambiarEstado(request, pk, var):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         if request.method == 'PUT':
-            if usuario.has_perms('app.change_user'):
+            if usuario.has_perms('auth.change_user'):
                 if(var==0):
                     U = UserSerializer(obUsuario)
                     dato = U.data
@@ -250,7 +250,7 @@ def cambiarGrupo(request, pk):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         if request.method == 'PUT':
-            if usuario.has_perm('app.change_user'):
+            if usuario.has_perm('auth.change_user'):
                 if "idGrupoNuevo" in request.data:
                     serUsuario = UserSerializer(obUsuario)
                     user=serUsuario.data
