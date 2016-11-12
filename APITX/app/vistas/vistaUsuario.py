@@ -28,10 +28,10 @@ def crear_usuario(request):
         if usuario.has_perm('app.add_user'):
             serializador = UserSerializer(data = request.data)
             if serializador.is_valid():
-                user = User.objects.create_user(username=request.data.get('username'),
-                                                email=request.data.get('email'),
-                                                password=request.data.get('password'))
-                user.save()
+                serializador.save()
+                ultimoId = User.objects.latest('id')
+                user= User.objects.get(pk=ultimoId.id)
+
                 if 'idgroup' in request.data:
                     try:
                         grupo = Group.objects.get(pk=request.data['idgroup'])
@@ -74,7 +74,7 @@ def detalle_usuario(request, pk):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         if request.method == 'GET':
-            if usuario.has_perms('app.view_txdpmt', 'app.view_txdduenio', 'app.view_txccultura'):
+            if usuario.has_perm('app.view_txdpmt') | usuario.has_perm('app.view_txdduenio') | usuario.has_perm('app.view_txccultura'):
                 serUsuario = UserSerializer(obUsuario)
                 return Response(serUsuario.data)
             else:
@@ -118,11 +118,8 @@ def lista_usuario(request):
             content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-        try:
-            obUsuario =  User.objects.all()
-        except ObjectDoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
 
+        obUsuario =  User.objects.all()
         if request.method == 'GET':
             if usuario.has_perm('app.view_txdpmt') | usuario.has_perm('app.view_txdduenio') | usuario.has_perm('app.view_txccultura'):
                 serUsuario = UserSerializer(obUsuario,many=True)
@@ -136,8 +133,15 @@ def lista_usuario(request):
                 serializador = UserSerializer(data = request.data)
                 if serializador.is_valid():
                     user = User.objects.create_user(username=request.data.get('username'),
-                                                    email=request.data.get('email'),
-                                                    password=request.data.get('password'))
+                                                email=request.data.get('email'),
+                                                password=request.data.get('password'))
+                    if "is_active" in request.data:
+                        user.is_active=request.data.get('is_active')
+                    if "is_staff" in request.data:
+                        user.is_staff=request.data.get('is_staff')
+                    if "is_superuser" in request.data:
+                        user.is_superuser=request.data.get('is_superuser')
+
                     user.save()
                     if 'idgroup' in request.data:
                         try:
@@ -153,8 +157,6 @@ def lista_usuario(request):
                 content = {'Permiso denegado': 'El usuario no tiene permisos para ingresar datos'}
                 return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-
-
 @api_view(['GET'])
 def Usuarios_Group(request, pk):
         """
@@ -168,7 +170,7 @@ def Usuarios_Group(request, pk):
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
         if request.method == 'GET':
-            if usuario.has_perms('app.view_txdpmt', 'app.view_txdduenio', 'app.view_txccultura'):
+            if usuario.has_perm('app.view_txdpmt') | usuario.has_perm('app.view_txdduenio') | usuario.has_perm('app.view_txccultura'):
                 try:
                     usuarios = User.objects.filter(groups=pk)
                 except ObjectDoesNotExist:
