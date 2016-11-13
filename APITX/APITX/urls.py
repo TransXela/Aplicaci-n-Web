@@ -140,6 +140,7 @@ urlpatterns = [
     url(r'^cultura/titulo/(?P<pk>[0-9]+)/$', vistaTitulo.detalle_objetos),
     url(r'^cultura/articulo/$', vistaArticulo.lista_objetos),
     url(r'^cultura/articulo/(?P<pk>[0-9]+)/$', vistaArticulo.detalle_objetos),
+    url(r'^cultura/consejoAct/$',vistaConsejo.principal_consejoActividad),
 
     #para realizar reportes para pmt
     url(r'^reporte/pmt/RepDuenioBusD/$', vistaEstadistica.lista_objetos),

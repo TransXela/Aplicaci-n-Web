@@ -1,8 +1,8 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from app.models import TxcoConsejo
-from app.serializables import TxcoConsejoS, TxcoFechaS, TxcoConsejosFechaS
+from app.models import TxcoConsejo, TxcActividad
+from app.serializables import TxcoConsejoS, TxcoFechaS, TxcoConsejosFechaS, TxcActividadS
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -123,3 +123,17 @@ def detalle_objetos(request):
         else:
             content = {'Permiso denegado': 'El usuario no tiene permisos para eliminar datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
+@api_view(['GET'])
+def principal_consejoActividad(request):
+    """
+    Lista de actividades y consejos
+    """
+    if request.method == 'GET':
+        lista = list()
+        for recorrer in TxcActividad.objects.all():
+            actividadeser = TxcActividadS(recorrer)
+            lista+=[actividadeser.data]
+            for recorre in TxcoConsejo.objects.all():
+                consejoser = TxcoConsejoS(recorre)
+                lista+=[consejoser.data]
+        return Response(lista)
