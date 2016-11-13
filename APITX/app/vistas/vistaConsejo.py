@@ -136,6 +136,6 @@ def principal_consejoActividad(request):
             lista+=[actividadeser.data]
             recorre= TxcoConsejo.objects.all()
             consejoser = TxcoConsejoS(recorre,many=True)
-            ob['consejos']= consejoser.data
+            ob['consejo']= consejoser.data
             ob['actividades'] = lista
         return Response(ob)
