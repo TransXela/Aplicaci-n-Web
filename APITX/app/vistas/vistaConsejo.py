@@ -130,10 +130,12 @@ def principal_consejoActividad(request):
     """
     if request.method == 'GET':
         lista = list()
+        ob = {}
         for recorrer in TxcActividad.objects.all():
             actividadeser = TxcActividadS(recorrer)
             lista+=[actividadeser.data]
-            for recorre in TxcoConsejo.objects.all():
-                consejoser = TxcoConsejoS(recorre)
-                lista+=[consejoser.data]
-        return Response(lista)
+            recorre= TxcoConsejo.objects.all()
+            consejoser = TxcoConsejoS(recorre,many=True)
+            ob['consejos']= consejoser.data
+            ob['actividades'] = lista
+        return Response(ob)
