@@ -262,17 +262,15 @@ def lista_denuncias(request):
                 return Response(status=status.HTTP_404_NOT_FOUND)
 
             for denuncia in objeto:
-
-                chofer = TxdChofer.objects.filter(pk=denuncia.chofer.idchofer)
+                if denuncia.chofer.idchofer >0 :
+                    chofer = TxdChofer.objects.filter(pk=denuncia.chofer.idchofer)
+                else:
+                    chofer= ""    
                 tipodenuncia = TxdTipodenuncia.objects.filter(idtipodenuncia=denuncia.tipodenuncia.idtipodenuncia)
                 print chofer
                 data={}
                 data ['denuncia'] = TxdDenunciaS(denuncia).data
-                if chofer is null:
-                    data['chofer'] = ""
-                else:
-                    data['chofer'] = TxdChoferS(chofer,many=True).data
-                       
+                data['chofer'] = TxdChoferS(chofer,many=True).data
                 data['tipodenuncia'] = TxdTipodenunciaS(tipodenuncia,many=True).data
                 a+= [data]
             ob['numdenuncias'] = TxdDenuncia.objects.count()
