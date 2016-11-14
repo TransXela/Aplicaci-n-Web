@@ -268,7 +268,11 @@ def lista_denuncias(request):
                 print chofer
                 data={}
                 data ['denuncia'] = TxdDenunciaS(denuncia).data
-                data['chofer'] = TxdChoferS(chofer,many=True).data
+                if chofer is null:
+                    data['chofer'] = ""
+                else:
+                    data['chofer'] = TxdChoferS(chofer,many=True).data
+                       
                 data['tipodenuncia'] = TxdTipodenunciaS(tipodenuncia,many=True).data
                 a+= [data]
             ob['numdenuncias'] = TxdDenuncia.objects.count()
