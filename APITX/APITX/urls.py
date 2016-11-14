@@ -99,7 +99,7 @@ urlpatterns = [
     url(r'^piloto/(?P<pk>[0-9]+)/$', vistaChofer.chofer_dpi),
     url(r'^bus/(?P<pk>[1-9a-zA-Z]+)/$', vistaBus.bus_placa),
     url(r'^horariosdetalle/bus/(?P<pk>[1-9]+)/$', vistaHorariodetalle.lista_por_bus),
-    url(r'^webdenuncias/$', vistadenunciaWeb.lista_objetos),
+    url(r'^webdenuncias/$', vistaDenuncia.lista_denuncias),
     url(r'^denuncias/rutas/$', vistaRuta.lista_numDenuncias),
     url(r'^denuncia/estado/(?P<pk>[0-9]+)/$', vistaDenuncia.cambio_estado),
     url(r'^denuncias/ruta/(?P<pk>[0-9]+)/$', vistaRuta.denuncias_ruta),
