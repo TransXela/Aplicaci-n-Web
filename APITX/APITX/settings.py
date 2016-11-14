@@ -27,7 +27,7 @@ SECRET_KEY = '8m8ke$w2cwi$5b&^%y=a#4s)u2dq#pd&e_o9$@ap4b-@5j@67h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['api.transxela.site','transxela.site','localhost:9000']
 
 
 # Application definition
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'app',
     'rest_framework.authtoken',
+    'corsheaders',
 ]
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
@@ -61,8 +62,28 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
-
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_HEADERS = (
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+)
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+)
 ROOT_URLCONF = 'APITX.urls'
 
 TEMPLATES = [
@@ -90,10 +111,10 @@ WSGI_APPLICATION = 'APITX.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'transxela',
-        'USER': 'transxela01',
-        'PASSWORD': 'jjDLtuVcFt',
-        'HOST': 'mysql.transxela.site',
+        'NAME': 'dbtransxela',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
         'PORT': '3306',
     }
 }

@@ -109,10 +109,7 @@ def lista_objetos(request, var):
             try:
                 bus = TxdBus.objects.get(placa=data['placa'])
                 busid=bus.idbus
-                if denuncia.chofer is None :
-                    idchofer= ""
-                else:
-                    idchofer= (TxdHorariodetalle.objects.get(bus=busid,fecha=date.today())).chofer.idchofer
+                idchofer= (TxdHorariodetalle.objects.get(bus=busid,fecha=date.today())).chofer.idchofer
 
                 data['estado']= 1
                 data['chofer']= idchofer
