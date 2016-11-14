@@ -262,10 +262,10 @@ def lista_denuncias(request):
                 return Response(status=status.HTTP_404_NOT_FOUND)
 
             for denuncia in objeto:
-                if denuncia.chofer.idchofer >0 :
+                if denuncia.chofer.idchofer is none :
                     chofer = TxdChofer.objects.filter(pk=denuncia.chofer.idchofer)
                 else:
-                    chofer= ""    
+                    chofer= ""
                 tipodenuncia = TxdTipodenuncia.objects.filter(idtipodenuncia=denuncia.tipodenuncia.idtipodenuncia)
                 print chofer
                 data={}
