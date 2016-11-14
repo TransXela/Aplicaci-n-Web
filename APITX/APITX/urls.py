@@ -112,6 +112,8 @@ urlpatterns = [
     url(r'^groups/(?P<pk>[0-9]+)/$', vistaGrupo.detalle_objetos),
     url(r'^users/crearusuario/$', vistaUsuario.crear_usuario),
     url(r'^users/$', vistaUsuario.lista_usuario),
+    url(r'^users/cambiarcontrasenia/(?P<pk>[0-9]+)/$', vistaUsuario.cambiarContrasenia),
+    url(r'^users/cambiarcontreniausuario/(?P<pk>[0-9]+)/$', vistaUsuario.cambiarContreniaUsuario),
     url(r'^users/(?P<pk>[0-9]+)/$', vistaUsuario.detalle_usuario),
     url(r'^users/group/(?P<pk>[0-9]+)/$', vistaUsuario.Usuarios_Group),
     url(r'^users/habilitar/(?P<pk>[0-9]+)/$', vistaUsuario.CambiarEstado,{'var': 0}),

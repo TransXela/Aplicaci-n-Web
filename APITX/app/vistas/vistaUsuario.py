@@ -87,7 +87,6 @@ def detalle_usuario(request, pk):
                 if serUsuario.is_valid():
                     serUsuario.save()
                     user = User.objects.get(username=request.data.get('username'))
-                    user.set_password(request.data.get('password'))
                     user.save()
                     return Response(serUsuario.data)
                 return Response(serUsuario.errors,status=status.HTTP_400_BAD_REQUEST)
@@ -271,6 +270,81 @@ def cambiarGrupo(request, pk):
                     return Response(serUsuario.data)
                 else:
                     return Response(status=status.HTTP_400_BAD_REQUEST)
+            else:
+                content = {'Permiso denegado': 'El usuario no tiene permisos para editar datos'}
+                return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT'])
+def cambiarContrasenia(request, pk):
+        """
+        Actualiza, elimina un objeto segun su id
+        """
+        try:
+            objToken = Token.objects.get(key=request.query_params.get('tk'))
+            usuario = User.objects.get(pk=objToken.user.id)
+        except ObjectDoesNotExist:
+            content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+        try:
+            obUsuario =  User.objects.get(pk = pk)
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if request.method == 'PUT':
+            if usuario.has_perm('auth.change_user'):
+                if "password" in request.data:
+                    obUsuario.set_password(request.data['password'])
+                    obUsuario.save()
+                    serializador = UserSerializer(obUsuario)
+                    return Response(serializador.data, status=status.HTTP_201_CREATED)
+                else :
+                    Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+            else:
+                content = {'Permiso denegado': 'El usuario no tiene permisos para editar datos'}
+                return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT'])
+def cambiarContreniaUsuario(request, pk):
+        """
+        Actualiza, elimina un objeto segun su id
+        """
+        try:
+            objToken = Token.objects.get(key=request.query_params.get('tk'))
+            usuario = User.objects.get(pk=objToken.user.id)
+        except ObjectDoesNotExist:
+            content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+        try:
+            obUsuario =  User.objects.get(pk = pk)
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if request.method == 'PUT':
+            if usuario.has_perm('auth.change_user'):
+                if "password_old" in request.data and "password_new" in request.data:
+                    if obUsuario .check_password(request.data['password_old']):
+                        obUsuario .set_password(request.data['password_new'])
+                        obUsuario.save()
+                        serializador = UserSerializer(obUsuario )
+                        return Response(serializador.data, status=status.HTTP_201_CREATED)
+                    else:
+                        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+                else :
+                    content = {'Permiso denegado': 'la contrasenia es invalida'}
+                    return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+
             else:
                 content = {'Permiso denegado': 'El usuario no tiene permisos para editar datos'}
                 return Response(content, status=status.HTTP_403_FORBIDDEN)
