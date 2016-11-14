@@ -109,7 +109,11 @@ def lista_objetos(request, var):
             try:
                 bus = TxdBus.objects.get(placa=data['placa'])
                 busid=bus.idbus
-                idchofer= (TxdHorariodetalle.objects.get(bus=busid,fecha=date.today())).chofer.idchofer
+                if denuncia.chofer is None :
+                    idchofer= ""
+                else:
+                    idchofer= (TxdHorariodetalle.objects.get(bus=busid,fecha=date.today())).chofer.idchofer
+
                 data['estado']= 1
                 data['chofer']= idchofer
             except ObjectDoesNotExist:
@@ -223,8 +227,13 @@ def cambio_estado(request, pk):
 
     if request.method == 'PUT':
         if usuario.has_perms('app.change_txddenuncia'):
+            if denuncia.chofer is None :
+                idchofer= ""
+            else:
+                idchofer= (TxdHorariodetalle.objects.get(bus=busid,fecha=date.today())).chofer.idchofer
+
             data = {"descripcion": objeto.descripcion ,"fechahora": objeto.fechahora,"placa":objeto.placa,
-            "chofer":objeto.chofer.idchofer,"token":objeto.token.idtoken,"tipodenuncia":objeto.tipodenuncia.idtipodenuncia,
+            "chofer":idchofer,"token":objeto.token.idtoken,"tipodenuncia":objeto.tipodenuncia.idtipodenuncia,
             "latitud":objeto.latitud, "longitud":objeto.longitud}
             data['estado']= request.data['estado']
             print data
@@ -265,7 +274,7 @@ def lista_denuncias(request):
                 if denuncia.chofer is None :
                     chofer= ""
                 else:
-                    chofer = TxdChofer.objects.filter(pk=denuncia.chofer.idchofer)                    
+                    chofer = TxdChofer.objects.filter(pk=denuncia.chofer.idchofer)
                 tipodenuncia = TxdTipodenuncia.objects.filter(idtipodenuncia=denuncia.tipodenuncia.idtipodenuncia)
                 print chofer
                 data={}
