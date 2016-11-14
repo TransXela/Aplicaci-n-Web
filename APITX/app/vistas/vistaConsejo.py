@@ -22,7 +22,7 @@ def lista_objetos(request):
     if request.method == 'GET':
         if usuario.has_perm('app.view_txcoconsejo'):
             objeto = TxcoConsejo.objects.all()
-            serializador = TxcoConsejosFechaS(objeto, many=True)
+            serializador = TxcoConsejoS(objeto, many=True)
             return Response(serializador.data)
         else:
             content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
