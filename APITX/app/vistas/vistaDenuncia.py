@@ -263,9 +263,9 @@ def lista_denuncias(request):
 
             for denuncia in objeto:
                 if denuncia.chofer is None :
-                    chofer = TxdChofer.objects.filter(pk=denuncia.chofer.idchofer)
-                else:
                     chofer= ""
+                else:
+                    chofer = TxdChofer.objects.filter(pk=denuncia.chofer.idchofer)                    
                 tipodenuncia = TxdTipodenuncia.objects.filter(idtipodenuncia=denuncia.tipodenuncia.idtipodenuncia)
                 print chofer
                 data={}
