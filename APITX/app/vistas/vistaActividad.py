@@ -124,3 +124,9 @@ def busqueda(request, busq):
         else:
             content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
+@api_view(['GET'])
+def lista(request):
+    if request.method == 'GET':
+        objeto = TxcActividad.objects.all()
+        serializador = TxcActividadS(objeto, many = True)
+        return Response(serializador.data)
