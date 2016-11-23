@@ -275,3 +275,8 @@ class TipoDenDenunciaS(serializers.ModelSerializer):
     class Meta:
         model = models.TxdTipodenuncia
         fields = ('idtipodenuncia','descripcion','dnc')
+class FechaConsejoS(serializers.ModelSerializer):
+    fcon = TxcoFechaS(many = True, read_only=True, source = 'txcofecha_set')
+    class Meta:
+        model = models.TxcoConsejo
+        fields = ('idconsejo','consejo','consejo','fcon')

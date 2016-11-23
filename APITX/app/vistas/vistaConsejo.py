@@ -1,8 +1,8 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from app.models import TxcoConsejo, TxcActividad
-from app.serializables import TxcoConsejoS, TxcoFechaS, TxcoConsejosFechaS, TxcActividadS
+from app.models import TxcoConsejo, TxcActividad, TxcoConsejo
+from app.serializables import TxcoConsejoS, TxcoFechaS, TxcoConsejosFechaS, TxcActividadS, FechaConsejoS
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -139,3 +139,9 @@ def principal_consejoActividad(request):
             ob['consejo']= consejoser.data
             ob['actividades'] = lista
         return Response(ob)
+@api_view(['GET'])
+def principal_consejofecha(request):
+    if request.method == 'GET':
+        objeto = TxcoConsejo.objects.all()
+        serializador =FechaConsejoS(objeto, many=True)
+        return Response(serializador.data)
