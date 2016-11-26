@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import TxdDenuncia, TxdBus, TxdRuta, TxdChofer, TxdDuenio, TxdTipodenuncia
-from app.serializables import TxdDenunciaS, BusRutaS, ChoferDenunciaS, BusDuenioS, PilotoDuenioS,TipoDenDenunciaS,TxdBusS
+from app.serializables import TxdDenunciaS, BusRutaS, ChoferDenunciaS,TxdChoferS, BusDuenioS, PilotoDuenioS,TipoDenDenunciaS,TxdBusS
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -190,4 +190,34 @@ def lista_objetos_tipoDenDenuncia(request):
             return Response(serializador.data)
         else:
             content = {'Permiso denagado': 'El usuario no tiene permisos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+@api_view(['GET'])
+def lista_busesDenunciadosChoferPmt(request):
+    """
+    Listado de denuncias por chofer
+    """
+    try:
+        objToken = Token.objects.get(key=request.query_params.get('tk'))
+        usuario = User.objects.get(pk=objToken.user.id)
+    except ObjectDoesNotExist:
+        content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
+        return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+    if request.method == 'GET':
+        if usuario.has_perm('app.view_txdchofer'):
+            vec = []
+            cantidad = 0
+            for recChof in TxdChofer.objects.all():
+                serChof = TxdChoferS(recChof)
+                for recDen in TxdDenuncia.objects.all():
+                    serDen = TxdDenunciaS(recDen)
+                    if recDen.chofer_id == recChof.idchofer:
+                        cantidad=cantidad+1
+                if cantidad>0:
+                    var = {'dpi': recChof.dpi,'cantidad':cantidad}
+                    vec+=[var]
+                    cantidad = 0;
+            return Response(vec)
+        else:
+            content = {'Persmiso Denegado':'El usuario no tiene Persmisos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)

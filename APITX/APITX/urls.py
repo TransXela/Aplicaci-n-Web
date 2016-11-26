@@ -155,6 +155,7 @@ urlpatterns = [
     url(r'^reporte/pmt/RepBusRuta/$', vistaEstadistica.lista_objetos_rutaBus),
     url(r'^reporte/pmt/RepPilotoDen/$', vistaEstadistica.lista_objetos_pilotoDenuncia),
     url(r'^reporte/pmt/RepDuenioBuses/$', vistaEstadistica.lista_objetos_duenioBuses),
+    url(r'^reporte/pmt/pilotos/$', vistaEstadistica.lista_busesDenunciadosChoferPmt),
     #generar reportes para duenios
     url(r'^reporte/duenio/RepDuenioBusesId/(?P<pk>[0-9]+)/$', vistaEstadistica.lista_objetos_duenioBusesId),
     url(r'^reporte/duenio/RepDuenioChoferId/(?P<pk>[0-9]+)/$', vistaEstadistica.lista_objetos_duenioChofId),
