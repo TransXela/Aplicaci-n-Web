@@ -144,6 +144,14 @@ class DueniosChoferes(serializers.ModelSerializer):
         model = models.TxdDuenio
         fields = ('idduenio','nombre','apellidos','direccion','empresa','fecha_nac','fecha_crea','dpi','telefono','correo','foto','estado','choferes')
 
+class RutasBuses(serializers.ModelSerializer):
+    buses = TxdBusS(many=True, read_only=True, source='txdbus_set')
+    rutas =  TxdRutaS(models.TxdRuta.objects.all(), many=True)
+    class Meta:
+        model = models.TxdDuenio
+        fields = ('idduenio','nombre','apellidos','direccion','empresa','fecha_nac','fecha_crea','dpi','telefono','correo','foto','estado','buses','rutas')
+
+
 class TxdHorarioS(serializers.ModelSerializer):
     class Meta:
         fields = ('__all__')

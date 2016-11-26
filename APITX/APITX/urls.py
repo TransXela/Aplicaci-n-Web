@@ -43,6 +43,7 @@ urlpatterns = [
     url(r'^duenio/(?P<pk>[0-9]+)/pilotos/$', vistaDuenio.principal_duenio_choferes,{'var': 1}),
     url(r'^duenio/(?P<pk>[0-9]+)/buses/$', vistaDuenio.principal_duenio_choferes,{'var': 3}),
     url(r'^duenio/(?P<pk>[0-9]+)/completo/$', vistaDuenio.principal_duenio_choferes,{'var': 4}),
+    url(r'^duenio/(?P<pk>[0-9]+)/rutas-buses/$', vistaDuenio.principal_duenio_choferes,{'var': 5}),
     url(r'^duenio/piloto/$', vistaChofer.lista_objetos),
     url(r'^duenio/piloto/(?P<pk>[0-9]+)/$', vistaChofer.detalle_objetos),
     url(r'^duenio/piloto/(?P<pk>[0-9]+)/editar//$', vistaChofer.detalle_objetos),

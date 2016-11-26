@@ -3,9 +3,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
-from app.models import TxdDuenio, TxdChofer, TxdHorario, TxdBus, TxdHorariodetalle
-from app.serializables import (TxdDuenioS, TxdHorariodetalleS, DueniosChoferBuses, DueniosChoferes, DueniosHorarios, DueniosBuses,DueniosHorarioPilotosBuses,
-                                listadoDueniosDetalles,TxdHorarioS,TxdChoferS,TxdBusS)
+from app.models import TxdDuenio, TxdChofer, TxdHorario, TxdBus, TxdHorariodetalle, TxdRuta
+from app.serializables import (TxdDuenioS, TxdHorariodetalleS, DueniosChoferBuses, DueniosChoferes, DueniosHorarios, DueniosBuses,DueniosHorarioPilotosBuses,RutasBuses,
+                                listadoDueniosDetalles,TxdHorarioS,TxdChoferS,TxdBusS,TxdRutaS)
 from django.core.exceptions import ObjectDoesNotExist
 
 @api_view(['GET', 'POST'])
@@ -79,6 +79,11 @@ def principal_duenio_choferes(request,pk, var):
             elif var==4:
                 serializador = DueniosHorarioPilotosBuses(objeto)
                 return Response(serializador.data)
+            elif var==5:
+                rutas = TxdRutaS(TxdRuta.objects.all(), many=True)
+                serializador = DueniosBuses(objeto)
+                data={"rutas":rutas.data,"Duenio y Buses": serializador.data}
+                return Response(data)
             else:
                 return Response(status=status.HTTP_204_NO_CONTENT)
         else:
