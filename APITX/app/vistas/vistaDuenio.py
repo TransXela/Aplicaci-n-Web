@@ -5,7 +5,7 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from app.models import TxdDuenio, TxdChofer, TxdHorario, TxdBus, TxdHorariodetalle
 from app.serializables import (TxdDuenioS, TxdHorariodetalleS, DueniosChoferBuses, DueniosChoferes, DueniosHorarios, DueniosBuses,
-                                listadoDueniosDetalles)
+                                listadoDueniosDetalles,TxdHorarioS,TxdChoferS,TxdBusS)
 from django.core.exceptions import ObjectDoesNotExist
 
 @api_view(['GET', 'POST'])
@@ -173,6 +173,42 @@ def lista_horariodetalle(request):
                     ob['detallehorarios']=TxdHorariodetalleS(detallehorario, many=True).data
                 y+=[ob]
             return Response(y)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+@api_view(['GET'])
+def todaInformacion(request):
+    """
+    obtiene la lista de duenio
+    """
+    try:
+        objToken = Token.objects.get(key=request.query_params.get('tk'))
+        usuario = User.objects.get(pk=objToken.user.id)
+    except ObjectDoesNotExist:
+        content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
+        return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+    if request.method == 'GET':
+        if usuario.has_perm('app.view_txdduenio'):
+            try:
+                print usuario.id
+                duenio = TxdDuenio.objects.get(usuario=usuario.id)
+
+            except ObjectDoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+            d=TxdDuenioS(duenio)
+            ob={}
+            ob['duenio']=d.data
+            Hd={}
+            for horario in TxdHorario.objects.filter(duenio=duenio.idduenio):
+                detallehorario = TxdHorariodetalle.objects.filter(horario=horario.idhorario)
+                ob['horariosdetalle']=TxdHorariodetalleS(detallehorario, many=True).data
+            ob["horarios"]= TxdHorarioS(TxdHorario.objects.filter(duenio=duenio.idduenio),many=True).data
+            ob["pilotos"]= TxdChoferS(TxdChofer.objects.filter(duenio=duenio.idduenio),many=True).data
+            ob["buses"]= TxdBusS(TxdBus.objects.filter(duenio=duenio.idduenio),many=True).data
+
+            return Response(ob)
         else:
             content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
