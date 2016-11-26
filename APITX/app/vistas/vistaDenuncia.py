@@ -224,15 +224,15 @@ def cambio_estado(request, pk):
 
     if request.method == 'PUT':
         if usuario.has_perms('app.change_txddenuncia'):
-            if denuncia.chofer is None :
-                idchofer= ""
+            if objeto.chofer is None:
+                idchofer=""
             else:
-                idchofer= (TxdHorariodetalle.objects.get(bus=busid,fecha=date.today())).chofer.idchofer
+                idchofer= objeto.chofer.idchofer
 
             data = {"descripcion": objeto.descripcion ,"fechahora": objeto.fechahora,"placa":objeto.placa,
             "chofer":idchofer,"token":objeto.token.idtoken,"tipodenuncia":objeto.tipodenuncia.idtipodenuncia,
             "latitud":objeto.latitud, "longitud":objeto.longitud}
-            data['estado']= request.data['estado']
+            data['estado']= request.data.get('estado')
             print data
             serializador = TxdDenunciaS(objeto,data=data)
             if serializador.is_valid():
@@ -241,6 +241,48 @@ def cambio_estado(request, pk):
                 return Response(content, status=status.HTTP_202_ACCEPTED)
             else:
                 return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para editar datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+@api_view(['PUT'])
+def cambio_estados(request):
+    """
+    Actualiza el estado de una denuncia
+    """
+    try:
+        objToken = Token.objects.get(key=request.query_params.get('tk'))
+        usuario = User.objects.get(pk=objToken.user.id)
+    except ObjectDoesNotExist:
+        content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
+        return Response(content, status=status.HTTP_403_FORBIDDEN)
+    if request.data.get('denuncias') is None:
+        objetos=[]
+    else:
+        objetos = TxdDenuncia.objects.filter(pk__in=request.data.get('denuncias'))
+
+
+    if request.method == 'PUT':
+        if usuario.has_perms('app.change_txddenuncia'):
+            for objeto in objetos:
+                if objeto.chofer is None:
+                    idchofer=""
+                else:
+                    idchofer= objeto.chofer.idchofer
+
+                data = {"descripcion": objeto.descripcion ,"fechahora": objeto.fechahora,"placa":objeto.placa,
+                "chofer":idchofer,"token":objeto.token.idtoken,"tipodenuncia":objeto.tipodenuncia.idtipodenuncia,
+                "latitud":objeto.latitud, "longitud":objeto.longitud}
+                data['estado']= request.data.get('estado')
+                print data
+                serializador = TxdDenunciaS(objeto,data=data)
+                if serializador.is_valid():
+                    serializador.save()
+                else:
+                    return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
+
+            content = {'estado': 'se actualizaron las denuncias'}
+            return Response(content, status=status.HTTP_202_ACCEPTED)
         else:
             content = {'Permiso denegado': 'El usuario no tiene permisos para editar datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
@@ -282,6 +324,81 @@ def lista_denuncias(request):
             ob['numdenuncias'] = TxdDenuncia.objects.count()
             ob['denuncias'] = a
             return Response(ob)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def lista_denuncias_rango(request):
+    """
+    Lista de todas las denuncias
+    """
+    try:
+        objToken = Token.objects.get(key=request.query_params.get('tk'))
+        usuario = User.objects.get(pk=objToken.user.id)
+    except ObjectDoesNotExist:
+        content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
+        return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+    if request.method == 'GET':
+        if usuario.has_perm('app.view_txddenuncia'):
+            try:
+                ob={}
+                a = list()
+                ob2={}
+                print "aqui"
+                formato_fecha = "%Y-%m-%d"
+                fInicio = request.query_params.get('fInicio')
+                fFin = request.query_params.get('fFin')
+                inicio = datetime.strptime(fInicio, formato_fecha).date()
+                fin = datetime.strptime(fFin, formato_fecha).date()
+
+                print inicio
+                print fin
+
+                objeto = TxdDenuncia.objects.filter(fechahora__range=(inicio, fin))
+            except ObjectDoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            for denuncia in objeto:
+                if denuncia.chofer is None :
+                    chofer= ""
+                else:
+                    chofer = TxdChofer.objects.filter(pk=denuncia.chofer.idchofer)
+                tipodenuncia = TxdTipodenuncia.objects.filter(idtipodenuncia=denuncia.tipodenuncia.idtipodenuncia)
+
+                data={}
+                data ['denuncia'] = TxdDenunciaS(denuncia).data
+                data['chofer'] = TxdChoferS(chofer,many=True).data
+                data['tipodenuncia'] = TxdTipodenunciaS(tipodenuncia,many=True).data
+                a+= [data]
+            ob['numdenuncias'] = len(objeto)
+            ob['denuncias'] = a
+            return Response(ob)
+        else:
+            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def estados(request):
+    """
+    Lista de todas las denuncias
+    """
+    try:
+        objToken = Token.objects.get(key=request.query_params.get('tk'))
+        usuario = User.objects.get(pk=objToken.user.id)
+    except ObjectDoesNotExist:
+        content = {'Datos incorrectos': 'El token enviado no coincide para ningun usuario'}
+        return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+    if request.method == 'GET':
+        if usuario.has_perm('app.view_txddenuncia'):
+            content = {"estado" : { "id": 1,"definicion": "Aceptada"}}
+            return Response(content)
         else:
             content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)

@@ -54,6 +54,7 @@ urlpatterns = [
     url(r'^duenio/horariosdetalle/$', vistaHorariodetalle.lista_objetos), # obtiene todos los horarios y detalles
     url(r'^duenio/horariodetalle/(?P<fInicio>20[0-9][0-9]-[0-1][0-9]-[0-3][0-9])/(?P<fFin>20[0-9][0-9]-[0-1][0-9]-[0-3][0-9])/$', vistaHorariodetalle.rango),
     url(r'^duenio/horariosdetalle/crearrango/$',vistaHorariodetalle.postRangoFechas),
+    url(r'^duenio/todainformacion/$',vistaDuenio.todaInformacion),
 
     #actualizar un horariodetalle PUT/DELETE
     url(r'^duenio/horariodetalle/(?P<pk>[0-9]+)/$', vistaHorariodetalle.detalle_objetos),# Obtiene uno en especifico
@@ -100,11 +101,14 @@ urlpatterns = [
     url(r'^bus/(?P<pk>[1-9a-zA-Z]+)/$', vistaBus.bus_placa),
     url(r'^horariosdetalle/bus/(?P<pk>[1-9]+)/$', vistaHorariodetalle.lista_por_bus),
     url(r'^webdenuncias/$', vistaDenuncia.lista_denuncias),
+    url(r'^webdenuncias/rango/$', vistaDenuncia.lista_denuncias_rango),
     url(r'^denuncias/rutas/$', vistaRuta.lista_numDenuncias),
     url(r'^denuncia/estado/(?P<pk>[0-9]+)/$', vistaDenuncia.cambio_estado),
+    url(r'^denuncias/cambiarestados/$', vistaDenuncia.cambio_estados),
     url(r'^denuncias/ruta/(?P<pk>[0-9]+)/$', vistaRuta.denuncias_ruta),
     url(r'^denuncias/ruta/bus/(?P<idB>[0-9]+)/$', vistaBus.denuncias_tipodenuncia),
     url(r'^denuncias/ruta/bus/(?P<idB>[0-9]+)/(?P<idTd>[0-9]+)/$', vistaBus.denuncias_bus_tipodenuncia),
+    url(r'^denuncias/tiposestados/$', vistaDenuncia.estados),
 
 
     #Administrador
