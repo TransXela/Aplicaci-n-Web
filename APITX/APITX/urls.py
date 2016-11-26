@@ -42,6 +42,8 @@ urlpatterns = [
     url(r'^duenio/(?P<pk>[0-9]+)/principal/$', vistaDuenio.principal_duenio_choferes,{'var': 0}),
     url(r'^duenio/(?P<pk>[0-9]+)/pilotos/$', vistaDuenio.principal_duenio_choferes,{'var': 1}),
     url(r'^duenio/(?P<pk>[0-9]+)/buses/$', vistaDuenio.principal_duenio_choferes,{'var': 3}),
+    url(r'^duenio/(?P<pk>[0-9]+)/completo/$', vistaDuenio.principal_duenio_choferes,{'var': 4}),
+    url(r'^duenio/(?P<pk>[0-9]+)/rutas-buses/$', vistaDuenio.principal_duenio_choferes,{'var': 5}),
     url(r'^duenio/piloto/$', vistaChofer.lista_objetos),
     url(r'^duenio/piloto/(?P<pk>[0-9]+)/$', vistaChofer.detalle_objetos),
     url(r'^duenio/piloto/(?P<pk>[0-9]+)/editar//$', vistaChofer.detalle_objetos),
@@ -59,7 +61,6 @@ urlpatterns = [
     #actualizar un horariodetalle PUT/DELETE
     url(r'^duenio/horariodetalle/(?P<pk>[0-9]+)/$', vistaHorariodetalle.detalle_objetos),# Obtiene uno en especifico
     url(r'^duenio/(?P<pk>[0-9]+)/horariosdetalle/$', vistaHorariodetalle.lista_por_duenio),# Otiene el listado de horarios de un duenio
-
     url(r'^ruta/$', vistaRuta.lista_objetos),
     url(r'^ruta/(?P<pk>[0-9]+)/$', vistaRuta.detalle_objetos),
     url(r'^duenio/bus/(?P<pk>[0-9]+)/editar/$', vistaBus.detalle_objetos),
@@ -147,7 +148,11 @@ urlpatterns = [
     url(r'^cultura/articulo/$', vistaArticulo.lista_objetos),
     url(r'^cultura/articulo/(?P<pk>[0-9]+)/$', vistaArticulo.detalle_objetos),
     url(r'^cultura/consejoAct/$',vistaConsejo.principal_consejoActividad),
+<<<<<<< HEAD
     url(r'^cultura/actividades/sintoken/$',vistaActividad.lista),
+=======
+    url(r'^cultura/actividades/outtk$',vistaActividad.lista),
+>>>>>>> origin/master
     url(r'^cultura/consejofe/$',vistaConsejo.principal_consejofecha),
 
     #para realizar reportes para pmt
