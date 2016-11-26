@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from app.models import TxdDuenio, TxdChofer, TxdHorario, TxdBus, TxdHorariodetalle
-from app.serializables import (TxdDuenioS, TxdHorariodetalleS, DueniosChoferBuses, DueniosChoferes, DueniosHorarios, DueniosBuses,
+from app.serializables import (TxdDuenioS, TxdHorariodetalleS, DueniosChoferBuses, DueniosChoferes, DueniosHorarios, DueniosBuses,DueniosHorarioPilotosBuses,
                                 listadoDueniosDetalles,TxdHorarioS,TxdChoferS,TxdBusS)
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -75,6 +75,9 @@ def principal_duenio_choferes(request,pk, var):
                 return Response(serializador.data)
             elif var==3:
                 serializador = DueniosBuses(objeto)
+                return Response(serializador.data)
+            elif var==4:
+                serializador = DueniosHorarioPilotosBuses(objeto)
                 return Response(serializador.data)
             else:
                 return Response(status=status.HTTP_204_NO_CONTENT)
