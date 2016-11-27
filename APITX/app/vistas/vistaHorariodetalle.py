@@ -110,7 +110,7 @@ def detalle_objetos(request, pk):
                 stringF=str(datetime.now().year)+"-"+str(datetime.now().month)+"-"+str(datetime.now().day)
                 fecha1 = datetime.strptime(stringF, formato_fecha)
                 if fecha2 < fecha1:
-                    respuesta ={'modificar': {'estado': 'Ya no puede modificar esta asignación.'}}
+                    respuesta ={'modificar': {'estado': 'Ya no puede modificar esta asignacion.'}}
                     return Response(respuesta, status=status.HTTP_406_NOT_ACCEPTABLE)
                 serializador.save()
                 respuesta ={'modificar': {'estado": "Modificado Exitosamente'}}

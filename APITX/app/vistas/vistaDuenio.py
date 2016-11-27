@@ -206,10 +206,12 @@ def todaInformacion(request):
             d=TxdDuenioS(duenio)
             ob={}
             ob['duenio']=d.data
+            lista = list()
             Hd={}
             for horario in TxdHorario.objects.filter(duenio=duenio.idduenio):
                 detallehorario = TxdHorariodetalle.objects.filter(horario=horario.idhorario)
-                ob['horariosdetalle']=TxdHorariodetalleS(detallehorario, many=True).data
+                lista+=TxdHorariodetalleS(detallehorario, many=True).data
+            ob['horariosdetalle']=lista    
             ob["horarios"]= TxdHorarioS(TxdHorario.objects.filter(duenio=duenio.idduenio),many=True).data
             ob["pilotos"]= TxdChoferS(TxdChofer.objects.filter(duenio=duenio.idduenio),many=True).data
             ob["buses"]= TxdBusS(TxdBus.objects.filter(duenio=duenio.idduenio),many=True).data
