@@ -27,7 +27,7 @@ def lista_objetos(request):
             serializador = TxdHorarioS(objeto, many=True)
             return Response(serializador.data)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar los datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
@@ -41,7 +41,7 @@ def lista_objetos(request):
                     serializador.save()
                     return Response(serializador.data, status=status.HTTP_201_CREATED)
                 else:
-                    respuesta ={"crear": {"estado": "Hora inicio debe ser menor/diferente a hora fin"}}
+                    respuesta ={"crear": {"estado": "Hora inicio debe ser menor o diferente a la hora final"}}
                     return Response(respuesta, status=status.HTTP_400_BAD_REQUEST)
             return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -71,7 +71,7 @@ def detalle_objetos(request, pk):
             serializador = TxdHorarioS(objeto)
             return Response(serializador.data)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar los datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     elif request.method == 'PUT':
@@ -85,7 +85,7 @@ def detalle_objetos(request, pk):
                     respuesta ={"modificar": {"estado": "Horario modificado exitosamente"}}
                     return Response(respuesta, status=status.HTTP_201_CREATED)
                 else:
-                    respuesta ={"modificar": {"estado": "Hora inicio debe ser menor/diferente a hora fin"}}
+                    respuesta ={"modificar": {"estado": "Hora inicio debe ser menor o diferente a la hora final"}}
                     return Response(respuesta, status=status.HTTP_400_BAD_REQUEST)
 
             return Response(serializador.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -130,5 +130,5 @@ def horarios_duenio(request, pk):
             serializador = TxdHorarioS(objeto, many=True)
             return Response(serializador.data)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar los datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)

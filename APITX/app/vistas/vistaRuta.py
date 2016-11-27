@@ -26,7 +26,7 @@ def lista_objetos(request):
             serializador = TxdRutaS(objeto, many=True)
             return Response(serializador.data)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar los datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     elif request.method == 'POST':
@@ -63,7 +63,7 @@ def detalle_objetos(request, pk):
             serializador = TxdRutaS(objeto)
             return Response(serializador.data)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar los datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     elif request.method == 'PUT':
@@ -84,7 +84,7 @@ def detalle_objetos(request, pk):
                 objeto.delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
             except IntegrityError:
-                content = {'estado': 'No se puede eliminar tiene dependencias'}
+                content = {'estado': 'Esta Ruta no se puede eliminar'}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
         else:
             content = {'Permiso denegado': 'El usuario no tiene permisos para eliminar datos'}
@@ -128,7 +128,7 @@ def denuncias_ruta(request, pk):
             respuesta['buses'] = listadenuncias
             return Response(respuesta)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar los datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
@@ -160,5 +160,5 @@ def lista_numDenuncias(request):
             rutas['rutas'] = a
             return Response(rutas)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar los datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)

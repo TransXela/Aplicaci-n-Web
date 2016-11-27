@@ -87,7 +87,7 @@ def principal_duenio_choferes(request,pk, var):
             else:
                 return Response(status=status.HTTP_204_NO_CONTENT)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar los datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
@@ -113,7 +113,7 @@ def detalle_objetos(request, pk):
             serializador = TxdDuenioS(objeto)
             return Response(serializador.data)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar los datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
@@ -173,8 +173,6 @@ def lista_horariodetalle(request):
                 d=TxdDuenioS(duenio)
                 ob={}
                 ob['duenio']=d.data
-                #y+=[duenio.idduenio]
-                #y+=[duenio.nombre]
                 for horario in TxdHorario.objects.filter(duenio=duenio.idduenio):
                     s+=[horario.idhorario]
                     detallehorario = TxdHorariodetalle.objects.filter(horario=horario.idhorario)
@@ -218,7 +216,7 @@ def todaInformacion(request):
 
             return Response(ob)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar los datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
@@ -243,7 +241,7 @@ def obtener_sinUser(request):
             except ObjectDoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar los datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     else:

@@ -25,7 +25,7 @@ def lista_objetos(request):
             serializador = TxdChoferS(objeto, many = true)
             return Response(serializador.data)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
@@ -62,7 +62,7 @@ def detalle_objetos(request, pk):
             serializador = TxdChoferS(objeto)
             return Response(serializador.data)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
@@ -105,7 +105,7 @@ def lista_choferes_denuncias(request):
             serializador = ChoferesDenuncias(objeto)
             return Response(serializador.data)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
@@ -131,5 +131,5 @@ def chofer_dpi(request, pk):
             serializador = TxdChoferS(objeto)
             return Response(serializador.data)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)

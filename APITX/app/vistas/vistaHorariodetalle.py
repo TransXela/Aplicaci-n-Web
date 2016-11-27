@@ -27,7 +27,7 @@ def lista_objetos(request):
             serializador = TxdHorariodetalleS(objeto, many=True)
             return Response(serializador.data)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar los datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
@@ -52,7 +52,7 @@ def lista_objetos(request):
                 stringF=str(datetime.now().year)+"-"+str(datetime.now().month)+"-"+str(datetime.now().day)
                 fecha1 = datetime.strptime(stringF, formato_fecha)
                 if fecha2 < fecha1:
-                    respuesta ={'crear': {'estado': 'La fecha debe ser mayor igual a la fecha actual.'}}
+                    respuesta ={'crear': {'estado': 'La hora Actual no coincide con la hora asignada.'}}
                     return Response(respuesta, status=status.HTTP_406_NOT_ACCEPTABLE)
                 serializador.save()
                 respuesta ={'crear': {'estado': 'Creado Exitosamente'}}
@@ -85,7 +85,7 @@ def detalle_objetos(request, pk):
             serializador = TxdHorariodetalleS(objeto)
             return Response(serializador.data)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar los datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
@@ -110,7 +110,7 @@ def detalle_objetos(request, pk):
                 stringF=str(datetime.now().year)+"-"+str(datetime.now().month)+"-"+str(datetime.now().day)
                 fecha1 = datetime.strptime(stringF, formato_fecha)
                 if fecha2 < fecha1:
-                    respuesta ={'modificar': {'estado': 'La fecha debe ser mayor igual a la fecha actual.'}}
+                    respuesta ={'modificar': {'estado': 'Ya no puede modificar esta asignación.'}}
                     return Response(respuesta, status=status.HTTP_406_NOT_ACCEPTABLE)
                 serializador.save()
                 respuesta ={'modificar': {'estado": "Modificado Exitosamente'}}
@@ -175,7 +175,7 @@ def rango(request,fInicio,fFin):
             serializador = TxdHorariodetalleS(objeto)
             return Response(serializador.data)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar los datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -209,7 +209,7 @@ def lista_por_duenio(request,pk):
             data={"duenio":duenios.data,"diasHorarioDetalle": serializador.data}
             return Response(data)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar los datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -230,14 +230,13 @@ def detalle_Choferes(request, pk):
         if usuario.has_perm('app.view_txdhorariodetalle'):
             try:
                 objeto = TxdChofer.objects.get(pk=pk)
-                #objHorarioDetalle = TxdHorariodetalle.objects.filter(bus=pk)
             except ObjectDoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
 
             serializador = choferHorariDetalleCompleto(objeto)
             return Response(serializador.data)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar los datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -268,7 +267,7 @@ def lista_por_bus(request,pk):
             data={"Bus":serBus.data,"HorarioDetalle": serHorarioDetalle.data}
             return Response(data)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar los datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)

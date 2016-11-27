@@ -26,7 +26,7 @@ def lista_objetos(request):
             serializador = TxdBusS(objeto, many=True)
             return Response(serializador.data)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
@@ -65,7 +65,7 @@ def detalle_objetos(request, pk):
             serializador = TxdBusS(objeto)
             return Response(serializador.data)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
@@ -115,13 +115,13 @@ def buses_Activos(request):
             return Response(serializador.data)
 
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 @api_view(['GET'])
 def buses_Activos(request):
     """
-    retorna los busese que estan activos
+    retorna los buses que estan activos
     """
     try:
         objToken = Token.objects.get(key=request.query_params.get('tk'))
@@ -141,7 +141,7 @@ def buses_Activos(request):
             serializador = TxdBusS(objetos, many=True)
             return Response(serializador.data)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
@@ -167,7 +167,7 @@ def bus_placa(request, pk):
             serializador = TxdBusS(objeto)
             return Response(serializador.data)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
@@ -205,7 +205,7 @@ def denuncias_tipodenuncia(request, idB):
             respuesta['TiposDenuncia'] = listatdenuncia
             return Response(respuesta)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 @api_view(['GET'])
@@ -240,5 +240,5 @@ def denuncias_bus_tipodenuncia(request, idB,idTd):
             respuesta2 = {"tipodenuncia": respuesta['tipodenuncia']}, {"denuncias": respuesta['denuncias']}
             return Response(respuesta2)
         else:
-            content = {'Permiso denegado': 'El usuario no tiene permisos para ver datos'}
+            content = {'Permiso denegado': 'El usuario no tiene permisos para visualizar datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
