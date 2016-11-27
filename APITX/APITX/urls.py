@@ -21,7 +21,8 @@ from rest_framework.authtoken import views
 from app.vistas import vistaGrupoUsuario
 from app.vistas import (vistaDuenio, vistaRuta, vistaHorario, vistaDenuncia, vistaTipodenuncia, vistaActividad,vistaConsejo, vistaFechaConsejo,
                         vistaBus, vistaRecurso, vistaChofer, vistaHorariodetalle, vistaTipodenuncia, vistaCapitulo, vistaPregunta, vistaTitulo,
-                        vistaArticulo, autenticacion, vistaUsuario, vistaPmt,vistaGrupo,vistaCultura,vistaEstadistica,vistadenunciaWeb)
+                        vistaArticulo, autenticacion, vistaUsuario, vistaPmt,vistaGrupo,vistaCultura,vistaEstadistica,vistadenunciaWeb,
+                        crearUsuarios)
 from APITX import settings
 from django.conf.urls.static import static
 
@@ -30,6 +31,8 @@ router = routers.DefaultRouter()
 #router.register(r'groups', vistaGrupoUsuario.GroupViewSet)
 
 urlpatterns = [
+
+    url(r'^crearusuariopersona/', crearUsuarios.crear_usuarioPersona),
 
     url(r'^obtenertoken/', autenticacion.token),
     url(r'^admin/', admin.site.urls),
