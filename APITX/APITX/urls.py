@@ -33,6 +33,8 @@ router = routers.DefaultRouter()
 urlpatterns = [
 
     url(r'^crearusuariopersona/', crearUsuarios.crear_usuarioPersona),
+    url(r'^crearusuarioadministrador/', crearUsuarios.crear_usuarioAdministrador),
+    url(r'^obtenerusuariosgrupos/', crearUsuarios.obtenerUsuariosGrupos),
 
     url(r'^obtenertoken/', autenticacion.token),
     url(r'^admin/', admin.site.urls),

@@ -3,6 +3,35 @@ from app import models
 from rest_framework import serializers
 
 
+class grupoS(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ('id', 'name')
+
+class UsuarioS(serializers.ModelSerializer):
+    groups = grupoS(many = True)
+    class Meta:
+        model = User
+        fields = ('__all__')
+
+class duenioSerializer(serializers.ModelSerializer):
+    usuario = UsuarioS(many = False)
+    class Meta:
+        fields = ('__all__')
+        model = models.TxdDuenio
+
+class pmtSerializer(serializers.ModelSerializer):
+    usuario = UsuarioS(many = False)
+    class Meta:
+        fields = ('__all__')
+        model = models.TxdPmt
+
+class culturaSerializer(serializers.ModelSerializer):
+    usuario = UsuarioS(many = False)
+    class Meta:
+        fields = ('__all__')
+        model = models.TxcCultura
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
