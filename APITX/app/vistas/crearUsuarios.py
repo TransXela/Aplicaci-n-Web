@@ -49,7 +49,7 @@ def crear_usuarioPersona(request):
                             "usuario": user.pk
                             }
 
-                if grupo.name == 'duenios':
+                if grupo.id == 1:
                     serializadorpersona = TxdDuenioS(data=persona)
                     if serializadorpersona.is_valid():
                         serializadorpersona.save()
@@ -57,7 +57,7 @@ def crear_usuarioPersona(request):
                     else:
                         return Response(serializadorpersona.errors, status=status.HTTP_400_BAD_REQUEST)
 
-                elif grupo.name == 'pmt':
+                elif grupo.id == 2:
                     serializadorpersona = TxdPmtS(data=persona)
                     if serializadorpersona.is_valid():
                         serializadorpersona.save()
@@ -65,7 +65,7 @@ def crear_usuarioPersona(request):
                     else:
                         return Response(serializadorpersona.errors, status=status.HTTP_400_BAD_REQUEST)
 
-                elif grupo.name == 'cultura':
+                elif grupo.id == 3:
                     serializadorpersona = TxcCulturaS(data=persona)
                     if serializadorpersona.is_valid():
                         serializadorpersona.save()
