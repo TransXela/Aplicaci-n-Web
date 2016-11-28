@@ -159,16 +159,17 @@ urlpatterns = [
     url(r'^cultura/consejofe/(?P<pk>[0-9]+)/$',vistaConsejo.principal_consejofecha),
 
     #para realizar reportes para pmt
-    url(r'^reporte/pmt/RepDuenioBusD/$', vistaEstadistica.lista_objetos),
-    url(r'^reporte/pmt/RepBusRuta/$', vistaEstadistica.lista_objetos_rutaBus),
-    url(r'^reporte/pmt/RepPilotoDen/$', vistaEstadistica.lista_objetos_pilotoDenuncia),
-    url(r'^reporte/pmt/RepDuenioBuses/$', vistaEstadistica.lista_objetos_duenioBuses),
+    url(r'^reporte/pmt/buses/$', vistaEstadistica.lista_busesDenunciadosPmt),
+    url(r'^reporte/pmt/duenio/$', vistaEstadistica.lista_dueniosDenPmt),
+    url(r'^reporte/pmt/tipoDenuncia/$', vistaEstadistica.lista_denunciasTipoDenPmt),
+    url(r'^reporte/pmt/rutas/$', vistaEstadistica.lista_rutasDenPmt),
     url(r'^reporte/pmt/pilotos/$', vistaEstadistica.lista_busesDenunciadosChoferPmt),
     #generar reportes para duenios
-    url(r'^reporte/duenio/RepDuenioBusesId/(?P<pk>[0-9]+)/$', vistaEstadistica.lista_objetos_duenioBusesId),
-    url(r'^reporte/duenio/RepDuenioChoferId/(?P<pk>[0-9]+)/$', vistaEstadistica.lista_objetos_duenioChofId),
-    url(r'^reporte/duenio/RepBusChofId/(?P<pk>[0-9]+)/$', vistaEstadistica.lista_objetos_busChofId),
-    url(r'^reporte/duenio/RepTipoDenD/$', vistaEstadistica.lista_objetos_tipoDenDenuncia),
+    url(r'^reporte/duenio/buses/(?P<pk>[0-9]+)/$', vistaEstadistica.lista_busesDenDuenio),
+    url(r'^reporte/duenio/pilotos/(?P<pk>[0-9]+)/$', vistaEstadistica.lista_choferDenDuenio),
+    url(r'^reporte/duenio/rutas/(?P<pk>[0-9]+)/$', vistaEstadistica.lista_rutasDenDuenio),
+    url(r'^reporte/duenio/tipoDenuncia/(?P<pk>[0-9]+)/$', vistaEstadistica.lista_tipoDenDuenio),
+
 
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
