@@ -140,8 +140,8 @@ def principal_consejoActividad(request):
             ob['actividades'] = lista
         return Response(ob)
 @api_view(['GET'])
-def principal_consejofecha(request):
+def principal_consejofecha(request,pk):
     if request.method == 'GET':
-        objeto = TxcoConsejo.objects.all()
-        serializador =FechaConsejoS(objeto, many=True)
+        objeto = TxcoConsejo.objects.get(pk=pk)
+        serializador =FechaConsejoS(objeto)
         return Response(serializador.data)
