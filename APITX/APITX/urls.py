@@ -156,7 +156,7 @@ urlpatterns = [
 
     url(r'^cultura/actividades/sintoken/$',vistaActividad.lista),
 
-    url(r'^cultura/consejofe/$',vistaConsejo.principal_consejofecha),
+    url(r'^cultura/consejofe/(?P<pk>[0-9]+)/$',vistaConsejo.principal_consejofecha),
 
     #para realizar reportes para pmt
     url(r'^reporte/pmt/RepDuenioBusD/$', vistaEstadistica.lista_objetos),
