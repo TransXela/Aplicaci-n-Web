@@ -34,7 +34,7 @@ def lista_objetos(request):
             if serializador.is_valid():
                 serializador.save()
                 return Response(serializador.data,status=status.HTTP_201_CREATED)
-                return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
         else:
             content = {'Permiso denegado': 'El usuario no tiene permisos para ingresar datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)

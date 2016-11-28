@@ -34,7 +34,7 @@ def lista_objetos(request):
             if serializador.is_valid():
                 serializador.save()
                 return Response(serializador.data,status=status.HTTP_201_CREATED)
-                return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializador.errors,status=status.HTTP_400_BAD_REQUEST)
         else:
             content = {'Permiso denegado': 'El usuario no tiene permisos para ingresar datos'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
@@ -59,7 +59,7 @@ def detalle_objetos(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        if usuario.has_perm('app.view_txctitulo'):    
+        if usuario.has_perm('app.view_txctitulo'):
             serializador = TxcTituloS(objeto)
             return Response(serializador.data)
         else:
