@@ -349,11 +349,11 @@ def lista_denuncias_rango(request):
                 a = list()
                 ob2={}
                 print "aqui"
-                formato_fecha = "%Y-%m-%d"
+                formato_fecha = "%Y-%m-%d %H:%M:%S"
                 fInicio = request.query_params.get('fInicio')
                 fFin = request.query_params.get('fFin')
-                inicio = datetime.strptime(fInicio, formato_fecha).date()
-                fin = datetime.strptime(fFin, formato_fecha).date()
+                inicio = datetime.strptime(fInicio+' 00:00:00', formato_fecha)
+                fin = datetime.strptime(fFin+' 23:59:59', formato_fecha)
 
                 print inicio
                 print fin
