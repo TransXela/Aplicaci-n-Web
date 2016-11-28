@@ -397,7 +397,7 @@ def estados(request):
 
     if request.method == 'GET':
         if usuario.has_perm('app.view_txddenuncia'):
-            content = {"estado" : { "id": 1,"definicion": "Aceptada"}}
+            content = {{ "id": 1,"definicion": "Aceptada"},{ "id": 2,"definicion": "Rechazada"}}
             return Response(content)
         else:
             content = {'Permiso denegado': 'El usuario no tiene permisos para ver los datos'}
